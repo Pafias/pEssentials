@@ -1,7 +1,7 @@
 # PafiasEssentials
 
 
-Basically my own Essentials
+Basically my own minecraft Essentials
 
 or something like that
 
