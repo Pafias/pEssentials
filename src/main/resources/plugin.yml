@@ -1,0 +1,145 @@
+name: PafiasEssentials
+version: ${project.version}
+main: me.pafias.pafiasessentials.PafiasEssentials
+softdepend: [ ProtocolLib ]
+author: Pafias
+description: PafiasEssentials
+api-version: 1.16
+commands:
+  entity:
+    usage: /e
+    aliases: [e]
+    description: Entity Utils
+    permission: essentials.entity
+  sound:
+    usage: /sound
+    aliases: [snd]
+    description: Sound Utils
+    permission: essentials.sound
+  nightvision:
+    usage: /nv
+    aliases: [nv]
+    description: Nightvision
+    permission: essentials.nightvision
+  ping:
+    usage: /ping [player]
+    aliases: [latency]
+    description: Ping
+  gamemode:
+    usage: /gamemode <gamemode> [player]
+    aliases: [gm]
+    description: GameMode
+    permission: essentials.gamemode
+  gmc:
+    usage: /gmc [player]
+    aliases: [gm1]
+    description: Gamemode Creative
+  gms:
+    usage: /gms [player]
+    aliases: [gm0]
+    description: Gamemode Survival
+  gmsp:
+    usage: /gmsp [player]
+    aliases: [gm3]
+    description: Gamemode Spectator
+  gma:
+    usage: /gma [player]
+    aliases: [gm2]
+    description: Gamemode Adventure
+  hub:
+    usage: /hub
+    aliases: []
+    description: Hub
+  heal:
+    usage: /heal [player]
+    aliases: []
+    description: Heal
+    permission: essentials.heal
+  speed:
+    usage: /speed <speed/reset> [player]
+    aliases: []
+    description: Speed
+    permission: essentials.speed
+  tell:
+    usage: /tell <player> <message>
+    aliases: [whisper, message, msg]
+    description: Private messaging
+  reply:
+    usage: /r <message>
+    aliases: [r]
+    description: Reply
+  teleport:
+    usage: /teleport <player> [player]
+    aliases: [tp]
+    description: Teleport player(s)
+    permission: essentials.teleport
+  teleporthere:
+    usage: /tphere <player>
+    aliases: [tphere]
+    description: Teleport player here
+    permission: essentials.teleporthere
+  skull:
+    usage: /skull <player>
+    aliases: [head, playerhead, playerskull]
+    description: Skull
+    permission: essentials.skull
+  back:
+    usage: /back
+    aliases: []
+    description: Back
+    permission: essentials.back
+  top:
+    usage: /top
+    aliases: []
+    description: Top
+    permission: essentials.top
+  day:
+    usage: /day
+    aliases: [daytime]
+    description: Day time
+    permission: essentials.day
+  night:
+    usage: /night
+    aliases: [nighttime]
+    description: Night time
+    permission: essentials.night
+  lag:
+    usage: /lag
+    aliases: [gc, mem, memory]
+    description: Server performance information
+    permission: essentials.lag
+  item:
+    usage: /item
+    aliases: [i, giveitem]
+    description: Item
+    permission: essentials.item
+  staffchat:
+    usage: /staffchat [message]
+    aliases: [sc]
+    description: StaffChat
+    permission: essentials.staffchat
+  vanish:
+    usage: /vanish [player]
+    aliases: [v, sv]
+    description: Vanish
+    permission: essentials.vanish
+  copyinventory:
+    usage: /ci <player> [player]
+    aliases: [ci]
+    description: Copy inventory
+    permission: essentials.copyinventory
+  crash:
+    usage: /crash <player> [times]
+    aliases: []
+    description: Crash someone's client
+    permission: op
+  christmastree:
+    usage: /christmastree <width> <height> <base>
+    aliases: [xmastree]
+    description: Spawn a beautiful christmas tree
+    permission: essentials.christmastree
+  armorstand:
+    usage: /armorstand [subcommand]
+    aliases: [as]
+    description: ArmorStand management
+    permission: essentials.armorstand
