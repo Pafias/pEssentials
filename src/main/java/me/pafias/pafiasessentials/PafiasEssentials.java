@@ -83,6 +83,7 @@ public final class PafiasEssentials extends JavaPlugin {
         getCommand("crash").setExecutor(new CrashCommand(plugin));
         getCommand("christmastree").setExecutor(new ChristmasTreeCommand());
         getCommand("armorstand").setExecutor(new ArmorstandCommand());
+        getCommand("identity").setExecutor(new IdentityCommand(plugin));
     }
 
     @Override
@@ -91,6 +92,7 @@ public final class PafiasEssentials extends JavaPlugin {
         getServer().getOnlinePlayers().stream()
                 .filter(p -> servicesManager.getVanishManager().isVanished(p))
                 .forEach(p -> servicesManager.getVanishManager().unvanish(p));
+        servicesManager.getUserManager().getUsers().stream().filter(User::hasIdentity).forEach(user -> user.setIdentity(user.getOriginalGameProfile()));
         if (getServer().getPluginManager().getPlugin("PlaceholderAPI") != null)
             servicesManager.getPAPIExpansion().unregister();
         plugin = null;

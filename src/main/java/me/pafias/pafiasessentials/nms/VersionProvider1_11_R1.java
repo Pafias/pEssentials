@@ -1,5 +1,6 @@
 package me.pafias.pafiasessentials.nms;
 
+import com.mojang.authlib.GameProfile;
 import net.minecraft.server.v1_11_R1.*;
 import org.bukkit.SkullType;
 import org.bukkit.Sound;
@@ -9,7 +10,28 @@ import org.bukkit.entity.ArmorStand;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
 
+import java.lang.reflect.Field;
+
 public class VersionProvider1_11_R1 implements NMSProvider {
+
+    @Override
+    public void setGameProfile(Player player, GameProfile profile) {
+        try {
+            CraftPlayer cp = ((CraftPlayer) player);
+            EntityLiving el = cp.getHandle();
+            Field gp2 = el.getClass().getSuperclass().getDeclaredField("bS");
+            gp2.setAccessible(true);
+            gp2.set(el, profile);
+            gp2.setAccessible(false);
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
+    }
+
+    @Override
+    public GameProfile getGameProfile(Player player) {
+        return ((CraftPlayer) player).getProfile();
+    }
 
     @Override
     public boolean isInvisible(LivingEntity entity) {

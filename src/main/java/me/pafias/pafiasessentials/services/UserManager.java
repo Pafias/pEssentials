@@ -31,7 +31,7 @@ public class UserManager {
     }
 
     public User getUser(String name) {
-        return users.stream().filter(u -> u.getName().equals(name)).findAny().orElse(null);
+        return users.stream().filter(u -> u.getName().toLowerCase().startsWith(name.toLowerCase().trim())).findAny().orElse(null);
     }
 
     public void addUser(Player player) {
