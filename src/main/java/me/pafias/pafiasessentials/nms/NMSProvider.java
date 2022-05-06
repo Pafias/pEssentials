@@ -1,5 +1,6 @@
 package me.pafias.pafiasessentials.nms;
 
+import com.mojang.authlib.GameProfile;
 import me.pafias.pafiasessentials.PafiasEssentials;
 import org.bukkit.Sound;
 import org.bukkit.entity.LivingEntity;
@@ -9,6 +10,9 @@ import org.bukkit.inventory.ItemStack;
 public interface NMSProvider {
 
     PafiasEssentials plugin = PafiasEssentials.get();
+
+    void setGameProfile(Player player, GameProfile profile);
+    GameProfile getGameProfile(Player player);
 
     boolean isInvisible(LivingEntity entity);
     void toggleInvisibility(LivingEntity entity);

@@ -143,3 +143,8 @@ commands:
     aliases: [as]
     description: ArmorStand management
     permission: essentials.armorstand
+  identity:
+    usage: /identity <reset/<name>> [skin player name] [-f]
+    aliases: [id]
+    description: Change your name and skin
+    permission: essentials.identity
