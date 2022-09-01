@@ -84,6 +84,7 @@ public final class PafiasEssentials extends JavaPlugin {
         getCommand("christmastree").setExecutor(new ChristmasTreeCommand());
         getCommand("armorstand").setExecutor(new ArmorstandCommand());
         getCommand("identity").setExecutor(new IdentityCommand(plugin));
+        getCommand("itemstack").setExecutor(new ItemstackCommand());
     }
 
     @Override

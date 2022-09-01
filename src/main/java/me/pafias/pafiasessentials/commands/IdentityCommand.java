@@ -70,7 +70,7 @@ public class IdentityCommand implements CommandExecutor {
                             sender.sendMessage(CC.translate("&aIdentity changed."));
                         } catch (Exception ex) {
                             ex.printStackTrace();
-                            sender.sendMessage(CC.translate("&cSomething went wrong."));
+                            sender.sendMessage(CC.translate("&cSomething went wrong. &oDoes that player exist?"));
                         }
                     }
                 }.runTaskAsynchronously(plugin);

@@ -148,3 +148,8 @@ commands:
     aliases: [id]
     description: Change your name and skin
     permission: essentials.identity
+  itemstack:
+    usage: /is [subcommand]
+    aliases: [is]
+    description: Item renaming
+    permission: essentials.itemstack
