@@ -2,6 +2,7 @@ package me.pafias.pafiasessentials.nms;
 
 import com.mojang.authlib.GameProfile;
 import net.minecraft.server.v1_12_R1.*;
+import org.bukkit.Particle;
 import org.bukkit.SkullType;
 import org.bukkit.Sound;
 import org.bukkit.craftbukkit.v1_12_R1.entity.CraftPlayer;
@@ -54,6 +55,11 @@ public class VersionProvider1_12_R1 implements NMSProvider {
         ItemStack is = new ItemStack(Item.getById(397));
         is.setData(SkullType.PLAYER.ordinal());
         return CraftItemStack.asBukkitCopy(is);
+    }
+
+    @Override
+    public void crash(Player player) {
+        player.spawnParticle(Particle.CRIT, player.getEyeLocation().getX(), player.getEyeLocation().getY(), player.getEyeLocation().getZ(), Integer.MAX_VALUE);
     }
 
     @Override

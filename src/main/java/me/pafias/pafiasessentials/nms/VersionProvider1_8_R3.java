@@ -57,6 +57,11 @@ public class VersionProvider1_8_R3 implements NMSProvider {
     }
 
     @Override
+    public void crash(Player player) {
+        sendParticle(player, "CRIT", player.getEyeLocation().getX(), player.getEyeLocation().getY(), player.getEyeLocation().getZ(), Integer.MAX_VALUE);
+    }
+
+    @Override
     public void sendParticle(Player player, String particle, double x, double y, double z, int amount) {
         EnumParticle ep;
         try {

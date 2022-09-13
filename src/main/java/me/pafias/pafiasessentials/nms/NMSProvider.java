@@ -19,6 +19,8 @@ public interface NMSProvider {
 
     ItemStack getSkull();
 
+    void crash(Player player);
+
     void sendParticle(Player player, String particle, double x, double y, double z, int amount);
 
     void playSound(Player player, Sound sound, double x, double y, double z, float volume, float pitch);

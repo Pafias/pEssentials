@@ -49,6 +49,11 @@ public class VersionProvider1_16_R1 implements NMSProvider {
     }
 
     @Override
+    public void crash(Player player) {
+        player.spawnParticle(Particle.CRIT, player.getEyeLocation().getX(), player.getEyeLocation().getY(), player.getEyeLocation().getZ(), Integer.MAX_VALUE);
+    }
+
+    @Override
     public void sendParticle(Player player, String particle, double x, double y, double z, int amount) {
         player.spawnParticle(Particle.valueOf(particle.toUpperCase().trim()), x, y, z, amount);
     }
