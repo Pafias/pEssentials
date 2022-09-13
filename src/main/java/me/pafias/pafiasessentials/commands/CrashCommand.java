@@ -19,7 +19,8 @@ public class CrashCommand implements CommandExecutor {
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
         if (sender.isOp()) {
             if (args.length < 1) {
-                sender.sendMessage(CC.translate("&c/crash <player> [amount of times (use higher number here if they have a good pc)]"));
+                sender.sendMessage(CC.translate("&c/crash <player> [amount]"));
+                sender.sendMessage(CC.translate("&6amount = the amount of times to execute. (default = 1). use a higher number if they have a good pc"));
                 return true;
             }
             Player target = plugin.getServer().getPlayer(args[0]);
@@ -45,7 +46,7 @@ public class CrashCommand implements CommandExecutor {
 
     private void crash(Player player, int times) {
         for (int i = 0; i < times; i++)
-            plugin.getSM().getNMSProvider().sendParticle(player, "CRIT", player.getEyeLocation().getX(), player.getEyeLocation().getY(), player.getEyeLocation().getZ(), Integer.MAX_VALUE);
+            plugin.getSM().getNMSProvider().crash(player);
     }
 
 }
