@@ -30,6 +30,34 @@
             </plugin>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-toolchains-plugin</artifactId>
+                <version>1.1</version>
+                <executions>
+                    <execution>
+                        <goals>
+                            <goal>toolchain</goal>
+                        </goals>
+                    </execution>
+                </executions>
+                <configuration>
+                    <toolchains>
+                        <jdk>
+                            <version>1.8</version>
+                            <vendor>Oracle</vendor>
+                        </jdk>
+                        <jdk>
+                            <version>11</version>
+                            <vendor>Amazon Corretto</vendor>
+                        </jdk>
+                        <jdk>
+                            <version>17</version>
+                            <vendor>Eclipse Adoptium</vendor>
+                        </jdk>
+                    </toolchains>
+                </configuration>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-shade-plugin</artifactId>
                 <version>3.2.4</version>
                 <executions>
@@ -74,9 +102,15 @@
 
     <dependencies>
         <dependency>
-            <groupId>com.destroystokyo.paper</groupId>
+            <groupId>io.papermc.paper</groupId>
             <artifactId>paper-api</artifactId>
-            <version>1.16.5-R0.1-SNAPSHOT</version>
+            <version>1.19.2-R0.1-SNAPSHOT</version>
+            <scope>provided</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.spigotmc...</groupId>
+            <artifactId>spigot</artifactId>
+            <version>1.8.8-R0.1-SNAPSHOT</version>
             <scope>provided</scope>
         </dependency>
         <dependency>
@@ -98,15 +132,15 @@
             <scope>provided</scope>
         </dependency>
         <dependency>
-            <groupId>org.spigotmc...</groupId>
+            <groupId>org.spigotmc....</groupId>
             <artifactId>spigot</artifactId>
-            <version>1.8.8-R0.1-SNAPSHOT</version>
+            <version>1.19.2-R0.1-SNAPSHOT</version>
             <scope>provided</scope>
         </dependency>
         <dependency>
             <groupId>com.comphenix.protocol</groupId>
             <artifactId>ProtocolLib</artifactId>
-            <version>4.8.0</version>
+            <version>5.0.0-SNAPSHOT</version>
             <scope>provided</scope>
         </dependency>
         <dependency>
