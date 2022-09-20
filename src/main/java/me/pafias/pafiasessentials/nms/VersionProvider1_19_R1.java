@@ -1,25 +1,27 @@
 package me.pafias.pafiasessentials.nms;
 
 import com.mojang.authlib.GameProfile;
-import net.minecraft.server.v1_16_R3.*;
+import net.minecraft.network.protocol.game.PacketPlayInSteerVehicle;
+import net.minecraft.world.entity.EntityLiving;
 import org.bukkit.Material;
 import org.bukkit.Particle;
 import org.bukkit.Sound;
-import org.bukkit.craftbukkit.v1_16_R3.entity.CraftPlayer;
+import org.bukkit.SoundCategory;
+import org.bukkit.craftbukkit.v1_19_R1.entity.CraftPlayer;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 
 import java.lang.reflect.Field;
 
-public class VersionProvider1_16_R1 implements NMSProvider {
+public class VersionProvider1_19_R1 implements NMSProvider {
 
     @Override
     public void setGameProfile(Player player, GameProfile profile) {
         try {
             CraftPlayer cp = ((CraftPlayer) player);
             EntityLiving el = cp.getHandle();
-            Field gp2 = el.getClass().getSuperclass().getDeclaredField("bJ");
+            Field gp2 = el.getClass().getSuperclass().getDeclaredField("ct");
             gp2.setAccessible(true);
             gp2.set(el, profile);
             gp2.setAccessible(false);
@@ -44,7 +46,7 @@ public class VersionProvider1_16_R1 implements NMSProvider {
     }
 
     @Override
-    public org.bukkit.inventory.ItemStack getSkull() {
+    public ItemStack getSkull() {
         return new ItemStack(Material.PLAYER_HEAD, 1);
     }
 
@@ -60,10 +62,7 @@ public class VersionProvider1_16_R1 implements NMSProvider {
 
     @Override
     public void playSound(Player player, Sound sound, double x, double y, double z, float volume, float pitch) {
-        PacketPlayOutCustomSoundEffect packet = new PacketPlayOutCustomSoundEffect(new MinecraftKey(sound.getKey().getKey()), SoundCategory.MASTER, new Vec3D(player.getEyeLocation().getX(), player.getEyeLocation().getY(), player.getEyeLocation().getZ()), volume, pitch);
-        CraftPlayer cp = (CraftPlayer) player;
-        EntityPlayer cep = cp.getHandle();
-        cep.playerConnection.sendPacket(packet);
+        player.playSound(player, sound, SoundCategory.MASTER, volume, pitch);
     }
 
     @Override
