@@ -17,6 +17,11 @@ import java.lang.reflect.Field;
 public class VersionProvider1_19_R1 implements NMSProvider {
 
     @Override
+    public int getPing(Player player) {
+        return player.getPing();
+    }
+
+    @Override
     public void setGameProfile(Player player, GameProfile profile) {
         try {
             CraftPlayer cp = ((CraftPlayer) player);

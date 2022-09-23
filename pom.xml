@@ -43,15 +43,15 @@
                     <toolchains>
                         <jdk>
                             <version>1.8</version>
-                            <vendor>Oracle</vendor>
+                            <vendor>Java</vendor>
                         </jdk>
                         <jdk>
                             <version>11</version>
-                            <vendor>Amazon Corretto</vendor>
+                            <vendor>Java</vendor>
                         </jdk>
                         <jdk>
                             <version>17</version>
-                            <vendor>Eclipse Adoptium</vendor>
+                            <vendor>Java</vendor>
                         </jdk>
                     </toolchains>
                 </configuration>

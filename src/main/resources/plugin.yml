@@ -4,7 +4,7 @@ main: me.pafias.pafiasessentials.PafiasEssentials
 softdepend: [ ProtocolLib ]
 author: Pafias
 description: PafiasEssentials
-api-version: 1.16
+api-version: 1.19
 commands:
   entity:
     usage: /e
