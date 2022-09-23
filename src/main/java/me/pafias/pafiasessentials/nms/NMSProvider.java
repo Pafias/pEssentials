@@ -11,6 +11,8 @@ public interface NMSProvider {
 
     PafiasEssentials plugin = PafiasEssentials.get();
 
+    int getPing(Player player);
+
     void setGameProfile(Player player, GameProfile profile);
     GameProfile getGameProfile(Player player);
 
