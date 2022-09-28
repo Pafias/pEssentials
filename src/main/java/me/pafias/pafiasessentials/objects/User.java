@@ -1,6 +1,7 @@
-package me.pafias.pafiasessentials;
+package me.pafias.pafiasessentials.objects;
 
 import com.mojang.authlib.GameProfile;
+import me.pafias.pafiasessentials.PafiasEssentials;
 import me.pafias.pafiasessentials.util.CC;
 import org.bukkit.Location;
 import org.bukkit.entity.Player;
@@ -35,7 +36,11 @@ public class User {
 
     public String getName() {
         if (newIdentity != null) return newIdentity.getName();
-        return this.player.getName();
+        return profile.getName();
+    }
+
+    public String getRealName() {
+        return profile.getName();
     }
 
     public boolean isInStaffChat() {

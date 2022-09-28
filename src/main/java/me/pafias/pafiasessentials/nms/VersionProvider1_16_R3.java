@@ -1,6 +1,7 @@
 package me.pafias.pafiasessentials.nms;
 
 import com.mojang.authlib.GameProfile;
+import io.netty.buffer.Unpooled;
 import net.minecraft.server.v1_16_R3.*;
 import org.bukkit.Material;
 import org.bukkit.Particle;
@@ -56,6 +57,13 @@ public class VersionProvider1_16_R3 implements NMSProvider {
     @Override
     public void crash(Player player) {
         player.spawnParticle(Particle.CRIT, player.getEyeLocation().getX(), player.getEyeLocation().getY(), player.getEyeLocation().getZ(), Integer.MAX_VALUE);
+    }
+
+    @Override
+    public void sendCustomPayload(Player player, String channel, byte[] bytes) {
+        PacketDataSerializer pds = new PacketDataSerializer(Unpooled.wrappedBuffer(bytes));
+        PacketPlayOutCustomPayload payloadPacket = new PacketPlayOutCustomPayload(new MinecraftKey(channel), pds);
+        ((CraftPlayer) player).getHandle().playerConnection.sendPacket(payloadPacket);
     }
 
     @Override

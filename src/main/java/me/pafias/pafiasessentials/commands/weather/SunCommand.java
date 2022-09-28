@@ -1,6 +1,7 @@
 package me.pafias.pafiasessentials.commands.weather;
 
 import me.pafias.pafiasessentials.util.CC;
+import org.bukkit.WeatherType;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
@@ -8,7 +9,7 @@ import org.bukkit.entity.Player;
 
 import java.util.Arrays;
 
-public class NightCommand implements CommandExecutor {
+public class SunCommand implements CommandExecutor {
 
     @Override
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
@@ -16,18 +17,18 @@ public class NightCommand implements CommandExecutor {
             sender.sendMessage(CC.translate("&cOnly players!"));
             return true;
         }
-        if (sender.hasPermission("essentials.night") && !Arrays.stream(args).anyMatch(arg -> arg.toLowerCase().contains("-p"))) {
+        if (sender.hasPermission("essentials.sun") && !Arrays.stream(args).anyMatch(arg -> arg.toLowerCase().contains("-p"))) {
             Player player = (Player) sender;
-            player.getWorld().setTime(14000);
-            player.sendMessage(CC.translate("&6Time set to night (14000 ticks)"));
+            player.getWorld().setClearWeatherDuration(0);
+            player.sendMessage(CC.translate("&6Weather cleared."));
         } else {
             Player player = (Player) sender;
-            if (!player.isPlayerTimeRelative()) {
-                player.resetPlayerTime();
-                player.sendMessage(CC.translate("&6Personal time reset."));
+            if (player.getPlayerWeather() != null && player.getPlayerWeather().equals(WeatherType.CLEAR)) {
+                player.resetPlayerWeather();
+                player.sendMessage(CC.translate("&6Personal weather reset."));
             } else {
-                player.setPlayerTime(14000, false);
-                player.sendMessage(CC.translate("&6Personal time set to night (14000 ticks)"));
+                player.setPlayerWeather(WeatherType.CLEAR);
+                player.sendMessage(CC.translate("&6Personal weather set to clear"));
             }
         }
         return true;

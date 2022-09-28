@@ -1,7 +1,7 @@
 package me.pafias.pafiasessentials.commands;
 
 import me.pafias.pafiasessentials.PafiasEssentials;
-import me.pafias.pafiasessentials.User;
+import me.pafias.pafiasessentials.objects.User;
 import me.pafias.pafiasessentials.util.CC;
 import org.bukkit.Material;
 import org.bukkit.command.Command;

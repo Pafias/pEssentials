@@ -1,3 +1,4 @@
 hub_server: 'hub'
 staffchat_format: '&e&l[STAFF] &r&9{player}&r: {message}'
 log4j_exploit_protection: true
+server_name: 'Minecraft Server'

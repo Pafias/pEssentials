@@ -1,9 +1,10 @@
-package me.pafias.pafiasessentials;
+package me.pafias.pafiasessentials.services;
 
+import me.pafias.pafiasessentials.PafiasEssentials;
+import me.pafias.pafiasessentials.client.labymod.LabymodManager;
+import me.pafias.pafiasessentials.objects.Variables;
 import me.pafias.pafiasessentials.nms.NMSProvider;
 import me.pafias.pafiasessentials.nms.NMSVersionProvider;
-import me.pafias.pafiasessentials.services.UserManager;
-import me.pafias.pafiasessentials.services.VanishManager;
 import me.pafias.pafiasessentials.util.PAPIExpansion;
 
 public class ServicesManager {
@@ -13,6 +14,7 @@ public class ServicesManager {
     public ServicesManager(PafiasEssentials plugin) {
         this.plugin = plugin;
         userManager = new UserManager(plugin);
+        labymodManager = new LabymodManager(plugin);
         variables = new Variables(plugin);
         if (plugin.getServer().getPluginManager().getPlugin("PlaceholderAPI") != null)
             papiExpansion = new PAPIExpansion(plugin);
@@ -30,6 +32,12 @@ public class ServicesManager {
 
     public UserManager getUserManager() {
         return userManager;
+    }
+
+    private final LabymodManager labymodManager;
+
+    public LabymodManager getLabymodManager() {
+        return labymodManager;
     }
 
     private final Variables variables;

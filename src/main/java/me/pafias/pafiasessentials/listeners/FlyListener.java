@@ -5,7 +5,7 @@ import com.comphenix.protocol.ProtocolLibrary;
 import com.comphenix.protocol.events.PacketAdapter;
 import com.comphenix.protocol.events.PacketEvent;
 import me.pafias.pafiasessentials.PafiasEssentials;
-import me.pafias.pafiasessentials.User;
+import me.pafias.pafiasessentials.objects.User;
 import me.pafias.pafiasessentials.nms.NMSProvider;
 import org.bukkit.entity.Entity;
 import org.bukkit.event.Listener;

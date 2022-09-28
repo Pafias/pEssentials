@@ -1,7 +1,7 @@
 package me.pafias.pafiasessentials.listeners;
 
 import me.pafias.pafiasessentials.PafiasEssentials;
-import me.pafias.pafiasessentials.User;
+import me.pafias.pafiasessentials.objects.User;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerTeleportEvent;

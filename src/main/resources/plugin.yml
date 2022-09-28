@@ -1,7 +1,7 @@
 name: PafiasEssentials
 version: ${project.version}
 main: me.pafias.pafiasessentials.PafiasEssentials
-softdepend: [ ProtocolLib ]
+softdepend: [ ProtocolLib, PlaceholderAPI ]
 author: Pafias
 description: PafiasEssentials
 api-version: 1.19
@@ -153,3 +153,23 @@ commands:
     aliases: [is]
     description: Item renaming
     permission: essentials.itemstack
+  whois:
+    usage: /whois <player>
+    aliases: [seen]
+    description: Information about someone
+    permission: essentials.whois
+  sun:
+    usage: /sun [-p]
+    aliases: [sunny]
+    description: Clear the weather
+    permission: essentials.sun
+  rain:
+    usage: /rain [-p]
+    aliases: [raining, storm, storming]
+    description: Let it rain
+    permission: essentials.rain
+  knockback:
+    usage: /knockback <reset/x> [y] [z]
+    aliases: [kb]
+    description: Knockback management
+    permission: essentials.knockback

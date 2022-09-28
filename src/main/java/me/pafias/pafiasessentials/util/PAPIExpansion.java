@@ -2,7 +2,7 @@ package me.pafias.pafiasessentials.util;
 
 import me.clip.placeholderapi.expansion.PlaceholderExpansion;
 import me.pafias.pafiasessentials.PafiasEssentials;
-import me.pafias.pafiasessentials.User;
+import me.pafias.pafiasessentials.objects.User;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 
