@@ -2,7 +2,7 @@ package me.pafias.pafiasessentials.commands;
 
 import com.mojang.authlib.GameProfile;
 import me.pafias.pafiasessentials.PafiasEssentials;
-import me.pafias.pafiasessentials.User;
+import me.pafias.pafiasessentials.objects.User;
 import me.pafias.pafiasessentials.util.CC;
 import me.pafias.pafiasessentials.util.GameProfileBuilder;
 import me.pafias.pafiasessentials.util.UUIDFetcher;

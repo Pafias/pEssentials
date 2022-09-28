@@ -13,7 +13,11 @@ import me.pafias.pafiasessentials.commands.teleport.TeleportCommand;
 import me.pafias.pafiasessentials.commands.teleport.TphereCommand;
 import me.pafias.pafiasessentials.commands.weather.DayCommand;
 import me.pafias.pafiasessentials.commands.weather.NightCommand;
+import me.pafias.pafiasessentials.commands.weather.RainCommand;
+import me.pafias.pafiasessentials.commands.weather.SunCommand;
 import me.pafias.pafiasessentials.listeners.*;
+import me.pafias.pafiasessentials.objects.User;
+import me.pafias.pafiasessentials.services.ServicesManager;
 import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.java.JavaPlugin;
 
@@ -53,6 +57,7 @@ public final class PafiasEssentials extends JavaPlugin {
         pm.registerEvents(new ChatListener(plugin), plugin);
         pm.registerEvents(new VanishListener(plugin), plugin);
         pm.registerEvents(new Log4j(plugin), plugin);
+        pm.registerEvents(new KnockbackListener(), plugin);
 
         getCommand("entity").setExecutor(new EntityCommand(plugin));
         getCommand("sound").setExecutor(new SoundCommand(plugin));
@@ -85,6 +90,10 @@ public final class PafiasEssentials extends JavaPlugin {
         getCommand("armorstand").setExecutor(new ArmorstandCommand());
         getCommand("identity").setExecutor(new IdentityCommand(plugin));
         getCommand("itemstack").setExecutor(new ItemstackCommand());
+        getCommand("whois").setExecutor(new WhoisCommand(plugin));
+        getCommand("sun").setExecutor(new SunCommand());
+        getCommand("rain").setExecutor(new RainCommand());
+        getCommand("knockback").setExecutor(new KnockbackCommand());
     }
 
     @Override
@@ -97,6 +106,15 @@ public final class PafiasEssentials extends JavaPlugin {
         if (getServer().getPluginManager().getPlugin("PlaceholderAPI") != null)
             servicesManager.getPAPIExpansion().unregister();
         plugin = null;
+    }
+
+    public double parseVersion() {
+        String version = getServer().getBukkitVersion();
+        String[] var = version.split("\\.", 2);
+        String[] var2 = var[1].split("-");
+        String var3 = var2[0];
+        double d = Double.parseDouble(var3);
+        return d;
     }
 
 }
