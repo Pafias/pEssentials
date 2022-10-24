@@ -19,28 +19,28 @@ public class ReplyCommand implements CommandExecutor {
     @Override
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
         if (args.length < 1) {
-            sender.sendMessage(CC.translate("&c/" + label + " <message>"));
+            sender.sendMessage(CC.t("&c/" + label + " <message>"));
             return true;
         } else {
             if (!(sender instanceof Player)) {
-                sender.sendMessage(CC.translate("&cOnly players!"));
+                sender.sendMessage(CC.t("&cOnly players!"));
                 return true;
             }
             User player = plugin.getSM().getUserManager().getUser((Player) sender);
             if (!TellCommand.msg.containsKey(player.getUUID())) {
-                player.getPlayer().sendMessage(CC.translate("&cYou haven't messaged anybody recently!"));
+                player.getPlayer().sendMessage(CC.t("&cYou haven't messaged anybody recently!"));
                 return true;
             }
             User target = plugin.getSM().getUserManager().getUser(TellCommand.msg.get(player.getUUID()));
-            if (target == null) {
-                sender.sendMessage(CC.translate("&cThe person you were chatting with is no longer online!"));
+            if (target == null || target.isVanished()) {
+                sender.sendMessage(CC.t("&cThe person you were chatting with is no longer online!"));
                 return true;
             }
             StringBuilder sb = new StringBuilder();
             for (String arg : args) sb.append(arg).append(" ");
             String message = sb.toString();
-            target.getPlayer().sendMessage(CC.translate("&e[Tell] &c" + player.getName() + "&6: &r" + message));
-            player.getPlayer().sendMessage(CC.translate("&e[Tell] &c" + player.getName() + " &6-> &c" + target.getName() + " &6: &r" + message));
+            target.getPlayer().sendMessage(CC.t("&e[Tell] &c" + player.getName() + "&6: &r" + message));
+            player.getPlayer().sendMessage(CC.t("&e[Tell] &c" + player.getName() + " &6-> &c" + target.getName() + " &6: &r" + message));
         }
         return true;
     }

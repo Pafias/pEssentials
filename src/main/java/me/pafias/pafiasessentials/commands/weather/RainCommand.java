@@ -14,21 +14,21 @@ public class RainCommand implements CommandExecutor {
     @Override
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
         if (!(sender instanceof Player)) {
-            sender.sendMessage(CC.translate("&cOnly players!"));
+            sender.sendMessage(CC.t("&cOnly players!"));
             return true;
         }
         if (sender.hasPermission("essentials.rain") && !Arrays.stream(args).anyMatch(arg -> arg.toLowerCase().contains("-p"))) {
             Player player = (Player) sender;
             player.getWorld().setStorm(true);
-            player.sendMessage(CC.translate("&6Weather set to storming (rain)."));
+            player.sendMessage(CC.t("&6Weather set to storming (rain)."));
         } else {
             Player player = (Player) sender;
             if (player.getPlayerWeather() != null && player.getPlayerWeather().equals(WeatherType.DOWNFALL)) {
                 player.resetPlayerWeather();
-                player.sendMessage(CC.translate("&6Personal weather reset."));
+                player.sendMessage(CC.t("&6Personal weather reset."));
             } else {
                 player.setPlayerWeather(WeatherType.DOWNFALL);
-                player.sendMessage(CC.translate("&6Personal weather set to raining"));
+                player.sendMessage(CC.t("&6Personal weather set to raining"));
             }
         }
         return true;

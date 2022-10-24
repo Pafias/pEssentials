@@ -1,43 +1,43 @@
 package me.pafias.pafiasessentials.client.labymod.objects;
 
-import com.google.gson.JsonParser;
+import com.google.gson.JsonArray;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
 import me.pafias.pafiasessentials.PafiasEssentials;
 import me.pafias.pafiasessentials.client.labymod.LabyModProtocol;
 import me.pafias.pafiasessentials.objects.User;
 import org.bukkit.entity.Player;
-import org.json.JSONArray;
-import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.List;
 
 public class LabymodUser {
 
-    private User user;
+    private final User user;
 
-    private String version;
-    private boolean ccp;
-    private boolean shadow;
-    private List<Addon> addons = new ArrayList<>();
-    private List<Mod> mods = new ArrayList<>();
+    private final String version;
+    private final boolean ccp;
+    private final boolean shadow;
+    private final List<Addon> addons = new ArrayList<>();
+    private final List<Mod> mods = new ArrayList<>();
 
-    public LabymodUser(Player player, JSONObject json) {
+    public LabymodUser(Player player, JsonElement json) {
         user = PafiasEssentials.get().getSM().getUserManager().getUser(player);
-        version = json.getString("version");
-        ccp = json.getJSONObject("ccp").getBoolean("enabled");
-        shadow = json.getJSONObject("shadow").getBoolean("enabled");
-        if (json.has("addons")) {
-            JSONArray a = json.getJSONArray("addons");
-            for (int i = 0; i < a.length(); i++) {
-                JSONObject addon = a.getJSONObject(i);
-                addons.add(new Addon(addon.getString("uuid"), addon.getString("name")));
+        version = json.getAsJsonObject().get("version").getAsString();
+        ccp = json.getAsJsonObject().get("ccp").getAsJsonObject().get("enabled").getAsBoolean();
+        shadow = json.getAsJsonObject().get("shadow").getAsJsonObject().get("enabled").getAsBoolean();
+        if (json.getAsJsonObject().has("addons")) {
+            JsonArray a = json.getAsJsonObject().get("addons").getAsJsonArray();
+            for (int i = 0; i < a.size(); i++) {
+                JsonObject addon = a.get(i).getAsJsonObject();
+                addons.add(new Addon(addon.get("uuid").getAsString(), addon.get("name").getAsString()));
             }
         }
-        if (json.has("mods")) {
-            JSONArray m = json.getJSONArray("mods");
-            for (int i = 0; i < m.length(); i++) {
-                JSONObject mod = m.getJSONObject(i);
-                mods.add(new Mod(mod.getString("hash"), mod.getString("name")));
+        if (json.getAsJsonObject().has("mods")) {
+            JsonArray m = json.getAsJsonObject().get("mods").getAsJsonArray();
+            for (int i = 0; i < m.size(); i++) {
+                JsonObject mod = m.get(i).getAsJsonObject();
+                mods.add(new Mod(mod.get("hash").getAsString(), mod.get("name").getAsString()));
             }
         }
     }
@@ -66,8 +66,8 @@ public class LabymodUser {
         return mods;
     }
 
-    public void sendLabyMessage(Player player, String key, JSONObject json) {
-        LabyModProtocol.sendLabyModMessage(player, key, new JsonParser().parse(json.toString()));
+    public void sendLabyMessage(Player player, String key, JsonElement json) {
+        LabyModProtocol.sendLabyModMessage(player, key, json);
     }
 
 }

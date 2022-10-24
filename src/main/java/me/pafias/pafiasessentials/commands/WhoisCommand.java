@@ -28,7 +28,7 @@ public class WhoisCommand implements CommandExecutor {
     public boolean onCommand(@NotNull CommandSender sender, @NotNull Command command, @NotNull String label, @NotNull String[] args) {
         if (sender.hasPermission("essentials.whois")) {
             if (args.length == 0) {
-                sender.sendMessage(CC.translate("&c/whois <player>"));
+                sender.sendMessage(CC.t("&c/whois <player>"));
                 return true;
             } else {
                 if (plugin.getServer().getPlayer(args[0]) == null) {
@@ -37,14 +37,14 @@ public class WhoisCommand implements CommandExecutor {
                         public void run() {
                             OfflinePlayer player = plugin.getServer().getOfflinePlayer(args[0]);
                             if (!player.hasPlayedBefore()) {
-                                sender.sendMessage(CC.translate("That player has never been online before."));
+                                sender.sendMessage(CC.t("That player has never been online before."));
                                 return;
                             } else {
                                 sender.sendMessage("");
-                                sender.sendMessage(CC.translate("&6UUID: &7" + player.getUniqueId()));
-                                sender.sendMessage(CC.translate("&6Name: &7" + player.getName()));
-                                sender.sendMessage(CC.translate("&6First login: &7" + new SimpleDateFormat("dd MM yyyy @ HH:mm:ss").format(new Date(player.getFirstPlayed()))));
-                                sender.sendMessage(CC.translate("&6Last seen: &7" + new SimpleDateFormat("dd MM yyyy @ HH:mm:ss").format(new Date(player.getLastSeen()))));
+                                sender.sendMessage(CC.t("&6UUID: &7" + player.getUniqueId()));
+                                sender.sendMessage(CC.t("&6Name: &7" + player.getName()));
+                                sender.sendMessage(CC.t("&6First login: &7" + new SimpleDateFormat("dd MM yyyy @ HH:mm:ss").format(new Date(player.getFirstPlayed()))));
+                                sender.sendMessage(CC.t("&6Last seen: &7" + new SimpleDateFormat("dd MM yyyy @ HH:mm:ss").format(new Date(player.getLastSeen()))));
                                 sender.sendMessage("");
                             }
                         }
@@ -52,38 +52,38 @@ public class WhoisCommand implements CommandExecutor {
                 } else {
                     User user = plugin.getSM().getUserManager().getUser(args[0]);
                     sender.sendMessage("");
-                    sender.sendMessage(CC.translate("&6UUID: &7" + user.getUUID().toString()));
+                    sender.sendMessage(CC.t("&6UUID: &7" + user.getUUID().toString()));
                     if (user.hasIdentity()) {
-                        sender.sendMessage(CC.translate("&6Real name: &7" + user.getRealName()));
-                        sender.sendMessage(CC.translate("&6Disguised name: &7" + user.getName()));
+                        sender.sendMessage(CC.t("&6Real name: &7" + user.getRealName()));
+                        sender.sendMessage(CC.t("&6Disguised name: &7" + user.getName()));
                     } else {
-                        sender.sendMessage(CC.translate("&6Name: &7" + user.getName()));
+                        sender.sendMessage(CC.t("&6Name: &7" + user.getName()));
                     }
-                    sender.sendMessage(CC.translate("&6First login: &7" + new SimpleDateFormat("dd MM yyyy @ HH:mm:ss").format(new Date(user.getPlayer().getFirstPlayed()))));
-                    sender.sendMessage(CC.translate("&6Ping: &7" + plugin.getSM().getNMSProvider().getPing(user.getPlayer())));
+                    sender.sendMessage(CC.t("&6First login: &7" + new SimpleDateFormat("dd MM yyyy @ HH:mm:ss").format(new Date(user.getPlayer().getFirstPlayed()))));
+                    sender.sendMessage(CC.t("&6Ping: &7" + plugin.getSM().getNMSProvider().getPing(user.getPlayer())));
                     if (RandomUtils.isRecentVersion()) {
-                        sender.sendMessage(CC.translate("&6Client options:"));
-                        sender.sendMessage(CC.translate("  &b- Language: &7" + user.getPlayer().getClientOption(ClientOption.LOCALE)));
-                        sender.sendMessage(CC.translate("  &b- Chat visibility: &7" + user.getPlayer().getClientOption(ClientOption.CHAT_VISIBILITY).name().toLowerCase()));
-                        sender.sendMessage(CC.translate("  &b- View distance: &7" + user.getPlayer().getClientOption(ClientOption.VIEW_DISTANCE)));
+                        sender.sendMessage(CC.t("&6Client options:"));
+                        sender.sendMessage(CC.t("  &b- Language: &7" + user.getPlayer().getClientOption(ClientOption.LOCALE)));
+                        sender.sendMessage(CC.t("  &b- Chat visibility: &7" + user.getPlayer().getClientOption(ClientOption.CHAT_VISIBILITY).name().toLowerCase()));
+                        sender.sendMessage(CC.t("  &b- View distance: &7" + user.getPlayer().getClientOption(ClientOption.VIEW_DISTANCE)));
                     }
                     if (plugin.getSM().getLabymodManager().usingLabymod(user)) {
-                        sender.sendMessage(CC.translate("&6LabyMod: &ayes"));
+                        sender.sendMessage(CC.t("&6LabyMod: &ayes"));
                         LabymodUser lu = plugin.getSM().getLabymodManager().getLabymodUser(user);
                         if (lu != null) {
                             if (!lu.getAddons().isEmpty()) {
                                 StringBuilder sb = new StringBuilder();
                                 lu.getAddons().forEach(addon -> {
-                                    sb.append(addon.getName()).append(lu.getAddons().indexOf(addon) == lu.getAddons().size() - 1 ? "" : CC.translate("&c, &7"));
+                                    sb.append(addon.getName()).append(lu.getAddons().indexOf(addon) == lu.getAddons().size() - 1 ? "" : CC.t("&c, &7"));
                                 });
-                                sender.sendMessage(CC.translate("  &b- Addons: &7" + sb.toString()));
+                                sender.sendMessage(CC.t("  &b- Addons: &7" + sb.toString()));
                             }
                             if (!lu.getMods().isEmpty()) {
                                 StringBuilder sb = new StringBuilder();
                                 lu.getMods().forEach(mod -> {
-                                    sb.append(mod.getName()).append(lu.getMods().indexOf(mod) == lu.getMods().size() - 1 ? "" : CC.translate("&c, &7"));
+                                    sb.append(mod.getName()).append(lu.getMods().indexOf(mod) == lu.getMods().size() - 1 ? "" : CC.t("&c, &7"));
                                 });
-                                sender.sendMessage(CC.translate("  &b- Mods: &7" + sb.toString()));
+                                sender.sendMessage(CC.t("  &b- Mods: &7" + sb.toString()));
                             }
                         }
                     }

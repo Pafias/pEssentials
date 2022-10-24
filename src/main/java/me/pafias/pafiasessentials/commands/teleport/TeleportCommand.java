@@ -20,31 +20,31 @@ public class TeleportCommand implements CommandExecutor {
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
         if (sender.hasPermission("essentials.teleport")) {
             if (args.length == 0) {
-                sender.sendMessage(CC.translate("&c/" + label + " <player> [player]"));
+                sender.sendMessage(CC.t("&c/" + label + " <player> [player]"));
                 return true;
             } else if (args.length == 1) {
                 if (!(sender instanceof Player)) {
-                    sender.sendMessage(CC.translate("&cOnly players!"));
+                    sender.sendMessage(CC.t("&cOnly players!"));
                     return true;
                 }
                 User player = plugin.getSM().getUserManager().getUser((Player) sender);
                 User target = plugin.getSM().getUserManager().getUser(args[0]);
                 if (target == null) {
-                    sender.sendMessage(CC.translate("&cPlayer not found!"));
+                    sender.sendMessage(CC.t("&cPlayer not found!"));
                     return true;
                 }
                 player.getPlayer().teleport(target.getPlayer());
-                sender.sendMessage(CC.translate("&6Teleported to &d" + target.getName()));
+                sender.sendMessage(CC.t("&6Teleported to &d" + target.getName()));
                 return true;
             } else {
                 User player1 = plugin.getSM().getUserManager().getUser(args[0]);
                 User player2 = plugin.getSM().getUserManager().getUser(args[1]);
                 if (player1 == null || player2 == null) {
-                    sender.sendMessage(CC.translate("&cPlayer not found!"));
+                    sender.sendMessage(CC.t("&cPlayer not found!"));
                     return true;
                 }
                 player1.getPlayer().teleport(player2.getPlayer());
-                sender.sendMessage(CC.translate("&6Teleported &d" + player1.getName() + " &6to &d" + player2.getName()));
+                sender.sendMessage(CC.t("&6Teleported &d" + player1.getName() + " &6to &d" + player2.getName()));
                 return true;
             }
         }

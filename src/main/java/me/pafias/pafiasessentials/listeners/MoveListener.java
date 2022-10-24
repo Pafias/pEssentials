@@ -55,13 +55,13 @@ public class MoveListener implements Listener {
                             double ii = i + 0.1D;
                             speed.replace(user.getUUID(), ii);
                             DecimalFormat df = new DecimalFormat("#.##");
-                            user.getPlayer().sendTitle("", CC.translate("&6Speed: &7" + df.format(ii)), 2, 10, 5);
+                            user.getPlayer().sendTitle("", CC.t("&6Speed: &7" + df.format(ii)), 2, 10, 5);
                         }
                         if (nms.steeringLeft(packet)) {
                             double ii = i - 0.1D;
                             speed.replace(user.getUUID(), ii);
                             DecimalFormat df = new DecimalFormat("#.##");
-                            user.getPlayer().sendTitle("", CC.translate("&6Speed: &7" + df.format(ii)), 2, 10, 5);
+                            user.getPlayer().sendTitle("", CC.t("&6Speed: &7" + df.format(ii)), 2, 10, 5);
                         }
                         entity.setVelocity(v);
                     } catch (Exception ex) {

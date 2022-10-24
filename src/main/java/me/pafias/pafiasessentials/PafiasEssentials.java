@@ -47,17 +47,21 @@ public final class PafiasEssentials extends JavaPlugin {
     private void register() {
         PluginManager pm = getServer().getPluginManager();
 
-        if (pm.getPlugin("PlaceholderAPI") != null)
+        if (pm.isPluginEnabled("PlaceholderAPI"))
             servicesManager.getPAPIExpansion().register();
 
         pm.registerEvents(new JoinQuitListener(plugin), plugin);
-        pm.registerEvents(new FlyListener(plugin), plugin);
-        pm.registerEvents(new MoveListener(plugin), plugin);
+        if (pm.isPluginEnabled("ProtocolLib")) {
+            pm.registerEvents(new FlyListener(plugin), plugin);
+            pm.registerEvents(new MoveListener(plugin), plugin);
+            pm.registerEvents(new VanishListener(plugin), plugin);
+        }
         pm.registerEvents(new TeleportListener(plugin), plugin);
         pm.registerEvents(new ChatListener(plugin), plugin);
-        pm.registerEvents(new VanishListener(plugin), plugin);
         pm.registerEvents(new Log4j(plugin), plugin);
         pm.registerEvents(new KnockbackListener(), plugin);
+        RickrollCommand rickroll = new RickrollCommand(plugin);
+        pm.registerEvents(rickroll, plugin);
 
         getCommand("entity").setExecutor(new EntityCommand(plugin));
         getCommand("sound").setExecutor(new SoundCommand(plugin));
@@ -94,6 +98,11 @@ public final class PafiasEssentials extends JavaPlugin {
         getCommand("sun").setExecutor(new SunCommand());
         getCommand("rain").setExecutor(new RainCommand());
         getCommand("knockback").setExecutor(new KnockbackCommand());
+        getCommand("feed").setExecutor(new FeedCommand(plugin));
+        getCommand("sudo").setExecutor(new SudoCommand(plugin));
+        getCommand("russianroulette").setExecutor(new RussianrouletteCommand(plugin));
+        getCommand("rickroll").setExecutor(rickroll);
+        getCommand("launch").setExecutor(new LaunchCommand(plugin));
     }
 
     @Override

@@ -23,15 +23,15 @@ public class SoundCommand implements CommandExecutor {
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
         if (sender.hasPermission("essentials.sound")) {
             if (args.length == 0) {
-                sender.sendMessage(CC.translate("&2/" + label + " play <player/all> <sound> [omnipresent] [volume] [pitch] &f- Plays a sound"));
-                sender.sendMessage(CC.translate("&2/" + label + " stop <player/all> &f- Stops a sound"));
+                sender.sendMessage(CC.t("&2/" + label + " play <player/all> <sound> [omnipresent] [volume] [pitch] &f- Plays a sound"));
+                sender.sendMessage(CC.t("&2/" + label + " stop <player/all> &f- Stops a sound"));
                 return true;
             }
             if (args[0].equalsIgnoreCase("play") && sender.hasPermission("essentials.sound.play")) {
                 Set<Player> target;
                 Sound sound;
                 if (args.length < 3) {
-                    sender.sendMessage(CC.translate("&c/" + label + " " + args[0] + " play <player/all> <sound> [omnipresent] [volume] [pitch]"));
+                    sender.sendMessage(CC.t("&c/" + label + " " + args[0] + " play <player/all> <sound> [omnipresent] [volume] [pitch]"));
                     return true;
                 }
                 if (args[1].equalsIgnoreCase("all") || args[1].equalsIgnoreCase("*")) {
@@ -40,13 +40,13 @@ public class SoundCommand implements CommandExecutor {
                     target = new HashSet<>(Collections.singleton(plugin.getServer().getPlayer(args[1])));
                 }
                 if (target == null || target.isEmpty()) {
-                    sender.sendMessage(CC.translate("&cPlayer not found!"));
+                    sender.sendMessage(CC.t("&cPlayer not found!"));
                     return true;
                 }
                 try {
                     sound = Sound.valueOf(args[2].toUpperCase());
                 } catch (IllegalArgumentException ex) {
-                    sender.sendMessage(CC.translate("&cInvalid sound!"));
+                    sender.sendMessage(CC.t("&cInvalid sound!"));
                     return true;
                 }
                 boolean omnipresent = false;
@@ -54,7 +54,7 @@ public class SoundCommand implements CommandExecutor {
                     try {
                         omnipresent = Boolean.parseBoolean(args[3]);
                     } catch (IllegalArgumentException ex) {
-                        sender.sendMessage(CC.translate("&cInvalid omnipresent value! Use 'true' or 'false'"));
+                        sender.sendMessage(CC.t("&cInvalid omnipresent value! Use 'true' or 'false'"));
                         return true;
                     }
                 float volume = omnipresent ? Float.MAX_VALUE : 1.0F;
@@ -62,7 +62,7 @@ public class SoundCommand implements CommandExecutor {
                     try {
                         volume = Float.parseFloat(args[4]);
                     } catch (NumberFormatException ex) {
-                        sender.sendMessage(CC.translate("&cInvalid volume level!"));
+                        sender.sendMessage(CC.t("&cInvalid volume level!"));
                         return true;
                     }
                 float pitch = 1.0F;
@@ -70,7 +70,7 @@ public class SoundCommand implements CommandExecutor {
                     try {
                         pitch = Float.parseFloat(args[5]);
                     } catch (NumberFormatException ex) {
-                        sender.sendMessage(CC.translate("&cInvalid pitch level!"));
+                        sender.sendMessage(CC.t("&cInvalid pitch level!"));
                         return true;
                     }
                 for (Player t : target) {
@@ -80,11 +80,11 @@ public class SoundCommand implements CommandExecutor {
                     }
                     t.playSound(t.getEyeLocation(), sound, volume, pitch);
                 }
-                sender.sendMessage(CC.translate("&aSound played!"));
+                sender.sendMessage(CC.t("&aSound played!"));
             } else if (args[0].equalsIgnoreCase("stop") && sender.hasPermission("essentials.sound.stop")) {
                 Set<Player> target;
                 if (args.length < 2) {
-                    sender.sendMessage(CC.translate("&c/" + label + " " + args[0] + " stop <player/all>"));
+                    sender.sendMessage(CC.t("&c/" + label + " " + args[0] + " stop <player/all>"));
                     return true;
                 }
                 if (args[1].equalsIgnoreCase("all") || args[1].equalsIgnoreCase("*")) {
@@ -93,14 +93,14 @@ public class SoundCommand implements CommandExecutor {
                     target = new HashSet<>(Collections.singleton(plugin.getServer().getPlayer(args[1])));
                 }
                 if (target == null || target.isEmpty()) {
-                    sender.sendMessage(CC.translate("&cPlayer not found!"));
+                    sender.sendMessage(CC.t("&cPlayer not found!"));
                     return true;
                 }
                 for (Player t : target) {
                     for (Sound sound : Sound.values())
                         t.stopSound(sound);
                 }
-                sender.sendMessage(CC.translate("&aSound(s) stopped!"));
+                sender.sendMessage(CC.t("&aSound(s) stopped!"));
             }
         }
         return true;

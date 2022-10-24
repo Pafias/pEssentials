@@ -1,5 +1,7 @@
 package me.pafias.pafiasessentials.client.labymod;
 
+import com.google.gson.JsonObject;
+import com.google.gson.JsonParser;
 import io.netty.buffer.ByteBuf;
 import io.netty.buffer.Unpooled;
 import me.pafias.pafiasessentials.PafiasEssentials;
@@ -9,7 +11,6 @@ import org.bukkit.entity.Player;
 import org.bukkit.plugin.messaging.PluginMessageListener;
 import org.bukkit.scheduler.BukkitRunnable;
 import org.jetbrains.annotations.NotNull;
-import org.json.JSONObject;
 
 import java.io.ByteArrayInputStream;
 import java.io.DataInputStream;
@@ -56,16 +57,16 @@ public class LabymodManager implements PluginMessageListener {
         String key = LabyModProtocol.readString(buf, Short.MAX_VALUE);
         String json = LabyModProtocol.readString(buf, Short.MAX_VALUE);
         if (key.equals("INFO")) {
-            LabymodUser user = new LabymodUser(player, new JSONObject(json));
+            LabymodUser user = new LabymodUser(player, new JsonParser().parse(json));
             labymodUsers.add(user);
             new BukkitRunnable() {
                 @Override
                 public void run() {
-                    JSONObject jo = new JSONObject();
-                    jo.put("hasGame", true);
-                    jo.put("game_mode", plugin.getSM().getVariables().serverName);
-                    jo.put("game_startTime", System.currentTimeMillis());
-                    jo.put("game_endTime", 0);
+                    JsonObject jo = new JsonObject();
+                    jo.addProperty("hasGame", true);
+                    jo.addProperty("game_mode", plugin.getSM().getVariables().serverName);
+                    jo.addProperty("game_startTime", System.currentTimeMillis());
+                    jo.addProperty("game_endTime", 0);
                     user.sendLabyMessage(user.getUser().getPlayer(), "discord_rpc", jo);
                 }
             }.runTaskLaterAsynchronously(plugin, (3 * 20));

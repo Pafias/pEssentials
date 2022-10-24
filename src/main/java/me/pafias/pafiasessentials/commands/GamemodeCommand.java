@@ -20,7 +20,7 @@ public class GamemodeCommand implements CommandExecutor {
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
         if (sender.hasPermission("essentials.gamemode")) {
             if (args.length == 0) {
-                sender.sendMessage(CC.translate("&c/" + label + " <gamemode> [player]"));
+                sender.sendMessage(CC.t("&c/" + label + " <gamemode> [player]"));
                 return true;
             } else if (args.length == 1) {
                 GameMode gamemode = null;
@@ -34,20 +34,20 @@ public class GamemodeCommand implements CommandExecutor {
                                 break;
                             }
                     } catch (IllegalArgumentException exx) {
-                        sender.sendMessage(CC.translate("&cInvalid gamemode!"));
+                        sender.sendMessage(CC.t("&cInvalid gamemode!"));
                         return true;
                     }
                 }
                 if (gamemode == null) {
-                    sender.sendMessage(CC.translate("&cInvalid gamemode!"));
+                    sender.sendMessage(CC.t("&cInvalid gamemode!"));
                     return true;
                 }
                 ((Player) sender).setGameMode(gamemode);
-                sender.sendMessage(CC.translate("&6Gamemode: &a" + gamemode.name().toLowerCase()));
+                sender.sendMessage(CC.t("&6Gamemode: &a" + gamemode.name().toLowerCase()));
             } else {
                 Player target = plugin.getServer().getPlayer(args[1]);
                 if (target == null) {
-                    sender.sendMessage(CC.translate("&cPlayer not found!"));
+                    sender.sendMessage(CC.t("&cPlayer not found!"));
                     return true;
                 }
                 GameMode gamemode = null;
@@ -61,17 +61,17 @@ public class GamemodeCommand implements CommandExecutor {
                                 break;
                             }
                     } catch (IllegalArgumentException exx) {
-                        sender.sendMessage(CC.translate("&cInvalid gamemode!"));
+                        sender.sendMessage(CC.t("&cInvalid gamemode!"));
                         return true;
                     }
                 }
                 if (gamemode == null) {
-                    sender.sendMessage(CC.translate("&cInvalid gamemode!"));
+                    sender.sendMessage(CC.t("&cInvalid gamemode!"));
                     return true;
                 }
                 target.setGameMode(gamemode);
-                target.sendMessage(CC.translate("&6Gamemode: &a" + gamemode.name().toLowerCase()));
-                sender.sendMessage(CC.translate("&7" + target.getName() + "&6 " + (target.getName().endsWith("s") ? "'" : "'s") + "&6gamemode: &a" + gamemode.name().toLowerCase()));
+                target.sendMessage(CC.t("&6Gamemode: &a" + gamemode.name().toLowerCase()));
+                sender.sendMessage(CC.t("&7" + target.getName() + "&6 " + (target.getName().endsWith("s") ? "'" : "'s") + "&6gamemode: &a" + gamemode.name().toLowerCase()));
             }
         }
         return true;

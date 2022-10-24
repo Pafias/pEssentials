@@ -14,21 +14,21 @@ public class SunCommand implements CommandExecutor {
     @Override
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
         if (!(sender instanceof Player)) {
-            sender.sendMessage(CC.translate("&cOnly players!"));
+            sender.sendMessage(CC.t("&cOnly players!"));
             return true;
         }
         if (sender.hasPermission("essentials.sun") && !Arrays.stream(args).anyMatch(arg -> arg.toLowerCase().contains("-p"))) {
             Player player = (Player) sender;
             player.getWorld().setClearWeatherDuration(0);
-            player.sendMessage(CC.translate("&6Weather cleared."));
+            player.sendMessage(CC.t("&6Weather cleared."));
         } else {
             Player player = (Player) sender;
             if (player.getPlayerWeather() != null && player.getPlayerWeather().equals(WeatherType.CLEAR)) {
                 player.resetPlayerWeather();
-                player.sendMessage(CC.translate("&6Personal weather reset."));
+                player.sendMessage(CC.t("&6Personal weather reset."));
             } else {
                 player.setPlayerWeather(WeatherType.CLEAR);
-                player.sendMessage(CC.translate("&6Personal weather set to clear"));
+                player.sendMessage(CC.t("&6Personal weather set to clear"));
             }
         }
         return true;

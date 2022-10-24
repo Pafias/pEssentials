@@ -13,17 +13,17 @@ public class TopCommand implements CommandExecutor {
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
         if (sender.hasPermission("essentials.top")) {
             if (!(sender instanceof Player)) {
-                sender.sendMessage(CC.translate("&cOnly players!"));
+                sender.sendMessage(CC.t("&cOnly players!"));
                 return true;
             }
             Player player = (Player) sender;
             Block highest = player.getLocation().getWorld().getHighestBlockAt(player.getLocation());
             if (highest == null) {
-                player.sendMessage(CC.translate("&cNo highest block found."));
+                player.sendMessage(CC.t("&cNo highest block found."));
                 return true;
             }
             player.teleport(highest.getLocation());
-            player.sendMessage(CC.translate("&6Teleported to the highest block!"));
+            player.sendMessage(CC.t("&6Teleported to the highest block!"));
         }
         return true;
     }

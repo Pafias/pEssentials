@@ -1,11 +1,11 @@
 package me.pafias.pafiasessentials.util;
 
+
 import com.google.gson.*;
 import com.mojang.authlib.GameProfile;
 import com.mojang.authlib.properties.Property;
 import com.mojang.authlib.properties.PropertyMap;
 import com.mojang.util.UUIDTypeAdapter;
-import org.apache.commons.io.IOUtils;
 import org.yaml.snakeyaml.external.biz.base64Coder.Base64Coder;
 
 import java.io.BufferedReader;
@@ -15,11 +15,7 @@ import java.lang.reflect.Type;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.nio.charset.StandardCharsets;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map.Entry;
-import java.util.UUID;
+import java.util.*;
 
 public class GameProfileBuilder {
 
@@ -66,7 +62,12 @@ public class GameProfileBuilder {
             connection.setReadTimeout(5000);
 
             if (connection.getResponseCode() == HttpURLConnection.HTTP_OK) {
-                String json = IOUtils.toString(connection.getInputStream(), StandardCharsets.UTF_8);
+                BufferedReader rd = new BufferedReader(new InputStreamReader(connection.getInputStream(), StandardCharsets.UTF_8));
+                StringBuilder sb = new StringBuilder();
+                int cp;
+                while ((cp = rd.read()) != -1)
+                    sb.append((char) cp);
+                String json = sb.toString();
 
                 GameProfile result = gson.fromJson(json, GameProfile.class);
                 cache.put(uuid, new CachedProfile(result));
@@ -84,8 +85,8 @@ public class GameProfileBuilder {
     /**
      * Builds a GameProfile for the specified args
      *
-     * @param uuid The uuid
-     * @param name The name
+     * @param uuid    The uuid
+     * @param name    The name
      * @param skinUrl The url from the skin image
      * @return A GameProfile built from the arguments
      * @see GameProfile
@@ -137,7 +138,7 @@ public class GameProfileBuilder {
             GameProfile profile = new GameProfile(id, name);
 
             if (object.has("properties")) {
-                for (Entry<String, Property> prop : ((PropertyMap) context.deserialize(object.get("properties"), PropertyMap.class)).entries()) {
+                for (Map.Entry<String, Property> prop : ((PropertyMap) context.deserialize(object.get("properties"), PropertyMap.class)).entries()) {
                     profile.getProperties().put(prop.getKey(), prop.getValue());
                 }
             }

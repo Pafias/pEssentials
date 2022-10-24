@@ -16,7 +16,7 @@ public class PAPIExpansion extends PlaceholderExpansion {
 
     @Override
     public @NotNull String getIdentifier() {
-        return "pafiasessentials";
+        return "essentials";
     }
 
     @Override
@@ -36,10 +36,12 @@ public class PAPIExpansion extends PlaceholderExpansion {
         if (user == null) return "";
         switch (params) {
             case "name":
+                return user.getRealName();
+            case "nickname":
                 return user.getName();
             case "staffchat":
                 return String.valueOf(user.isInStaffChat());
-            case "vanish":
+            case "vanished":
                 return String.valueOf(plugin.getSM().getVanishManager().isVanished(player));
         }
         return null;

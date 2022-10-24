@@ -1,6 +1,8 @@
 package me.pafias.pafiasessentials.services;
 
 import me.pafias.pafiasessentials.PafiasEssentials;
+import me.pafias.pafiasessentials.events.PlayerUnvanishedEvent;
+import me.pafias.pafiasessentials.events.PlayerVanishedEvent;
 import me.pafias.pafiasessentials.util.CC;
 import org.bukkit.entity.Player;
 
@@ -16,7 +18,7 @@ public class VanishManager {
         this.plugin = plugin;
     }
 
-    private Set<UUID> vanished = new HashSet<>();
+    private final Set<UUID> vanished = new HashSet<>();
 
     public Set<UUID> getVanishedPlayers() {
         return vanished;
@@ -32,16 +34,18 @@ public class VanishManager {
                 p.hidePlayer(player);
             }
         });
+        plugin.getServer().getPluginManager().callEvent(new PlayerVanishedEvent(player));
         vanished.add(player.getUniqueId());
-        player.sendMessage(CC.translate("&6Vanish: &aON"));
+        player.sendMessage(CC.t("&6Vanish: &aON"));
     }
 
     public void unvanish(Player player) {
         plugin.getServer().getOnlinePlayers().forEach(p -> {
             p.showPlayer(player);
         });
+        plugin.getServer().getPluginManager().callEvent(new PlayerUnvanishedEvent(player));
         vanished.remove(player.getUniqueId());
-        player.sendMessage(CC.translate("&6Vanish: &cOFF"));
+        player.sendMessage(CC.t("&6Vanish: &cOFF"));
     }
 
 }

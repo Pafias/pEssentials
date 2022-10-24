@@ -22,12 +22,12 @@ public class StaffchatCommand implements CommandExecutor {
         if (sender.hasPermission("essentials.staffchat")) {
             if (args.length < 1) {
                 if (!(sender instanceof Player)) {
-                    sender.sendMessage(CC.translate("&cOnly players can toggle staffchat. You can chat in staffchat by putting a message after the command."));
+                    sender.sendMessage(CC.t("&cOnly players can toggle staffchat. You can chat in staffchat by putting a message after the command."));
                     return true;
                 }
                 User player = plugin.getSM().getUserManager().getUser((Player) sender);
                 player.setInStaffchat(!player.isInStaffChat());
-                player.getPlayer().sendMessage(CC.translate("&6Staffchat: " + (player.isInStaffChat() ? "&aON" : "&cOFF")));
+                player.getPlayer().sendMessage(CC.t("&6Staffchat: " + (player.isInStaffChat() ? "&aON" : "&cOFF")));
             } else {
                 StringBuilder sb = new StringBuilder();
                 for (String arg : args) {

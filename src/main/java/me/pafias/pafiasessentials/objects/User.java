@@ -72,7 +72,7 @@ public class User {
             idTask = new BukkitRunnable() {
                 @Override
                 public void run() {
-                    player.sendActionBar(CC.translate(String.format("&aCurrently disguised. &6Name: &b%s", getName())));
+                    player.sendActionBar(CC.t(String.format("&aCurrently disguised. &6Name: &b%s", getName())));
                 }
             }.runTaskTimer(PafiasEssentials.get(), 2, 40);
         }
@@ -93,6 +93,10 @@ public class User {
                 PafiasEssentials.get().getServer().getOnlinePlayers().forEach(p -> p.showPlayer(player));
             }
         }.runTaskLater(PafiasEssentials.get(), 5);
+    }
+
+    public boolean isVanished() {
+        return PafiasEssentials.get().getSM().getVanishManager().isVanished(player);
     }
 
 }

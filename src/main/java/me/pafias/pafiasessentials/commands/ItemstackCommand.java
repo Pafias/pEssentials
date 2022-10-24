@@ -15,8 +15,8 @@ import java.util.Arrays;
 public class ItemstackCommand implements CommandExecutor {
 
     private boolean help(CommandSender sender, String label) {
-        sender.sendMessage(CC.translate("&c/" + label + " name <name>"));
-        sender.sendMessage(CC.translate("&c/" + label + " lore <lore>"));
+        sender.sendMessage(CC.t("&c/" + label + " name <name>"));
+        sender.sendMessage(CC.t("&c/" + label + " lore <lore>"));
         return true;
     }
 
@@ -24,14 +24,14 @@ public class ItemstackCommand implements CommandExecutor {
     public boolean onCommand(@NotNull CommandSender sender, @NotNull Command command, @NotNull String label, @NotNull String[] args) {
         if (args.length == 0) return help(sender, label);
         if (!(sender instanceof Player)) {
-            sender.sendMessage(CC.translate("&cOnly players!"));
+            sender.sendMessage(CC.t("&cOnly players!"));
             return true;
         }
         Player player = (Player) sender;
         if (args[0].equalsIgnoreCase("name")) {
             ItemStack is = player.getInventory().getItemInHand();
             if (!validItem(is)) {
-                sender.sendMessage(CC.translate("&cInvalid item."));
+                sender.sendMessage(CC.t("&cInvalid item."));
                 return true;
             }
             StringBuilder sb = new StringBuilder();
@@ -39,14 +39,14 @@ public class ItemstackCommand implements CommandExecutor {
                 sb.append(args[i]).append(i == args.length - 1 ? "" : " ");
             String name = sb.toString();
             ItemMeta meta = is.getItemMeta();
-            meta.setDisplayName(CC.translate(name));
+            meta.setDisplayName(CC.t(name));
             is.setItemMeta(meta);
-            sender.sendMessage(CC.translate("&aName changed."));
+            sender.sendMessage(CC.t("&aName changed."));
             return true;
         } else if (args[0].equalsIgnoreCase("lore")) {
             ItemStack is = player.getInventory().getItemInHand();
             if (!validItem(is)) {
-                sender.sendMessage(CC.translate("&cInvalid item."));
+                sender.sendMessage(CC.t("&cInvalid item."));
                 return true;
             }
             StringBuilder sb = new StringBuilder();
@@ -55,9 +55,9 @@ public class ItemstackCommand implements CommandExecutor {
             String arg = sb.toString();
             String[] lore = arg.split("\\|");
             ItemMeta meta = is.getItemMeta();
-            meta.setLore(CC.translate(Arrays.asList(lore)));
+            meta.setLore(CC.t(Arrays.asList(lore)));
             is.setItemMeta(meta);
-            sender.sendMessage(CC.translate("&aLore changed."));
+            sender.sendMessage(CC.t("&aLore changed."));
             return true;
         }
         return true;

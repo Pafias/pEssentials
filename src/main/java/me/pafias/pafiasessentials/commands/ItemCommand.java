@@ -15,7 +15,7 @@ public class ItemCommand implements CommandExecutor {
             for (String arg : args)
                 sb.append(arg).append(" ");
             if (!(sender instanceof Player)) {
-                sender.sendMessage(CC.translate("&cOnly players!"));
+                sender.sendMessage(CC.t("&cOnly players!"));
                 return true;
             }
             Player player = (Player) sender;
