@@ -84,13 +84,6 @@ public class VersionProvider1_13_R1 implements NMSProvider {
     }
 
     @Override
-    public void sendCustomPayload(Player player, String channel, byte[] bytes) {
-        PacketDataSerializer pds = new PacketDataSerializer(Unpooled.wrappedBuffer(bytes));
-        PacketPlayOutCustomPayload payloadPacket = new PacketPlayOutCustomPayload(new MinecraftKey(channel), pds);
-        ((CraftPlayer) player).getHandle().playerConnection.sendPacket(payloadPacket);
-    }
-
-    @Override
     public void sendParticle(Player player, String particle, double x, double y, double z, int amount) {
         net.minecraft.server.v1_13_R2.Particle<? extends ParticleParam> ep;
         try {

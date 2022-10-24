@@ -10,12 +10,9 @@ import java.util.UUID;
 
 public class UserManager {
 
-    private PafiasEssentials plugin;
-
-    private Set<User> users = new HashSet<>();
+    private final Set<User> users = new HashSet<>();
 
     public UserManager(PafiasEssentials plugin) {
-        this.plugin = plugin;
     }
 
     public Set<User> getUsers() {

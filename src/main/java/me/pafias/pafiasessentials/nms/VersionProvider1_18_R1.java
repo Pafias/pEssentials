@@ -1,12 +1,10 @@
 package me.pafias.pafiasessentials.nms;
 
 import com.mojang.authlib.GameProfile;
-import io.netty.buffer.Unpooled;
 import me.pafias.pafiasessentials.commands.RickrollCommand;
 import me.pafias.pafiasessentials.events.PlayerRickrollEndedEvent;
 import me.pafias.pafiasessentials.events.PlayerRickrolledEvent;
 import me.pafias.pafiasessentials.util.CC;
-import net.minecraft.network.PacketDataSerializer;
 import net.minecraft.network.protocol.game.*;
 import net.minecraft.resources.MinecraftKey;
 import net.minecraft.server.level.EntityPlayer;
@@ -75,13 +73,6 @@ public class VersionProvider1_18_R1 implements NMSProvider {
     @Override
     public void crash(Player player) {
         player.spawnParticle(Particle.CRIT, player.getEyeLocation().getX(), player.getEyeLocation().getY(), player.getEyeLocation().getZ(), Integer.MAX_VALUE);
-    }
-
-    @Override
-    public void sendCustomPayload(Player player, String channel, byte[] bytes) {
-        PacketDataSerializer pds = new PacketDataSerializer(Unpooled.wrappedBuffer(bytes));
-        PacketPlayOutCustomPayload payloadPacket = new PacketPlayOutCustomPayload(new MinecraftKey(channel), pds);
-        ((CraftPlayer) player).getHandle().b.a(payloadPacket);
     }
 
     @Override

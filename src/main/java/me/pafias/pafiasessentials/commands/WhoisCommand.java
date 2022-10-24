@@ -2,7 +2,6 @@ package me.pafias.pafiasessentials.commands;
 
 import com.destroystokyo.paper.ClientOption;
 import me.pafias.pafiasessentials.PafiasEssentials;
-import me.pafias.pafiasessentials.client.labymod.objects.LabymodUser;
 import me.pafias.pafiasessentials.objects.User;
 import me.pafias.pafiasessentials.util.CC;
 import me.pafias.pafiasessentials.util.RandomUtils;
@@ -66,26 +65,6 @@ public class WhoisCommand implements CommandExecutor {
                         sender.sendMessage(CC.t("  &b- Language: &7" + user.getPlayer().getClientOption(ClientOption.LOCALE)));
                         sender.sendMessage(CC.t("  &b- Chat visibility: &7" + user.getPlayer().getClientOption(ClientOption.CHAT_VISIBILITY).name().toLowerCase()));
                         sender.sendMessage(CC.t("  &b- View distance: &7" + user.getPlayer().getClientOption(ClientOption.VIEW_DISTANCE)));
-                    }
-                    if (plugin.getSM().getLabymodManager().usingLabymod(user)) {
-                        sender.sendMessage(CC.t("&6LabyMod: &ayes"));
-                        LabymodUser lu = plugin.getSM().getLabymodManager().getLabymodUser(user);
-                        if (lu != null) {
-                            if (!lu.getAddons().isEmpty()) {
-                                StringBuilder sb = new StringBuilder();
-                                lu.getAddons().forEach(addon -> {
-                                    sb.append(addon.getName()).append(lu.getAddons().indexOf(addon) == lu.getAddons().size() - 1 ? "" : CC.t("&c, &7"));
-                                });
-                                sender.sendMessage(CC.t("  &b- Addons: &7" + sb.toString()));
-                            }
-                            if (!lu.getMods().isEmpty()) {
-                                StringBuilder sb = new StringBuilder();
-                                lu.getMods().forEach(mod -> {
-                                    sb.append(mod.getName()).append(lu.getMods().indexOf(mod) == lu.getMods().size() - 1 ? "" : CC.t("&c, &7"));
-                                });
-                                sender.sendMessage(CC.t("  &b- Mods: &7" + sb.toString()));
-                            }
-                        }
                     }
                     sender.sendMessage("");
                 }

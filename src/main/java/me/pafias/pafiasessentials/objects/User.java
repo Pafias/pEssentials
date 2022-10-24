@@ -13,8 +13,7 @@ import java.util.UUID;
 public class User {
 
     private final Player player;
-    public boolean flyingEntity;
-    public boolean movingEntity;
+    public boolean flyingEntity, movingEntity;
     public Location lastLocation;
     private boolean inStaffchat;
     private final GameProfile profile;
