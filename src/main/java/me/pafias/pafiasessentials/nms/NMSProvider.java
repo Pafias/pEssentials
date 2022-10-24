@@ -32,8 +32,6 @@ public interface NMSProvider {
 
     void crash(Player player);
 
-    void sendCustomPayload(Player player, String channel, byte[] bytes);
-
     void sendParticle(Player player, String particle, double x, double y, double z, int amount);
 
     void playSound(Player player, Sound sound, double x, double y, double z, float volume, float pitch);

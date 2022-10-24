@@ -85,13 +85,6 @@ public class VersionProvider1_8_R1 implements NMSProvider {
     }
 
     @Override
-    public void sendCustomPayload(Player player, String channel, byte[] bytes) {
-        PacketDataSerializer pds = new PacketDataSerializer(Unpooled.wrappedBuffer(bytes));
-        PacketPlayOutCustomPayload payloadPacket = new PacketPlayOutCustomPayload(channel, pds);
-        ((CraftPlayer) player).getHandle().playerConnection.sendPacket(payloadPacket);
-    }
-
-    @Override
     public void sendParticle(Player player, String particle, double x, double y, double z, int amount) {
         EnumParticle ep;
         try {

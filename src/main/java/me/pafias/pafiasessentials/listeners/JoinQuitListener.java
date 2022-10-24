@@ -46,7 +46,6 @@ public class JoinQuitListener implements Listener {
     public void onQuit(PlayerQuitEvent event) {
         if (!plugin.getSM().getVariables().quitMessage)
             event.setQuitMessage(null);
-        plugin.getSM().getLabymodManager().removeUser(event.getPlayer());
         plugin.getSM().getUserManager().removeUser(event.getPlayer());
     }
 
