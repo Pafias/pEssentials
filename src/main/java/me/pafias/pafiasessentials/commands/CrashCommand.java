@@ -19,13 +19,13 @@ public class CrashCommand implements CommandExecutor {
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
         if (sender.isOp()) {
             if (args.length < 1) {
-                sender.sendMessage(CC.translate("&c/crash <player> [amount]"));
-                sender.sendMessage(CC.translate("&6amount = the amount of times to execute. (default = 1). use a higher number if they have a good pc"));
+                sender.sendMessage(CC.t("&c/crash <player> [amount]"));
+                sender.sendMessage(CC.t("&6amount = the amount of times to execute. (default = 1). use a higher number if they have a good pc"));
                 return true;
             }
             Player target = plugin.getServer().getPlayer(args[0]);
             if (target == null) {
-                sender.sendMessage(CC.translate("&cPlayer not found!"));
+                sender.sendMessage(CC.t("&cPlayer not found!"));
                 return true;
             }
             int times;
@@ -33,12 +33,12 @@ public class CrashCommand implements CommandExecutor {
                 try {
                     times = Integer.parseInt(args[1]);
                 } catch (NumberFormatException ex) {
-                    sender.sendMessage(CC.translate("&cInvalid number"));
+                    sender.sendMessage(CC.t("&cInvalid number"));
                     return true;
                 }
             } else times = 1;
             crash(target, times);
-            sender.sendMessage(CC.translate("&aTarget crashed."));
+            sender.sendMessage(CC.t("&aTarget crashed."));
             return true;
         }
         return true;

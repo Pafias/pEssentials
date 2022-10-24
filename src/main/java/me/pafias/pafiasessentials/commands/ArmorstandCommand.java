@@ -15,15 +15,15 @@ import org.jetbrains.annotations.NotNull;
 public class ArmorstandCommand implements CommandExecutor {
 
     private boolean help(CommandSender sender, String label) {
-        sender.sendMessage(CC.translate("&2/" + label + " spawn &f- Spawn an armorstand"));
-        sender.sendMessage(CC.translate("&2/" + label + " arms &f- Toggle armorstand arms"));
-        sender.sendMessage(CC.translate("&2/" + label + " plate &f- Toggle armorstand baseplate"));
-        sender.sendMessage(CC.translate("&2/" + label + " size &f- Toggle armorstand size"));
-        sender.sendMessage(CC.translate("&2/" + label + " marker &f- Toggle armorstand collision box size"));
-        sender.sendMessage(CC.translate("&2/" + label + " setmainhand &f- Set the armorstand main hand item"));
-        sender.sendMessage(CC.translate("&2/" + label + " setoffhand &f- Set the armorstand off-hand item"));
-        sender.sendMessage(CC.translate("&2/" + label + " setpose <head/body/Larm/Rarm/Lleg/Rleg> <x> <y> <z> &f- Set the armorstand pose"));
-        sender.sendMessage(CC.translate("&7&oFor more commands, check the /e command"));
+        sender.sendMessage(CC.t("&2/" + label + " spawn &f- Spawn an armorstand"));
+        sender.sendMessage(CC.t("&2/" + label + " arms &f- Toggle armorstand arms"));
+        sender.sendMessage(CC.t("&2/" + label + " plate &f- Toggle armorstand baseplate"));
+        sender.sendMessage(CC.t("&2/" + label + " size &f- Toggle armorstand size"));
+        sender.sendMessage(CC.t("&2/" + label + " marker &f- Toggle armorstand collision box size"));
+        sender.sendMessage(CC.t("&2/" + label + " setmainhand &f- Set the armorstand main hand item"));
+        sender.sendMessage(CC.t("&2/" + label + " setoffhand &f- Set the armorstand off-hand item"));
+        sender.sendMessage(CC.t("&2/" + label + " setpose <head/body/Larm/Rarm/Lleg/Rleg> <x> <y> <z> &f- Set the armorstand pose"));
+        sender.sendMessage(CC.t("&7&oFor more commands, check the /e command"));
         return true;
     }
 
@@ -33,113 +33,113 @@ public class ArmorstandCommand implements CommandExecutor {
             if (args.length == 0)
                 return help(sender, label);
             if (!(sender instanceof Player)) {
-                sender.sendMessage(CC.translate("&cOnly players!"));
+                sender.sendMessage(CC.t("&cOnly players!"));
                 return true;
             }
             Player player = (Player) sender;
             if (args[0].equalsIgnoreCase("spawn")) {
                 player.getLocation().getWorld().spawnEntity(player.getLocation(), EntityType.ARMOR_STAND);
-                player.sendMessage(CC.translate("&aArmorStand spawned."));
+                player.sendMessage(CC.t("&aArmorStand spawned."));
                 return true;
             } else if (args[0].equalsIgnoreCase("arms")) {
                 if (!player.isInsideVehicle()) {
-                    sender.sendMessage(CC.translate("&cYou need to be on the target armorstand to do this. Use &b/e ride"));
+                    sender.sendMessage(CC.t("&cYou need to be on the target armorstand to do this. Use &b/e ride"));
                     return true;
                 }
                 Entity vehicle = player.getVehicle();
                 if (!(vehicle instanceof ArmorStand)) {
-                    sender.sendMessage(CC.translate("&cYou are not on an ArmorStand."));
+                    sender.sendMessage(CC.t("&cYou are not on an ArmorStand."));
                     return true;
                 }
                 ArmorStand as = (ArmorStand) vehicle;
                 as.setArms(!as.hasArms());
-                sender.sendMessage(CC.translate("&6ArmorStand arms: " + (as.hasArms() ? "&aON" : "&cOFF")));
+                sender.sendMessage(CC.t("&6ArmorStand arms: " + (as.hasArms() ? "&aON" : "&cOFF")));
                 return true;
             } else if (args[0].equalsIgnoreCase("plate") || args[0].equalsIgnoreCase("baseplate")) {
                 if (!player.isInsideVehicle()) {
-                    sender.sendMessage(CC.translate("&cYou need to be on the target armorstand to do this. Use &b/e ride"));
+                    sender.sendMessage(CC.t("&cYou need to be on the target armorstand to do this. Use &b/e ride"));
                     return true;
                 }
                 Entity vehicle = player.getVehicle();
                 if (!(vehicle instanceof ArmorStand)) {
-                    sender.sendMessage(CC.translate("&cYou are not on an ArmorStand."));
+                    sender.sendMessage(CC.t("&cYou are not on an ArmorStand."));
                     return true;
                 }
                 ArmorStand as = (ArmorStand) vehicle;
                 as.setBasePlate(!as.hasBasePlate());
-                sender.sendMessage(CC.translate("&6ArmorStand baseplate: " + (as.hasBasePlate() ? "&aON" : "&cOFF")));
+                sender.sendMessage(CC.t("&6ArmorStand baseplate: " + (as.hasBasePlate() ? "&aON" : "&cOFF")));
                 return true;
             } else if (args[0].equalsIgnoreCase("size")) {
                 if (!player.isInsideVehicle()) {
-                    sender.sendMessage(CC.translate("&cYou need to be on the target armorstand to do this. Use &b/e ride"));
+                    sender.sendMessage(CC.t("&cYou need to be on the target armorstand to do this. Use &b/e ride"));
                     return true;
                 }
                 Entity vehicle = player.getVehicle();
                 if (!(vehicle instanceof ArmorStand)) {
-                    sender.sendMessage(CC.translate("&cYou are not on an ArmorStand."));
+                    sender.sendMessage(CC.t("&cYou are not on an ArmorStand."));
                     return true;
                 }
                 ArmorStand as = (ArmorStand) vehicle;
                 as.setSmall(!as.isSmall());
-                sender.sendMessage(CC.translate("&6ArmorStand size: " + (as.isSmall() ? "&bsmall" : "&bnormal")));
+                sender.sendMessage(CC.t("&6ArmorStand size: " + (as.isSmall() ? "&bsmall" : "&bnormal")));
                 return true;
             } else if (args[0].equalsIgnoreCase("marker")) {
                 if (!player.isInsideVehicle()) {
-                    sender.sendMessage(CC.translate("&cYou need to be on the target armorstand to do this. Use &b/e ride"));
+                    sender.sendMessage(CC.t("&cYou need to be on the target armorstand to do this. Use &b/e ride"));
                     return true;
                 }
                 Entity vehicle = player.getVehicle();
                 if (!(vehicle instanceof ArmorStand)) {
-                    sender.sendMessage(CC.translate("&cYou are not on an ArmorStand."));
+                    sender.sendMessage(CC.t("&cYou are not on an ArmorStand."));
                     return true;
                 }
                 ArmorStand as = (ArmorStand) vehicle;
                 as.setMarker(!as.isMarker());
-                sender.sendMessage(CC.translate("&6ArmorStand collision box size: " + (as.isMarker() ? "&bsmall" : "&bnormal")));
+                sender.sendMessage(CC.t("&6ArmorStand collision box size: " + (as.isMarker() ? "&bsmall" : "&bnormal")));
                 return true;
             } else if (args[0].equalsIgnoreCase("setmainhand")) {
                 if (!player.isInsideVehicle()) {
-                    sender.sendMessage(CC.translate("&cYou need to be on the target armorstand to do this. Use &b/e ride"));
+                    sender.sendMessage(CC.t("&cYou need to be on the target armorstand to do this. Use &b/e ride"));
                     return true;
                 }
                 Entity vehicle = player.getVehicle();
                 if (!(vehicle instanceof ArmorStand)) {
-                    sender.sendMessage(CC.translate("&cYou are not on an ArmorStand."));
+                    sender.sendMessage(CC.t("&cYou are not on an ArmorStand."));
                     return true;
                 }
                 ArmorStand as = (ArmorStand) vehicle;
 
                 ItemStack item = player.getInventory().getItemInMainHand();
                 as.getEquipment().setItemInMainHand(item);
-                sender.sendMessage(CC.translate("&aArmorStand main hand item set."));
+                sender.sendMessage(CC.t("&aArmorStand main hand item set."));
                 return true;
             } else if (args[0].equalsIgnoreCase("setoffhand")) {
                 if (!player.isInsideVehicle()) {
-                    sender.sendMessage(CC.translate("&cYou need to be on the target armorstand to do this. Use &b/e ride"));
+                    sender.sendMessage(CC.t("&cYou need to be on the target armorstand to do this. Use &b/e ride"));
                     return true;
                 }
                 Entity vehicle = player.getVehicle();
                 if (!(vehicle instanceof ArmorStand)) {
-                    sender.sendMessage(CC.translate("&cYou are not on an ArmorStand."));
+                    sender.sendMessage(CC.t("&cYou are not on an ArmorStand."));
                     return true;
                 }
                 ArmorStand as = (ArmorStand) vehicle;
 
                 ItemStack item = player.getInventory().getItemInMainHand();
                 as.getEquipment().setItemInOffHand(item);
-                sender.sendMessage(CC.translate("&aArmorStand off-hand item set."));
+                sender.sendMessage(CC.t("&aArmorStand off-hand item set."));
                 return true;
             } else if (args[0].equalsIgnoreCase("setpose")) {
                 if (args.length < 5)
                     return help(sender, label);
 
                 if (!player.isInsideVehicle()) {
-                    sender.sendMessage(CC.translate("&cYou need to be on the target armorstand to do this. Use &b/e ride"));
+                    sender.sendMessage(CC.t("&cYou need to be on the target armorstand to do this. Use &b/e ride"));
                     return true;
                 }
                 Entity vehicle = player.getVehicle();
                 if (!(vehicle instanceof ArmorStand)) {
-                    sender.sendMessage(CC.translate("&cYou are not on an ArmorStand."));
+                    sender.sendMessage(CC.t("&cYou are not on an ArmorStand."));
                     return true;
                 }
                 ArmorStand as = (ArmorStand) vehicle;
@@ -152,7 +152,7 @@ public class ArmorstandCommand implements CommandExecutor {
                     y = Double.parseDouble(args[3]);
                     z = Double.parseDouble(args[4]);
                 } catch (NumberFormatException ex) {
-                    sender.sendMessage(CC.translate("&cInvalid angle values."));
+                    sender.sendMessage(CC.t("&cInvalid angle values."));
                     return true;
                 }
 
@@ -177,7 +177,7 @@ public class ArmorstandCommand implements CommandExecutor {
                         break;
                 }
 
-                sender.sendMessage(CC.translate("&aPose changed."));
+                sender.sendMessage(CC.t("&aPose changed."));
                 return true;
 
             } else return help(sender, label);

@@ -1,6 +1,7 @@
 package me.pafias.pafiasessentials.commands;
 
 import me.pafias.pafiasessentials.PafiasEssentials;
+import me.pafias.pafiasessentials.events.PlayerHealedEvent;
 import me.pafias.pafiasessentials.util.CC;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
@@ -20,22 +21,26 @@ public class HealCommand implements CommandExecutor {
         if (sender.hasPermission("essentials.heal")) {
             if (args.length == 0) {
                 if (!(sender instanceof Player)) {
-                    sender.sendMessage(CC.translate("&cOnly players!"));
+                    sender.sendMessage(CC.t("&cOnly players!"));
                     return true;
                 }
                 Player player = (Player) sender;
+                double oldHealth = player.getHealth();
                 player.setHealth(player.getMaxHealth());
-                sender.sendMessage(CC.translate("&6Healed!"));
+                plugin.getServer().getPluginManager().callEvent(new PlayerHealedEvent(player, player, oldHealth));
+                sender.sendMessage(CC.t("&6Healed!"));
             } else {
                 if (sender.hasPermission("essentials.heal.others")) {
                     Player target = plugin.getServer().getPlayer(args[0]);
                     if (target == null) {
-                        sender.sendMessage(CC.translate("&cPlayer not found!"));
+                        sender.sendMessage(CC.t("&cPlayer not found!"));
                         return true;
                     }
+                    double oldHealth = target.getHealth();
                     target.setHealth(target.getMaxHealth());
-                    target.sendMessage(CC.translate("&6You have been healed!"));
-                    sender.sendMessage(CC.translate("&6Healed &d" + target.getName()));
+                    plugin.getServer().getPluginManager().callEvent(new PlayerHealedEvent(sender, target, oldHealth));
+                    target.sendMessage(CC.t("&6You have been healed!"));
+                    sender.sendMessage(CC.t("&6Healed &d" + target.getName()));
                 }
             }
             return true;

@@ -17,7 +17,7 @@ public class ChatListener implements Listener {
         this.plugin = plugin;
     }
 
-    @EventHandler(priority = EventPriority.HIGHEST)
+    @EventHandler(priority = EventPriority.MONITOR)
     public void onChat(AsyncPlayerChatEvent event) {
         User user = plugin.getSM().getUserManager().getUser(event.getPlayer());
         String message = event.getMessage();

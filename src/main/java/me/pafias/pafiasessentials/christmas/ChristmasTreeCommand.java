@@ -19,7 +19,7 @@ public class ChristmasTreeCommand implements CommandExecutor {
     public boolean onCommand(@NotNull CommandSender sender, @NotNull Command command, @NotNull String label, @NotNull String[] args) {
         if (sender.hasPermission("essentials.christmastree")) {
             if (!(sender instanceof Player)) {
-                sender.sendMessage(CC.translate("&cOnly players!"));
+                sender.sendMessage(CC.t("&cOnly players!"));
                 return true;
             }
             Player player = (Player) sender;

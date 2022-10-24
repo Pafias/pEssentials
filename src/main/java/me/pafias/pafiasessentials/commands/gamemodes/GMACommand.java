@@ -19,25 +19,25 @@ public class GMACommand implements CommandExecutor {
     @Override
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
         if (!(sender instanceof Player)) {
-            sender.sendMessage(CC.translate("&cOnly players!"));
+            sender.sendMessage(CC.t("&cOnly players!"));
             return true;
         }
         if (args.length == 0) {
             if (sender.hasPermission("essentials.gamemode")) {
                 Player player = (Player) sender;
                 player.setGameMode(GameMode.ADVENTURE);
-                player.sendMessage(CC.translate("&6Gamemode: &aAdventure"));
+                player.sendMessage(CC.t("&6Gamemode: &aAdventure"));
             }
         } else {
             if (sender.hasPermission("essentials.gamemode.others")) {
                 Player target = plugin.getServer().getPlayer(args[0]);
                 if (target == null) {
-                    sender.sendMessage(CC.translate("&cPlayer not found!"));
+                    sender.sendMessage(CC.t("&cPlayer not found!"));
                     return true;
                 }
                 target.setGameMode(GameMode.ADVENTURE);
-                target.sendMessage(CC.translate("&6Gamemode: &aAdventure"));
-                sender.sendMessage(CC.translate("&7" + target.getName() + "&6 " + (target.getName().endsWith("s") ? "'" : "'s") + "&6gamemode: &aAdventure"));
+                target.sendMessage(CC.t("&6Gamemode: &aAdventure"));
+                sender.sendMessage(CC.t("&7" + target.getName() + "&6 " + (target.getName().endsWith("s") ? "'" : "'s") + "&6gamemode: &aAdventure"));
             }
         }
         return true;

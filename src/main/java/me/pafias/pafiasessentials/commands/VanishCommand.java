@@ -18,10 +18,10 @@ public class VanishCommand implements CommandExecutor {
     @Override
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
         if (sender.hasPermission("essentials.vanish")) {
-            Player player = null;
+            Player player;
             if (args.length < 1) {
                 if (!(sender instanceof Player)) {
-                    sender.sendMessage(CC.translate("&cOnly players can vanish!"));
+                    sender.sendMessage(CC.t("&cOnly players can vanish!"));
                     return true;
                 }
                 player = (Player) sender;
@@ -31,7 +31,7 @@ public class VanishCommand implements CommandExecutor {
                 } else return true;
             }
             if (player == null) {
-                sender.sendMessage(CC.translate("&cInvalid player!"));
+                sender.sendMessage(CC.t("&cInvalid player!"));
                 return true;
             }
             handle(player, sender);
@@ -43,11 +43,11 @@ public class VanishCommand implements CommandExecutor {
         if (plugin.getSM().getVanishManager().isVanished(player)) {
             plugin.getSM().getVanishManager().unvanish(player);
             if (sender != player)
-                sender.sendMessage(CC.translate("&6Vanish for &d" + player.getName() + "&6: &cOFF"));
+                sender.sendMessage(CC.t("&6Vanish for &d" + player.getName() + "&6: &cOFF"));
         } else {
             plugin.getSM().getVanishManager().vanish(player);
             if (sender != player)
-                sender.sendMessage(CC.translate("&6Vanish for &d" + player.getName() + "&6: &aON"));
+                sender.sendMessage(CC.t("&6Vanish for &d" + player.getName() + "&6: &aON"));
         }
 
     }

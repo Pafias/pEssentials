@@ -28,17 +28,17 @@ public class PingCommand implements CommandExecutor {
                 Player player = (Player) sender;
                 int ping = getPing(player);
                 String sping = (ping < 30 ? ChatColor.DARK_GREEN.toString() + ping : ping < 50 ? ChatColor.GREEN.toString() + ping : ping < 100 ? ChatColor.YELLOW.toString() + ping : ChatColor.RED.toString() + ping);
-                player.sendMessage(CC.translate("&6Ping: " + sping + "&7ms"));
+                player.sendMessage(CC.t("&6Ping: " + sping + "&7ms"));
             } else {
                 if (sender.hasPermission("essentials.ping.others")) {
                     Player target = plugin.getServer().getPlayer(args[0]);
                     if (target == null) {
-                        sender.sendMessage(CC.translate("&cPlayer not found."));
+                        sender.sendMessage(CC.t("&cPlayer not found."));
                         return true;
                     }
                     int ping = getPing(target);
                     String sping = (ping < 30 ? ChatColor.DARK_GREEN.toString() + ping : ping < 50 ? ChatColor.GREEN.toString() + ping : ping < 100 ? ChatColor.YELLOW.toString() + ping : ChatColor.RED.toString() + ping);
-                    sender.sendMessage(CC.translate("&d" + target.getName() + (target.getName().endsWith("s") ? "&6'" : "&6's") + " &6ping: " + sping + "&7ms"));
+                    sender.sendMessage(CC.t("&d" + target.getName() + (target.getName().endsWith("s") ? "&6'" : "&6's") + " &6ping: " + sping + "&7ms"));
                 }
             }
         }

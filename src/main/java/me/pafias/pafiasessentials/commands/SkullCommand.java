@@ -24,11 +24,11 @@ public class SkullCommand implements CommandExecutor {
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
         if (sender.hasPermission("essentials.skull")) {
             if (args.length < 1) {
-                sender.sendMessage(CC.translate("&c/" + label + " <player>"));
+                sender.sendMessage(CC.t("&c/" + label + " <player>"));
                 return true;
             }
             if (!(sender instanceof Player)) {
-                sender.sendMessage(CC.translate("&cOnly players!"));
+                sender.sendMessage(CC.t("&cOnly players!"));
                 return true;
             }
             Player player = (Player) sender;
@@ -39,7 +39,7 @@ public class SkullCommand implements CommandExecutor {
                 meta.setOwner(owner.getName());
                 skull.setItemMeta(meta);
                 player.getInventory().addItem(skull);
-                sender.sendMessage(CC.translate("&6Received skull of &d" + owner.getName()));
+                sender.sendMessage(CC.t("&6Received skull of &d" + owner.getName()));
             });
         }
         return true;

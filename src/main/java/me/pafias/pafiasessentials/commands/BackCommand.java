@@ -20,16 +20,16 @@ public class BackCommand implements CommandExecutor {
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
         if (sender.hasPermission("essentials.back")) {
             if (!(sender instanceof Player)) {
-                sender.sendMessage(CC.translate("&cOnly players!"));
+                sender.sendMessage(CC.t("&cOnly players!"));
                 return true;
             }
             User player = plugin.getSM().getUserManager().getUser((Player) sender);
             if (player.lastLocation == null) {
-                sender.sendMessage(CC.translate("&cNo last location available."));
+                sender.sendMessage(CC.t("&cNo last location available."));
                 return true;
             }
             player.getPlayer().teleport(player.lastLocation);
-            sender.sendMessage(CC.translate("&6Teleported to last location."));
+            sender.sendMessage(CC.t("&6Teleported to last location."));
         }
         return true;
     }

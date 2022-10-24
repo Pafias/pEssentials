@@ -20,12 +20,12 @@ public class HubCommand implements CommandExecutor {
     @Override
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
         if (!(sender instanceof Player)) {
-            sender.sendMessage(CC.translate("&cOnly players!"));
+            sender.sendMessage(CC.t("&cOnly players!"));
             return true;
         }
         String hubserver = plugin.getSM().getVariables().hubServer;
         if (hubserver == null) {
-            sender.sendMessage(CC.translate("&cInvalid hub server. Contact server admin."));
+            sender.sendMessage(CC.t("&cInvalid hub server. Contact server admin."));
             return true;
         }
         ByteArrayDataOutput out = ByteStreams.newDataOutput();
