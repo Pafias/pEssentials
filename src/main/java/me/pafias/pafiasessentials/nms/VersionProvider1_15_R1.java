@@ -1,26 +1,16 @@
 package me.pafias.pafiasessentials.nms;
 
 import com.mojang.authlib.GameProfile;
-import me.pafias.pafiasessentials.commands.RickrollCommand;
-import me.pafias.pafiasessentials.events.PlayerRickrollEndedEvent;
-import me.pafias.pafiasessentials.events.PlayerRickrolledEvent;
-import me.pafias.pafiasessentials.util.CC;
 import net.minecraft.server.v1_15_R1.*;
-import org.bukkit.Location;
 import org.bukkit.Particle;
 import org.bukkit.SkullType;
 import org.bukkit.Sound;
-import org.bukkit.command.CommandSender;
 import org.bukkit.craftbukkit.v1_15_R1.entity.CraftPlayer;
 import org.bukkit.craftbukkit.v1_15_R1.inventory.CraftItemStack;
 import org.bukkit.entity.ArmorStand;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
-import org.bukkit.event.player.PlayerMoveEvent;
-import org.bukkit.event.player.PlayerQuitEvent;
-import org.bukkit.scheduler.BukkitRunnable;
 
-import javax.annotation.Nullable;
 import java.lang.reflect.Field;
 
 public class VersionProvider1_15_R1 implements NMSProvider {
@@ -103,86 +93,6 @@ public class VersionProvider1_15_R1 implements NMSProvider {
         CraftPlayer cp = (CraftPlayer) player;
         EntityPlayer cep = cp.getHandle();
         cep.playerConnection.sendPacket(packet);
-    }
-
-    @Override
-    public void rickroll(Player player, @Nullable CommandSender sender) {
-        try {
-            PlayerConnection connection = ((CraftPlayer) player).getHandle().playerConnection;
-            PacketPlayOutCustomSoundEffect packet = new PacketPlayOutCustomSoundEffect(new MinecraftKey("music.rickroll"),
-                    SoundCategory.MASTER, new Vec3D(player.getEyeLocation().getX(), player.getEyeLocation().getY(),
-                    player.getEyeLocation().getZ()), Float.MAX_VALUE, 1f);
-            connection.sendPacket(packet);
-            if (sender != null)
-                sender.sendMessage(CC.tf("&e%s just got rickrolled!", player.getName()));
-            EntityPlayer npc = new EntityPlayer(((CraftPlayer) player).getHandle().server,
-                    ((CraftPlayer) player).getHandle().getWorldServer(), RickrollCommand.rickastley,
-                    new PlayerInteractManager(((CraftPlayer) player).getHandle().getWorldServer()));
-            Location loc = player.getLocation().add(player.getLocation().getDirection().multiply(2.5));
-            Location npcloc = loc.setDirection(player.getLocation().subtract(loc).toVector());
-            float yaw = npcloc.getYaw();
-            float pitch = npcloc.getPitch();
-            npc.setLocation(npcloc.getX(), npcloc.getY(), npcloc.getZ(), npcloc.getYaw(), npcloc.getPitch());
-            connection.sendPacket(
-                    new PacketPlayOutPlayerInfo(PacketPlayOutPlayerInfo.EnumPlayerInfoAction.ADD_PLAYER, npc));
-            connection.sendPacket(new PacketPlayOutNamedEntitySpawn(npc));
-            connection.sendPacket(new PacketPlayOutEntity.PacketPlayOutEntityLook(npc.getId(),
-                    (byte) ((yaw % 360.) * 256 / 360), (byte) ((pitch % 360.) * 256 / 360), false));
-            connection.sendPacket(new PacketPlayOutEntityHeadRotation(npc, (byte) ((yaw % 360.) * 256 / 360)));
-            RickrollCommand.entities.put(player.getUniqueId(), npc);
-            plugin.getServer().getPluginManager().callEvent(new PlayerRickrolledEvent(sender, player, npc));
-            new BukkitRunnable() {
-                @Override
-                public void run() {
-                    RickrollCommand.requested.remove(player.getUniqueId());
-                    RickrollCommand.entities.remove(player.getUniqueId());
-                    try {
-                        player.stopSound("music.rickroll");
-                        ((CraftPlayer) player).getHandle().playerConnection
-                                .sendPacket(new PacketPlayOutEntityDestroy(npc.getId()));
-                        ((CraftPlayer) player).getHandle().playerConnection.sendPacket(new PacketPlayOutPlayerInfo(
-                                PacketPlayOutPlayerInfo.EnumPlayerInfoAction.REMOVE_PLAYER, npc));
-                        npc.playerConnection.disconnect("");
-                        plugin.getServer().getPluginManager().callEvent(new PlayerRickrollEndedEvent(sender, player));
-                    } catch (Exception ignored) {
-                    }
-                }
-            }.runTaskLater(plugin, 17 * 20);
-        } catch (Exception ex) {
-            ex.printStackTrace();
-        }
-    }
-
-    @Override
-    public void handleRickrollMove(PlayerMoveEvent event) {
-        EntityPlayer npc = (EntityPlayer) RickrollCommand.entities.get(event.getPlayer().getUniqueId());
-        if (npc != null) {
-            Location loc = event.getPlayer().getLocation().add(event.getPlayer().getLocation().getDirection().multiply(2.5));
-            Location npcloc = loc.setDirection(event.getPlayer().getLocation().subtract(loc).toVector());
-            float yaw = npcloc.getYaw();
-            float pitch = npcloc.getPitch();
-            PlayerConnection connection = ((CraftPlayer) event.getPlayer()).getHandle().playerConnection;
-            connection.sendPacket(new PacketPlayOutEntityDestroy(npc.getId()));
-            npc.setLocation(npcloc.getX(), npcloc.getY(), npcloc.getZ(), npcloc.getYaw(), npcloc.getPitch());
-            connection.sendPacket(new PacketPlayOutNamedEntitySpawn(npc));
-            connection.sendPacket(new PacketPlayOutEntity.PacketPlayOutEntityLook(npc.getId(), (byte) ((yaw % 360.) * 256 / 360), (byte) ((pitch % 360.) * 256 / 360), false));
-            connection.sendPacket(new PacketPlayOutEntityHeadRotation(npc, (byte) ((yaw % 360.) * 256 / 360)));
-        }
-    }
-
-    @Override
-    public void handleRickrollQuit(PlayerQuitEvent event) {
-        if (RickrollCommand.entities.containsKey(event.getPlayer().getUniqueId())) {
-            EntityPlayer npc = (EntityPlayer) RickrollCommand.entities.get(event.getPlayer().getUniqueId());
-            RickrollCommand.requested.remove(event.getPlayer().getUniqueId());
-            RickrollCommand.entities.remove(event.getPlayer().getUniqueId());
-            try {
-                ((CraftPlayer) event.getPlayer()).getHandle().playerConnection.sendPacket(new PacketPlayOutEntityDestroy(npc.getId()));
-                ((CraftPlayer) event.getPlayer()).getHandle().playerConnection.sendPacket(new PacketPlayOutPlayerInfo(PacketPlayOutPlayerInfo.EnumPlayerInfoAction.REMOVE_PLAYER, npc));
-                npc.playerConnection.disconnect("");
-            } catch (Exception ignored) {
-            }
-        }
     }
 
     @Override

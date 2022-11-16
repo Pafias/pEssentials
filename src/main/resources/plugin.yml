@@ -188,11 +188,6 @@ commands:
     aliases: [ ]
     description: Russian roulette
     permission: essentials.russianroulette
-  rickroll:
-    usage: /rickroll <player>
-    aliases: []
-    description: Rickroll someone
-    permission: essentials.rickroll
   launch:
     usage: /launch <player> [multiplier]
     aliases: []

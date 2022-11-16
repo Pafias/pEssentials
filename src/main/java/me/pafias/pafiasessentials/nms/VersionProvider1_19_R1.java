@@ -1,26 +1,16 @@
 package me.pafias.pafiasessentials.nms;
 
 import com.mojang.authlib.GameProfile;
-import me.pafias.pafiasessentials.commands.RickrollCommand;
-import me.pafias.pafiasessentials.events.PlayerRickrollEndedEvent;
-import me.pafias.pafiasessentials.events.PlayerRickrolledEvent;
-import me.pafias.pafiasessentials.util.CC;
-import net.minecraft.network.protocol.game.*;
-import net.minecraft.resources.MinecraftKey;
-import net.minecraft.server.level.EntityPlayer;
-import net.minecraft.server.network.PlayerConnection;
+import net.minecraft.network.protocol.game.PacketPlayInSteerVehicle;
 import net.minecraft.world.entity.EntityLiving;
-import net.minecraft.world.phys.Vec3D;
-import org.bukkit.*;
-import org.bukkit.command.CommandSender;
+import org.bukkit.Material;
+import org.bukkit.Particle;
+import org.bukkit.Sound;
+import org.bukkit.SoundCategory;
 import org.bukkit.craftbukkit.v1_19_R1.entity.CraftPlayer;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
-import org.bukkit.event.player.PlayerMoveEvent;
-import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.inventory.ItemStack;
-import org.bukkit.scheduler.BukkitRunnable;
-import org.jetbrains.annotations.Nullable;
 
 import java.lang.reflect.Field;
 
@@ -83,77 +73,6 @@ public class VersionProvider1_19_R1 implements NMSProvider {
     @Override
     public void playSound(Player player, Sound sound, double x, double y, double z, float volume, float pitch) {
         player.playSound(player, sound, SoundCategory.MASTER, volume, pitch);
-    }
-
-    @Override
-    public void rickroll(Player player, @Nullable CommandSender sender) {
-        try {
-            PlayerConnection connection = ((CraftPlayer) player).getHandle().b;
-            PacketPlayOutCustomSoundEffect packet = new PacketPlayOutCustomSoundEffect(new MinecraftKey("music.rickroll"), net.minecraft.sounds.SoundCategory.a, new Vec3D(player.getEyeLocation().getX(), player.getEyeLocation().getY(), player.getEyeLocation().getZ()), Float.MAX_VALUE, 1f, 0);
-            connection.a(packet);
-            if (sender != null) sender.sendMessage(CC.tf("&e%s just got rickrolled!", player.getName()));
-            EntityPlayer npc = new EntityPlayer(((CraftPlayer) player).getHandle().c, ((CraftPlayer) player).getHandle().x(), RickrollCommand.rickastley, null);
-            Location loc = player.getLocation().add(player.getLocation().getDirection().multiply(2.5));
-            Location npcloc = loc.setDirection(player.getLocation().subtract(loc).toVector());
-            float yaw = npcloc.getYaw();
-            float pitch = npcloc.getPitch();
-            npc.a(npcloc.getX(), npcloc.getY(), npcloc.getZ(), npcloc.getYaw(), npcloc.getPitch());
-            connection.a(new PacketPlayOutPlayerInfo(PacketPlayOutPlayerInfo.EnumPlayerInfoAction.a, npc));
-            connection.a(new PacketPlayOutNamedEntitySpawn(npc));
-            connection.a(new PacketPlayOutEntity.PacketPlayOutEntityLook(npc.aH, (byte) ((yaw % 360.) * 256 / 360), (byte) ((pitch % 360.) * 256 / 360), false));
-            connection.a(new PacketPlayOutEntityHeadRotation(npc, (byte) ((yaw % 360.) * 256 / 360)));
-            RickrollCommand.entities.put(player.getUniqueId(), npc);
-            plugin.getServer().getPluginManager().callEvent(new PlayerRickrolledEvent(sender, player, npc));
-            new BukkitRunnable() {
-                @Override
-                public void run() {
-                    RickrollCommand.requested.remove(player.getUniqueId());
-                    RickrollCommand.entities.remove(player.getUniqueId());
-                    try {
-                        player.stopSound("music.rickroll");
-                        ((CraftPlayer) player).getHandle().b.a(new PacketPlayOutEntityDestroy(npc.aH));
-                        ((CraftPlayer) player).getHandle().b.a(new PacketPlayOutPlayerInfo(PacketPlayOutPlayerInfo.EnumPlayerInfoAction.b, npc));
-                        npc.b.disconnect("");
-                        plugin.getServer().getPluginManager().callEvent(new PlayerRickrollEndedEvent(sender, player));
-                    } catch (Exception ignored) {
-                    }
-                }
-            }.runTaskLater(plugin, 17 * 20);
-        } catch (Exception ex) {
-            ex.printStackTrace();
-        }
-    }
-
-    @Override
-    public void handleRickrollMove(PlayerMoveEvent event) {
-        EntityPlayer npc = (EntityPlayer) RickrollCommand.entities.get(event.getPlayer().getUniqueId());
-        if (npc != null) {
-            Location loc = event.getPlayer().getLocation().add(event.getPlayer().getLocation().getDirection().multiply(2.5));
-            Location npcloc = loc.setDirection(event.getPlayer().getLocation().subtract(loc).toVector());
-            float yaw = npcloc.getYaw();
-            float pitch = npcloc.getPitch();
-            PlayerConnection connection = ((CraftPlayer) event.getPlayer()).getHandle().b;
-            connection.a(new PacketPlayOutEntityDestroy(npc.aH));
-            npc.a(npcloc.getX(), npcloc.getY(), npcloc.getZ(), npcloc.getYaw(), npcloc.getPitch());
-            connection.a(new PacketPlayOutNamedEntitySpawn(npc));
-            connection.a(new PacketPlayOutEntity.PacketPlayOutEntityLook(npc.aH, (byte) ((yaw % 360.) * 256 / 360), (byte) ((pitch % 360.) * 256 / 360), false));
-            connection.a(new PacketPlayOutEntityHeadRotation(npc, (byte) ((yaw % 360.) * 256 / 360)));
-        }
-    }
-
-    @Override
-    public void handleRickrollQuit(PlayerQuitEvent event) {
-        if (RickrollCommand.entities.containsKey(event.getPlayer().getUniqueId())) {
-            EntityPlayer npc = (EntityPlayer) RickrollCommand.entities.get(event.getPlayer().getUniqueId());
-            RickrollCommand.requested.remove(event.getPlayer().getUniqueId());
-            RickrollCommand.entities.remove(event.getPlayer().getUniqueId());
-            try {
-                ((CraftPlayer) event.getPlayer()).getHandle().b.a(new PacketPlayOutEntityDestroy(npc.aH));
-                ((CraftPlayer) event.getPlayer()).getHandle().b.a(new PacketPlayOutPlayerInfo(PacketPlayOutPlayerInfo.EnumPlayerInfoAction.b, npc));
-                npc.b.disconnect("");
-            } catch (Exception ignored) {
-            }
-        }
     }
 
     @Override

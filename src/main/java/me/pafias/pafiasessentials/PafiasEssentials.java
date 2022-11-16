@@ -60,8 +60,6 @@ public final class PafiasEssentials extends JavaPlugin {
         pm.registerEvents(new ChatListener(plugin), plugin);
         pm.registerEvents(new Log4j(plugin), plugin);
         pm.registerEvents(new KnockbackListener(), plugin);
-        RickrollCommand rickroll = new RickrollCommand(plugin);
-        pm.registerEvents(rickroll, plugin);
 
         getCommand("entity").setExecutor(new EntityCommand(plugin));
         getCommand("sound").setExecutor(new SoundCommand(plugin));
@@ -93,7 +91,7 @@ public final class PafiasEssentials extends JavaPlugin {
         getCommand("christmastree").setExecutor(new ChristmasTreeCommand());
         getCommand("armorstand").setExecutor(new ArmorstandCommand());
         getCommand("identity").setExecutor(new IdentityCommand(plugin));
-        getCommand("itemstack").setExecutor(new ItemstackCommand());
+        getCommand("itemstack").setExecutor(new ItemstackCommand(plugin));
         getCommand("whois").setExecutor(new WhoisCommand(plugin));
         getCommand("sun").setExecutor(new SunCommand());
         getCommand("rain").setExecutor(new RainCommand());
@@ -101,7 +99,6 @@ public final class PafiasEssentials extends JavaPlugin {
         getCommand("feed").setExecutor(new FeedCommand(plugin));
         getCommand("sudo").setExecutor(new SudoCommand(plugin));
         getCommand("russianroulette").setExecutor(new RussianrouletteCommand(plugin));
-        getCommand("rickroll").setExecutor(rickroll);
         getCommand("launch").setExecutor(new LaunchCommand(plugin));
     }
 
