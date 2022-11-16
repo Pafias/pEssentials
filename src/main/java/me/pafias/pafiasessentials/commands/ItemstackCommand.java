@@ -1,10 +1,12 @@
 package me.pafias.pafiasessentials.commands;
 
+import me.pafias.pafiasessentials.PafiasEssentials;
 import me.pafias.pafiasessentials.util.CC;
 import org.bukkit.Material;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
+import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
@@ -14,9 +16,16 @@ import java.util.Arrays;
 
 public class ItemstackCommand implements CommandExecutor {
 
+    private final PafiasEssentials plugin;
+
+    public ItemstackCommand(PafiasEssentials plugin) {
+        this.plugin = plugin;
+    }
+
     private boolean help(CommandSender sender, String label) {
         sender.sendMessage(CC.t("&c/" + label + " name <name>"));
         sender.sendMessage(CC.t("&c/" + label + " lore <lore>"));
+        sender.sendMessage(CC.t("&c/" + label + " enchant <enchantment> <level>"));
         return true;
     }
 
@@ -28,7 +37,7 @@ public class ItemstackCommand implements CommandExecutor {
             return true;
         }
         Player player = (Player) sender;
-        if (args[0].equalsIgnoreCase("name")) {
+        if (args[0].equalsIgnoreCase("name") || args[0].equalsIgnoreCase("rename")) {
             ItemStack is = player.getInventory().getItemInHand();
             if (!validItem(is)) {
                 sender.sendMessage(CC.t("&cInvalid item."));
@@ -59,6 +68,30 @@ public class ItemstackCommand implements CommandExecutor {
             is.setItemMeta(meta);
             sender.sendMessage(CC.t("&aLore changed."));
             return true;
+        } else if (args[0].equalsIgnoreCase("enchant")) {
+            if (args.length < 3)
+                return help(sender, label);
+            Enchantment enchantment = Enchantment.getByName(args[1]);
+            if (enchantment == null) {
+                sender.sendMessage(CC.t("&cInvalid enchantment."));
+                return true;
+            }
+            int level;
+            try {
+                level = Integer.parseInt(args[2]);
+            } catch (NumberFormatException ex) {
+                sender.sendMessage(CC.t("&cInvalid level."));
+                return true;
+            }
+            ItemStack is = player.getInventory().getItemInHand();
+            if (!validItem(is)) {
+                sender.sendMessage(CC.t("&cInvalid item."));
+                return true;
+            }
+            ItemMeta meta = is.getItemMeta();
+            meta.addEnchant(enchantment, level, true);
+            is.setItemMeta(meta);
+            sender.sendMessage(CC.t("&aItem enchanted."));
         }
         return true;
     }
