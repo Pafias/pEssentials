@@ -5,6 +5,7 @@ import me.pafias.pafiasessentials.events.PlayerUnvanishedEvent;
 import me.pafias.pafiasessentials.events.PlayerVanishedEvent;
 import me.pafias.pafiasessentials.util.CC;
 import org.bukkit.entity.Player;
+import org.bukkit.metadata.FixedMetadataValue;
 
 import java.util.HashSet;
 import java.util.Set;
@@ -34,6 +35,7 @@ public class VanishManager {
                 p.hidePlayer(player);
             }
         });
+        player.setMetadata("vanished", new FixedMetadataValue(plugin, true));
         plugin.getServer().getPluginManager().callEvent(new PlayerVanishedEvent(player));
         vanished.add(player.getUniqueId());
         player.sendMessage(CC.t("&6Vanish: &aON"));
@@ -43,6 +45,7 @@ public class VanishManager {
         plugin.getServer().getOnlinePlayers().forEach(p -> {
             p.showPlayer(player);
         });
+        player.setMetadata("vanished", new FixedMetadataValue(plugin, false));
         plugin.getServer().getPluginManager().callEvent(new PlayerUnvanishedEvent(player));
         vanished.remove(player.getUniqueId());
         player.sendMessage(CC.t("&6Vanish: &cOFF"));
