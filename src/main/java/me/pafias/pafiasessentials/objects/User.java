@@ -19,6 +19,7 @@ public class User {
     private final GameProfile profile;
     private GameProfile newIdentity;
     private BukkitTask idTask;
+    private boolean frozen;
 
     public User(Player player) {
         this.player = player;
@@ -96,6 +97,14 @@ public class User {
 
     public boolean isVanished() {
         return PafiasEssentials.get().getSM().getVanishManager().isVanished(player);
+    }
+
+    public boolean isFrozen() {
+        return frozen;
+    }
+
+    public void setFrozen(boolean frozen) {
+        this.frozen = frozen;
     }
 
 }

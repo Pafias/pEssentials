@@ -26,7 +26,7 @@ public class JoinQuitListener implements Listener {
         plugin.getSM().getUserManager().addUser(event.getPlayer());
     }
 
-    @EventHandler(priority = EventPriority.HIGHEST)
+    @EventHandler(priority = EventPriority.HIGH)
     public void onJoin(PlayerJoinEvent event) {
         if (!plugin.getSM().getVariables().joinMessage)
             event.setJoinMessage(null);
@@ -42,7 +42,7 @@ public class JoinQuitListener implements Listener {
         }.runTaskLater(plugin, 5 * 20);
     }
 
-    @EventHandler(priority = EventPriority.HIGHEST)
+    @EventHandler(priority = EventPriority.HIGH)
     public void onQuit(PlayerQuitEvent event) {
         if (!plugin.getSM().getVariables().quitMessage)
             event.setQuitMessage(null);
