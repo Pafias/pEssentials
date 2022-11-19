@@ -3,6 +3,8 @@ package me.pafias.pafiasessentials;
 import me.pafias.pafiasessentials.antiexploit.Log4j;
 import me.pafias.pafiasessentials.christmas.ChristmasTreeCommand;
 import me.pafias.pafiasessentials.commands.*;
+import me.pafias.pafiasessentials.commands.freezing.FreezeCommand;
+import me.pafias.pafiasessentials.commands.freezing.UnfreezeCommand;
 import me.pafias.pafiasessentials.commands.gamemodes.GMACommand;
 import me.pafias.pafiasessentials.commands.gamemodes.GMCCommand;
 import me.pafias.pafiasessentials.commands.gamemodes.GMSCommand;
@@ -100,6 +102,8 @@ public final class PafiasEssentials extends JavaPlugin {
         getCommand("sudo").setExecutor(new SudoCommand(plugin));
         getCommand("russianroulette").setExecutor(new RussianrouletteCommand(plugin));
         getCommand("launch").setExecutor(new LaunchCommand(plugin));
+        getCommand("freeze").setExecutor(new FreezeCommand(plugin));
+        getCommand("unfreeze").setExecutor(new UnfreezeCommand(plugin));
     }
 
     @Override

@@ -18,6 +18,7 @@ public class ServicesManager {
             papiExpansion = new PAPIExpansion(plugin);
         vanishManager = new VanishManager(plugin);
         nmsProvider = NMSVersionProvider.getProvider();
+        freezeManager = new FreezeManager(plugin);
     }
 
     private PAPIExpansion papiExpansion;
@@ -48,6 +49,12 @@ public class ServicesManager {
 
     public NMSProvider getNMSProvider(){
         return nmsProvider;
+    }
+
+    private final FreezeManager freezeManager;
+
+    public FreezeManager getFreezeManager() {
+        return freezeManager;
     }
 
 }

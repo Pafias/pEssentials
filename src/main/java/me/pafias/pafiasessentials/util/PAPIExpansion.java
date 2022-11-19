@@ -42,7 +42,9 @@ public class PAPIExpansion extends PlaceholderExpansion {
             case "staffchat":
                 return String.valueOf(user.isInStaffChat());
             case "vanished":
-                return String.valueOf(plugin.getSM().getVanishManager().isVanished(player));
+                return String.valueOf(user.isVanished());
+            case "frozen":
+                return String.valueOf(user.isFrozen());
         }
         return null;
     }

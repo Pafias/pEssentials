@@ -193,3 +193,13 @@ commands:
     aliases: []
     description: Launch someone upwards
     permission: essentials.launch
+  freeze:
+    usage: /freeze <player>
+    aliases: []
+    description: Freeze someone
+    permission: essentials.freeze
+  unfreeze:
+    usage: /unfreeze <player>
+    aliases: [ ]
+    description: Unfreeze someone
+    permission: essentials.unfreeze
