@@ -203,3 +203,8 @@ commands:
     aliases: [ ]
     description: Unfreeze someone
     permission: essentials.unfreeze
+  sit:
+    usage: /sit
+    aliases: []
+    description: Sit down
+    permission: essentials.sit

@@ -63,6 +63,7 @@ public final class PafiasEssentials extends JavaPlugin {
         pm.registerEvents(new Log4j(plugin), plugin);
         pm.registerEvents(new KnockbackListener(), plugin);
         pm.registerEvents(new PingListener(plugin), plugin);
+        pm.registerEvents(new SitListener(), plugin);
 
         getCommand("entity").setExecutor(new EntityCommand(plugin));
         getCommand("sound").setExecutor(new SoundCommand(plugin));
@@ -105,6 +106,7 @@ public final class PafiasEssentials extends JavaPlugin {
         getCommand("launch").setExecutor(new LaunchCommand(plugin));
         getCommand("freeze").setExecutor(new FreezeCommand(plugin));
         getCommand("unfreeze").setExecutor(new UnfreezeCommand(plugin));
+        getCommand("sit").setExecutor(new SitCommand());
     }
 
     @Override

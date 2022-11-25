@@ -20,6 +20,7 @@ public class ChatListener implements Listener {
     @EventHandler(priority = EventPriority.MONITOR)
     public void onChat(AsyncPlayerChatEvent event) {
         User user = plugin.getSM().getUserManager().getUser(event.getPlayer());
+        if (user == null) return;
         String message = event.getMessage();
         if ((user.isInStaffChat() && message.startsWith("!")) || (message.startsWith("#") && event.getPlayer().hasPermission("essentials.staffchat")))
             if (user.isInStaffChat() && message.startsWith("!"))
