@@ -1,6 +1,5 @@
 package me.pafias.pafiasessentials.services;
 
-import me.pafias.pafiasessentials.PafiasEssentials;
 import me.pafias.pafiasessentials.objects.User;
 import org.bukkit.entity.Player;
 
@@ -11,9 +10,6 @@ import java.util.UUID;
 public class UserManager {
 
     private final Set<User> users = new HashSet<>();
-
-    public UserManager(PafiasEssentials plugin) {
-    }
 
     public Set<User> getUsers() {
         return users;

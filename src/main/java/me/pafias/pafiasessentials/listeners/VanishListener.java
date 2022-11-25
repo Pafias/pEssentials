@@ -15,6 +15,8 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
 
+import java.util.Set;
+import java.util.UUID;
 import java.util.stream.Collectors;
 
 public class VanishListener implements Listener {
@@ -23,29 +25,29 @@ public class VanishListener implements Listener {
 
     public VanishListener(PafiasEssentials plugin) {
         this.pe = plugin;
-        if (plugin.getServer().getPluginManager().isPluginEnabled("ProtocolLib"))
-            ProtocolLibrary.getProtocolManager().addPacketListener(new PacketAdapter(pe, ListenerPriority.HIGH, PacketType.Status.Server.SERVER_INFO) {
-                @Override
-                public void onPacketSending(PacketEvent event) {
-                    PacketContainer packet = event.getPacket();
-                    WrappedServerPing ping = packet.getServerPings().read(0);
-                    ImmutableList<WrappedGameProfile> players = ping.getPlayers();
-                    ping.setPlayers(players.stream().filter(p -> !pe.getSM().getVanishManager().getVanishedPlayers().contains(p.getUUID())).collect(Collectors.toSet()));
-                    packet.getServerPings().write(0, ping);
-                    event.setPacket(packet);
-                }
-            });
+        ProtocolLibrary.getProtocolManager().addPacketListener(new PacketAdapter(pe, ListenerPriority.HIGH, PacketType.Status.Server.SERVER_INFO) {
+            @Override
+            public void onPacketSending(PacketEvent event) {
+                PacketContainer packet = event.getPacket();
+                WrappedServerPing ping = packet.getServerPings().read(0);
+                ImmutableList<WrappedGameProfile> players = ping.getPlayers();
+                ping.setPlayers(players.stream().filter(p -> !pe.getSM().getVanishManager().getVanishedPlayers().contains(p.getUUID())).collect(Collectors.toSet()));
+                packet.getServerPings().write(0, ping);
+                event.setPacket(packet);
+            }
+        });
     }
 
     @EventHandler
     public void onJoin(PlayerJoinEvent event) {
-        pe.getSM().getVanishManager().getVanishedPlayers().stream()
+        Set<UUID> vanished = pe.getSM().getVanishManager().getVanishedPlayers();
+        if (vanished.isEmpty()) return;
+        vanished.stream()
                 .filter(uuid -> !uuid.equals(event.getPlayer().getUniqueId()))
                 .filter(uuid -> pe.getServer().getPlayer(uuid) != null)
                 .forEach(uuid -> {
-                    if (!event.getPlayer().hasPermission("essentials.vanish.bypass")) {
+                    if (!event.getPlayer().hasPermission("essentials.vanish.bypass"))
                         event.getPlayer().hidePlayer(pe.getServer().getPlayer(uuid));
-                    }
                 });
     }
 

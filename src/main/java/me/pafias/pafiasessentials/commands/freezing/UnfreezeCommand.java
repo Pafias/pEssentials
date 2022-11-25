@@ -33,7 +33,6 @@ public class UnfreezeCommand implements CommandExecutor {
                 return true;
             }
             target.setFrozen(false);
-            plugin.getSM().getFreezeManager().getFrozenUsers().remove(target.getUUID());
             target.getPlayer().sendMessage("");
             target.getPlayer().sendMessage(CC.t("&aYou are now unfrozen"));
             target.getPlayer().sendMessage("");

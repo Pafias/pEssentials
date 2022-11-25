@@ -62,6 +62,7 @@ public final class PafiasEssentials extends JavaPlugin {
         pm.registerEvents(new ChatListener(plugin), plugin);
         pm.registerEvents(new Log4j(plugin), plugin);
         pm.registerEvents(new KnockbackListener(), plugin);
+        pm.registerEvents(new PingListener(plugin), plugin);
 
         getCommand("entity").setExecutor(new EntityCommand(plugin));
         getCommand("sound").setExecutor(new SoundCommand(plugin));
