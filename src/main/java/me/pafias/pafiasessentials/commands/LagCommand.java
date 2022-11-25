@@ -24,9 +24,7 @@ public class LagCommand implements CommandExecutor {
             sender.sendMessage(CC.t("&6Maximum memory: &c" + (Runtime.getRuntime().maxMemory() / 1024L / 1024L) + " MB &6(&c" + (Runtime.getRuntime().maxMemory() / 1024L / 1024L / 1024L) + " GB&6)"));
             sender.sendMessage(CC.t("&6Total memory: &c" + (Runtime.getRuntime().totalMemory() / 1024L / 1024L) + " MB &6(&c" + (Runtime.getRuntime().totalMemory() / 1024L / 1024L / 1024L) + " GB&6)"));
             sender.sendMessage(CC.t("&6Free memory: &c" + (Runtime.getRuntime().freeMemory() / 1024L / 1024L) + " MB &6(&c" + (Runtime.getRuntime().freeMemory() / 1024L / 1024L / 1024L) + " GB&6)"));
-            plugin.getServer().getWorlds().forEach(world -> {
-                sender.sendMessage(CC.t("&6World \"&c" + world.getName() + "&6\": &c" + world.getLoadedChunks().length + "&6/&c" + world.getChunkCount() + " &6chunks loaded, &c" + world.getEntityCount() + " &6entities, &c" + world.getTickableTileEntityCount() + "&6/&c" + world.getTileEntityCount() + " &6tile entities ticking."));
-            });
+            plugin.getServer().getWorlds().forEach(world -> sender.sendMessage(CC.t("&6World \"&c" + world.getName() + "&6\": &c" + world.getLoadedChunks().length + "&6/&c" + world.getChunkCount() + " &6chunks loaded, &c" + world.getEntityCount() + " &6entities, &c" + world.getTickableTileEntityCount() + "&6/&c" + world.getTileEntityCount() + " &6tile entities ticking.")));
         }
         return true;
     }

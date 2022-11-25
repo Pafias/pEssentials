@@ -34,7 +34,6 @@ public class FreezeCommand implements CommandExecutor {
                 return true;
             }
             target.setFrozen(true);
-            plugin.getSM().getFreezeManager().getFrozenUsers().add(target.getUUID());
             target.getPlayer().sendMessage("");
             target.getPlayer().sendMessage(CC.tf("&cYou were frozen by &a%s", sender.getName()));
             target.getPlayer().sendMessage("");

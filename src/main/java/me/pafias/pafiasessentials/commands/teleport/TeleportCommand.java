@@ -3,6 +3,7 @@ package me.pafias.pafiasessentials.commands.teleport;
 import me.pafias.pafiasessentials.PafiasEssentials;
 import me.pafias.pafiasessentials.objects.User;
 import me.pafias.pafiasessentials.util.CC;
+import org.bukkit.Location;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
@@ -36,7 +37,7 @@ public class TeleportCommand implements CommandExecutor {
                 player.getPlayer().teleport(target.getPlayer());
                 sender.sendMessage(CC.t("&6Teleported to &d" + target.getName()));
                 return true;
-            } else {
+            } else if (args.length == 2) {
                 User player1 = plugin.getSM().getUserManager().getUser(args[0]);
                 User player2 = plugin.getSM().getUserManager().getUser(args[1]);
                 if (player1 == null || player2 == null) {
@@ -45,6 +46,19 @@ public class TeleportCommand implements CommandExecutor {
                 }
                 player1.getPlayer().teleport(player2.getPlayer());
                 sender.sendMessage(CC.t("&6Teleported &d" + player1.getName() + " &6to &d" + player2.getName()));
+                return true;
+            } else if (args.length == 3) {
+                double x, y, z;
+                try {
+                    x = Double.parseDouble(args[0]);
+                    y = Double.parseDouble(args[1]);
+                    z = Double.parseDouble(args[2]);
+                } catch (NumberFormatException ex) {
+                    sender.sendMessage(CC.t("&cInvalid coordinates."));
+                    return true;
+                }
+                ((Player) sender).teleport(new Location(((Player) sender).getWorld(), x, y, z));
+                sender.sendMessage(CC.tf("&6Teleported to &d%f.2, %f.2, %f.2", x, y, z));
                 return true;
             }
         }

@@ -8,9 +8,9 @@ import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
-import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
+import java.util.WeakHashMap;
 
 public class TellCommand implements CommandExecutor {
 
@@ -20,7 +20,7 @@ public class TellCommand implements CommandExecutor {
         this.plugin = plugin;
     }
 
-    public static Map<UUID, UUID> msg = new HashMap<>();
+    public static Map<UUID, UUID> msg = new WeakHashMap<>();
 
     @Override
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {

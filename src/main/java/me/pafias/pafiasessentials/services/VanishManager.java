@@ -30,11 +30,9 @@ public class VanishManager {
     }
 
     public void vanish(Player player) {
-        plugin.getServer().getOnlinePlayers().forEach(p -> {
-            if (p != player && !p.hasPermission("essentials.vanish.bypass")) {
-                p.hidePlayer(player);
-            }
-        });
+        plugin.getServer().getOnlinePlayers().stream()
+                .filter(p -> p != player && !p.hasPermission("essentials.vanish.bypass"))
+                .forEach(p -> p.hidePlayer(player));
         player.setMetadata("vanished", new FixedMetadataValue(plugin, true));
         plugin.getServer().getPluginManager().callEvent(new PlayerVanishedEvent(player));
         vanished.add(player.getUniqueId());
@@ -42,9 +40,8 @@ public class VanishManager {
     }
 
     public void unvanish(Player player) {
-        plugin.getServer().getOnlinePlayers().forEach(p -> {
-            p.showPlayer(player);
-        });
+        plugin.getServer().getOnlinePlayers()
+                .forEach(p -> p.showPlayer(player));
         player.setMetadata("vanished", new FixedMetadataValue(plugin, false));
         plugin.getServer().getPluginManager().callEvent(new PlayerUnvanishedEvent(player));
         vanished.remove(player.getUniqueId());

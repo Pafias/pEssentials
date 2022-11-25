@@ -12,6 +12,8 @@ import java.util.UUID;
 
 public class User {
 
+    private final PafiasEssentials plugin = PafiasEssentials.get();
+
     private final Player player;
     public boolean flyingEntity, movingEntity;
     public Location lastLocation;
@@ -19,11 +21,10 @@ public class User {
     private final GameProfile profile;
     private GameProfile newIdentity;
     private BukkitTask idTask;
-    private boolean frozen;
 
     public User(Player player) {
         this.player = player;
-        profile = PafiasEssentials.get().getSM().getNMSProvider().getGameProfile(player);
+        profile = plugin.getSM().getNMSProvider().getGameProfile(player);
     }
 
     public Player getPlayer() {
@@ -72,11 +73,11 @@ public class User {
             idTask = new BukkitRunnable() {
                 @Override
                 public void run() {
-                    player.sendActionBar(CC.t(String.format("&aCurrently disguised. &6Name: &b%s", getName())));
+                    plugin.getSM().getNMSProvider().sendActionbar(player, CC.t(String.format("&aCurrently disguised. &6Name: &b%s", getName())));
                 }
-            }.runTaskTimer(PafiasEssentials.get(), 2, 40);
+            }.runTaskTimer(plugin, 2, 40);
         }
-        PafiasEssentials.get().getSM().getNMSProvider().setGameProfile(player, profile);
+        plugin.getSM().getNMSProvider().setGameProfile(player, profile);
         hideAndShow();
     }
 
@@ -84,27 +85,30 @@ public class User {
         new BukkitRunnable() {
             @Override
             public void run() {
-                PafiasEssentials.get().getServer().getOnlinePlayers().forEach(p -> p.hidePlayer(player));
+                plugin.getServer().getOnlinePlayers().forEach(p -> p.hidePlayer(player));
             }
-        }.runTask(PafiasEssentials.get());
+        }.runTask(plugin);
         new BukkitRunnable() {
             @Override
             public void run() {
-                PafiasEssentials.get().getServer().getOnlinePlayers().forEach(p -> p.showPlayer(player));
+                plugin.getServer().getOnlinePlayers().forEach(p -> p.showPlayer(player));
             }
-        }.runTaskLater(PafiasEssentials.get(), 5);
+        }.runTaskLater(plugin, 2);
     }
 
     public boolean isVanished() {
-        return PafiasEssentials.get().getSM().getVanishManager().isVanished(player);
+        return plugin.getSM().getVanishManager().isVanished(player);
     }
 
     public boolean isFrozen() {
-        return frozen;
+        return plugin.getSM().getFreezeManager().getFrozenUsers().contains(player.getUniqueId());
     }
 
     public void setFrozen(boolean frozen) {
-        this.frozen = frozen;
+        if (frozen)
+            plugin.getSM().getFreezeManager().getFrozenUsers().remove(player.getUniqueId());
+        else
+            plugin.getSM().getFreezeManager().getFrozenUsers().add(player.getUniqueId());
     }
 
 }

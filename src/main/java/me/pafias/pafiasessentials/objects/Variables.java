@@ -23,6 +23,7 @@ public class Variables {
 
     public boolean joinMessage = true;
     public boolean quitMessage = true;
+    public boolean highPingKick = false;
     public int pingKickThreshold = 150;
     public String rickrollResourcePack;
 
@@ -36,6 +37,7 @@ public class Variables {
         hidePlugins = plugin.getConfig().getBoolean("hide_plugins");
         joinMessage = plugin.getConfig().getBoolean("join_message_enabled");
         quitMessage = plugin.getConfig().getBoolean("quit_message_enabled");
+        highPingKick = plugin.getConfig().getBoolean("kick_on_high_ping");
         pingKickThreshold = plugin.getConfig().getInt("ping_kick_threshold");
         rickrollResourcePack = plugin.getConfig().getString("rickroll_resourcepack_link");
     }

@@ -12,13 +12,13 @@ public class ServicesManager {
 
     public ServicesManager(PafiasEssentials plugin) {
         this.plugin = plugin;
-        userManager = new UserManager(plugin);
         variables = new Variables(plugin);
+        nmsProvider = NMSVersionProvider.getProvider();
+        userManager = new UserManager();
+        vanishManager = new VanishManager(plugin);
+        freezeManager = new FreezeManager(plugin);
         if (plugin.getServer().getPluginManager().getPlugin("PlaceholderAPI") != null)
             papiExpansion = new PAPIExpansion(plugin);
-        vanishManager = new VanishManager(plugin);
-        nmsProvider = NMSVersionProvider.getProvider();
-        freezeManager = new FreezeManager(plugin);
     }
 
     private PAPIExpansion papiExpansion;
@@ -47,7 +47,7 @@ public class ServicesManager {
 
     private final NMSProvider nmsProvider;
 
-    public NMSProvider getNMSProvider(){
+    public NMSProvider getNMSProvider() {
         return nmsProvider;
     }
 

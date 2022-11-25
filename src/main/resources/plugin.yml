@@ -62,7 +62,7 @@ commands:
     permission: essentials.speed
   tell:
     usage: /tell <player> <message>
-    aliases: [ whisper, message, msg ]
+    aliases: [ whisper, message, msg, w, t ]
     description: Private messaging
   reply:
     usage: /r <message>
