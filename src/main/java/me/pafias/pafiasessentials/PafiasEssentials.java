@@ -92,7 +92,7 @@ public final class PafiasEssentials extends JavaPlugin {
         getCommand("vanish").setExecutor(new VanishCommand(plugin));
         getCommand("copyinventory").setExecutor(new CopyInventoryCommand(plugin));
         getCommand("crash").setExecutor(new CrashCommand(plugin));
-        getCommand("christmastree").setExecutor(new ChristmasTreeCommand());
+        getCommand("christmastree").setExecutor(new ChristmasTreeCommand(plugin));
         getCommand("armorstand").setExecutor(new ArmorstandCommand());
         getCommand("identity").setExecutor(new IdentityCommand(plugin));
         getCommand("itemstack").setExecutor(new ItemstackCommand(plugin));
@@ -119,6 +119,15 @@ public final class PafiasEssentials extends JavaPlugin {
         if (getServer().getPluginManager().getPlugin("PlaceholderAPI") != null)
             servicesManager.getPAPIExpansion().unregister();
         plugin = null;
+    }
+
+    public double parseVersion() {
+        String version = getServer().getBukkitVersion();
+        String[] var = version.split("\\.", 2);
+        String[] var2 = var[1].split("-");
+        String var3 = var2[0];
+        double d = Double.parseDouble(var3);
+        return d;
     }
 
 }
