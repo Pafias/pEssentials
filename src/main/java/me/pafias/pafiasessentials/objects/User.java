@@ -106,9 +106,9 @@ public class User {
 
     public void setFrozen(boolean frozen) {
         if (frozen)
-            plugin.getSM().getFreezeManager().getFrozenUsers().remove(player.getUniqueId());
-        else
             plugin.getSM().getFreezeManager().getFrozenUsers().add(player.getUniqueId());
+        else
+            plugin.getSM().getFreezeManager().getFrozenUsers().remove(player.getUniqueId());
     }
 
 }
