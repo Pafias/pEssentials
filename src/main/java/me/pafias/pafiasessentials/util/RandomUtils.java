@@ -14,12 +14,4 @@ public class RandomUtils {
         return plugin.getServer().getOnlinePlayers().stream().filter(p -> p.hasPermission(perm)).collect(Collectors.toSet());
     }
 
-    public static boolean isRecentVersion() {
-        String v = plugin.getServer().getBukkitVersion();
-        return v.contains("1_19") ||
-                v.contains("1_18") ||
-                v.contains("1_17") ||
-                v.contains("1_16");
-    }
-
 }

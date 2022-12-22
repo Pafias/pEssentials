@@ -1,0 +1,44 @@
+package me.pafias.pafiasessentials.commands.modules;
+
+import me.pafias.pafiasessentials.commands.ICommand;
+import me.pafias.pafiasessentials.util.CC;
+import org.bukkit.Material;
+import org.bukkit.block.Block;
+import org.bukkit.command.Command;
+import org.bukkit.command.CommandSender;
+import org.bukkit.entity.Player;
+
+import java.util.Collections;
+import java.util.List;
+
+public class TopCommand extends ICommand {
+
+    public TopCommand() {
+        super("top", "essentials.top", "Go to the top", "/top");
+    }
+
+    @Override
+    public void commandHandler(CommandSender sender, Command command, String label, String[] args) {
+        if (sender.hasPermission("essentials.top")) {
+            if (!(sender instanceof Player)) {
+                sender.sendMessage(CC.t("&cOnly players!"));
+                return;
+            }
+            Player player = (Player) sender;
+            Block highest = player.getLocation().getWorld().getHighestBlockAt(player.getLocation());
+            if (highest == null || highest.getType().equals(Material.AIR)) {
+                player.sendMessage(CC.t("&cNo highest block found."));
+                return;
+            }
+            player.teleport(highest.getLocation());
+            player.sendMessage(CC.t("&6Teleported to the highest block!"));
+        }
+        return;
+    }
+
+    @Override
+    public List<String> tabHandler(CommandSender sender, Command command, String label, String[] args) {
+        return Collections.emptyList();
+    }
+
+}

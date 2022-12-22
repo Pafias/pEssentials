@@ -2,6 +2,7 @@ package me.pafias.pafiasessentials.listeners;
 
 import me.pafias.pafiasessentials.PafiasEssentials;
 import me.pafias.pafiasessentials.util.CC;
+import me.pafias.pafiasessentials.util.Reflection;
 import org.bukkit.event.Listener;
 import org.bukkit.scheduler.BukkitRunnable;
 
@@ -13,7 +14,7 @@ public class PingListener implements Listener {
                 @Override
                 public void run() {
                     plugin.getServer().getOnlinePlayers().stream().filter(p -> !p.hasPermission("essentials.ping.bypass")).forEach(p -> {
-                        int ping = plugin.getSM().getNMSProvider().getPing(p);
+                        int ping = Reflection.getPing(p);
                         if (ping > plugin.getSM().getVariables().pingKickThreshold)
                             new BukkitRunnable() {
                                 @Override

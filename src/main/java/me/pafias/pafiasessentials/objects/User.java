@@ -3,7 +3,9 @@ package me.pafias.pafiasessentials.objects;
 import com.mojang.authlib.GameProfile;
 import me.pafias.pafiasessentials.PafiasEssentials;
 import me.pafias.pafiasessentials.util.CC;
+import me.pafias.pafiasessentials.util.Reflection;
 import org.bukkit.Location;
+import org.bukkit.Particle;
 import org.bukkit.entity.Player;
 import org.bukkit.scheduler.BukkitRunnable;
 import org.bukkit.scheduler.BukkitTask;
@@ -24,7 +26,7 @@ public class User {
 
     public User(Player player) {
         this.player = player;
-        profile = plugin.getSM().getNMSProvider().getGameProfile(player);
+        profile = Reflection.getGameProfile(player);
     }
 
     public Player getPlayer() {
@@ -73,11 +75,11 @@ public class User {
             idTask = new BukkitRunnable() {
                 @Override
                 public void run() {
-                    plugin.getSM().getNMSProvider().sendActionbar(player, CC.t(String.format("&aCurrently disguised. &6Name: &b%s", getName())));
+                    Reflection.sendActionbar(player, CC.t(String.format("&aCurrently disguised. &6Name: &b%s", getName())));
                 }
             }.runTaskTimer(plugin, 2, 40);
         }
-        plugin.getSM().getNMSProvider().setGameProfile(player, profile);
+        Reflection.setGameProfile(player, profile);
         hideAndShow();
     }
 
@@ -94,6 +96,10 @@ public class User {
                 plugin.getServer().getOnlinePlayers().forEach(p -> p.showPlayer(player));
             }
         }.runTaskLater(plugin, 2);
+    }
+
+    public void crash() {
+        player.spawnParticle(Particle.CRIT, player.getEyeLocation().getX(), player.getEyeLocation().getY(), player.getEyeLocation().getZ(), Integer.MAX_VALUE);
     }
 
     public boolean isVanished() {

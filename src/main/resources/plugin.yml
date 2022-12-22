@@ -7,204 +7,73 @@ description: PafiasEssentials
 api-version: 1.13
 commands:
   entity:
-    usage: /e
     aliases: [ e ]
-    description: Entity Utils
-    permission: essentials.entity
   sound:
-    usage: /sound
     aliases: [ snd ]
-    description: Sound Utils
-    permission: essentials.sound
   nightvision:
-    usage: /nv
     aliases: [ nv ]
-    description: Nightvision
-    permission: essentials.nightvision
   ping:
-    usage: /ping [player]
     aliases: [ latency ]
-    description: Ping
   gamemode:
-    usage: /gamemode <gamemode> [player]
     aliases: [ gm ]
-    description: GameMode
-    permission: essentials.gamemode
   gmc:
-    usage: /gmc [player]
     aliases: [ gm1 ]
-    description: Gamemode Creative
   gms:
-    usage: /gms [player]
     aliases: [ gm0 ]
-    description: Gamemode Survival
   gmsp:
-    usage: /gmsp [player]
     aliases: [ gm3 ]
-    description: Gamemode Spectator
   gma:
-    usage: /gma [player]
     aliases: [ gm2 ]
-    description: Gamemode Adventure
   hub:
-    usage: /hub
-    aliases: [ ]
-    description: Hub
   heal:
-    usage: /heal [player]
-    aliases: [ ]
-    description: Heal
-    permission: essentials.heal
   speed:
-    usage: /speed <speed/reset> [player]
-    aliases: [ ]
-    description: Speed
-    permission: essentials.speed
   tell:
-    usage: /tell <player> <message>
-    aliases: [ whisper, message, msg, w, t ]
-    description: Private messaging
+    aliases: [ t, message, msg, whisper, w ]
   reply:
-    usage: /r <message>
     aliases: [ r ]
-    description: Reply
   teleport:
-    usage: /teleport <player> [player]
     aliases: [ tp ]
-    description: Teleport player(s)
-    permission: essentials.teleport
   teleporthere:
-    usage: /tphere <player/all>
     aliases: [ tphere ]
-    description: Teleport player here
-    permission: essentials.teleporthere
   skull:
-    usage: /skull <player>
-    aliases: [ head, playerhead, playerskull ]
-    description: Skull
-    permission: essentials.skull
+    aliases: [ playerhead ]
   back:
-    usage: /back
-    aliases: [ ]
-    description: Back
-    permission: essentials.back
   top:
-    usage: /top
-    aliases: [ ]
-    description: Top
-    permission: essentials.top
   day:
-    usage: /day
     aliases: [ daytime ]
-    description: Day time
-    permission: essentials.day
   night:
-    usage: /night
     aliases: [ nighttime ]
-    description: Night time
-    permission: essentials.night
   lag:
-    usage: /lag
-    aliases: [ gc, mem, memory ]
-    description: Server performance information
-    permission: essentials.lag
+    aliases: [ gc, memory, mem, performance ]
   item:
-    usage: /item
-    aliases: [ i, giveitem ]
-    description: Item
-    permission: essentials.item
+    aliases: [ giveitem ]
   staffchat:
-    usage: /staffchat [message]
     aliases: [ sc ]
-    description: StaffChat
-    permission: essentials.staffchat
   vanish:
-    usage: /vanish [player]
-    aliases: [ v, sv ]
-    description: Vanish
-    permission: essentials.vanish
+    aliases: [ v ]
   copyinventory:
-    usage: /ci <player> [player]
     aliases: [ ci ]
-    description: Copy inventory
-    permission: essentials.copyinventory
   crash:
-    usage: /crash <player> [times]
-    aliases: [ ]
-    description: Crash someone's client
-    permission: op
   christmastree:
-    usage: /christmastree <width> <height> <base>
     aliases: [ xmastree ]
-    description: Spawn a beautiful christmas tree
-    permission: essentials.christmastree
   armorstand:
-    usage: /armorstand [subcommand]
     aliases: [ as ]
-    description: ArmorStand management
-    permission: essentials.armorstand
   identity:
-    usage: /identity <reset/<name>> [skin player name] [-f]
     aliases: [ id ]
-    description: Change your name and skin
-    permission: essentials.identity
   itemstack:
-    usage: /is [subcommand]
     aliases: [ is ]
-    description: Item renaming
-    permission: essentials.itemstack
   whois:
-    usage: /whois <player>
     aliases: [ seen ]
-    description: Information about someone
-    permission: essentials.whois
   sun:
-    usage: /sun [-p]
     aliases: [ sunny ]
-    description: Clear the weather
-    permission: essentials.sun
   rain:
-    usage: /rain [-p]
-    aliases: [ raining, storm, storming ]
-    description: Let it rain
-    permission: essentials.rain
   knockback:
-    usage: /knockback <reset/x> [y] [z]
     aliases: [ kb ]
-    description: Knockback management
-    permission: essentials.knockback
   feed:
-    usage: /feed [player]
-    aliases: [ ]
-    description: Feed someone
-    permission: essentials.feed
   sudo:
-    usage: /sudo <player> <command>
-    aliases: [ ]
-    description: Sudo someone
-    permission: essentials.sudo
   russianroulette:
-    usage: /russianroulette
-    aliases: [ ]
-    description: Russian roulette
-    permission: essentials.russianroulette
   launch:
-    usage: /launch <player> [multiplier]
-    aliases: []
-    description: Launch someone upwards
-    permission: essentials.launch
   freeze:
-    usage: /freeze <player>
-    aliases: []
-    description: Freeze someone
-    permission: essentials.freeze
   unfreeze:
-    usage: /unfreeze <player>
-    aliases: [ ]
-    description: Unfreeze someone
-    permission: essentials.unfreeze
   sit:
-    usage: /sit
-    aliases: []
-    description: Sit down
-    permission: essentials.sit
+    aliases: [ chair ]
