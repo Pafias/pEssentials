@@ -1,6 +1,6 @@
 package me.pafias.pafiasessentials.listeners;
 
-import me.pafias.pafiasessentials.commands.SitCommand;
+import me.pafias.pafiasessentials.commands.modules.SitCommand;
 import org.bukkit.entity.ArmorStand;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;

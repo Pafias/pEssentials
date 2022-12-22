@@ -1,19 +1,15 @@
 package me.pafias.pafiasessentials.services;
 
 import me.pafias.pafiasessentials.PafiasEssentials;
-import me.pafias.pafiasessentials.nms.NMSProvider;
-import me.pafias.pafiasessentials.nms.NMSVersionProvider;
+import me.pafias.pafiasessentials.commands.CommandManager;
 import me.pafias.pafiasessentials.objects.Variables;
 import me.pafias.pafiasessentials.util.PAPIExpansion;
 
 public class ServicesManager {
 
-    private final PafiasEssentials plugin;
-
     public ServicesManager(PafiasEssentials plugin) {
-        this.plugin = plugin;
         variables = new Variables(plugin);
-        nmsProvider = NMSVersionProvider.getProvider();
+        commandManager = new CommandManager(plugin);
         userManager = new UserManager();
         vanishManager = new VanishManager(plugin);
         freezeManager = new FreezeManager(plugin);
@@ -45,16 +41,16 @@ public class ServicesManager {
         return vanishManager;
     }
 
-    private final NMSProvider nmsProvider;
-
-    public NMSProvider getNMSProvider() {
-        return nmsProvider;
-    }
-
     private final FreezeManager freezeManager;
 
     public FreezeManager getFreezeManager() {
         return freezeManager;
+    }
+
+    private final CommandManager commandManager;
+
+    public CommandManager getCommandManager() {
+        return commandManager;
     }
 
 }

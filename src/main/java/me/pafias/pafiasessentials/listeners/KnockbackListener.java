@@ -1,6 +1,6 @@
 package me.pafias.pafiasessentials.listeners;
 
-import me.pafias.pafiasessentials.commands.KnockbackCommand;
+import me.pafias.pafiasessentials.commands.modules.KnockbackCommand;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
