@@ -23,6 +23,7 @@ public class User {
     private final GameProfile profile;
     private GameProfile newIdentity;
     private BukkitTask idTask;
+    private boolean blockingPMs;
 
     public User(Player player) {
         this.player = player;
@@ -115,6 +116,14 @@ public class User {
             plugin.getSM().getFreezeManager().getFrozenUsers().add(player.getUniqueId());
         else
             plugin.getSM().getFreezeManager().getFrozenUsers().remove(player.getUniqueId());
+    }
+
+    public boolean isBlockingPMs() {
+        return blockingPMs;
+    }
+
+    public void setBlockingPMs(boolean blockingPMs) {
+        this.blockingPMs = blockingPMs;
     }
 
 }

@@ -34,6 +34,10 @@ public class TellCommand extends ICommand {
                 sender.sendMessage(CC.t("&cPlayer not found!"));
                 return;
             }
+            if (target.isBlockingPMs() && !player.getPlayer().hasPermission("essentials.msgtoggle.bypass")) {
+                sender.sendMessage(CC.t("&cThat player has private messages turned off."));
+                return;
+            }
             StringBuilder sb = new StringBuilder();
             for (int i = 1; i < args.length; i++)
                 sb.append(args[i]).append(" ");
@@ -49,7 +53,7 @@ public class TellCommand extends ICommand {
     @Override
     public List<String> tabHandler(CommandSender sender, Command command, String label, String[] args) {
         if (args.length == 1)
-            return plugin.getServer().getOnlinePlayers().stream().map(Player::getName).filter(p -> p.toLowerCase().startsWith(args[0].toLowerCase())).collect(Collectors.toList());
+            return plugin.getServer().getOnlinePlayers().stream().filter(p -> ((Player) sender).canSee(p)).map(Player::getName).filter(n -> n.toLowerCase().startsWith(args[0].toLowerCase())).collect(Collectors.toList());
         else return Collections.emptyList();
     }
 

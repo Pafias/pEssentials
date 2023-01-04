@@ -1,6 +1,5 @@
 package me.pafias.pafiasessentials.commands.modules;
 
-import me.pafias.pafiasessentials.PafiasEssentials;
 import me.pafias.pafiasessentials.commands.ICommand;
 import me.pafias.pafiasessentials.util.CC;
 import org.bukkit.Location;
@@ -22,11 +21,8 @@ import java.util.Random;
 
 public class ChristmastreeCommand extends ICommand {
 
-    private final PafiasEssentials plugin;
-
-    public ChristmastreeCommand(PafiasEssentials plugin) {
+    public ChristmastreeCommand() {
         super("christmastree", "essentials.christmastree", "Spawn a beautiful christmas tree", "/christmastree <width> <height> <base>", "xmastree");
-        this.plugin = plugin;
     }
 
     @Override

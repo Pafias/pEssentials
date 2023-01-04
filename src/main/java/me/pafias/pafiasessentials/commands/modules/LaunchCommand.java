@@ -48,7 +48,7 @@ public class LaunchCommand extends ICommand {
     @Override
     public List<String> tabHandler(CommandSender sender, Command command, String label, String[] args) {
         if (args.length == 1)
-            return plugin.getServer().getOnlinePlayers().stream().map(Player::getName).collect(Collectors.toList());
+            return plugin.getServer().getOnlinePlayers().stream().filter(p -> ((Player) sender).canSee(p)).map(Player::getName).filter(n -> n.toLowerCase().startsWith(args[0].toLowerCase())).collect(Collectors.toList());
         else return Collections.emptyList();
     }
 

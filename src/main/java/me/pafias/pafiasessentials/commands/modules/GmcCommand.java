@@ -7,8 +7,8 @@ import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
-import java.util.Collections;
 import java.util.List;
+import java.util.stream.Collectors;
 
 public class GmcCommand extends ICommand {
 
@@ -45,7 +45,7 @@ public class GmcCommand extends ICommand {
 
     @Override
     public List<String> tabHandler(CommandSender sender, Command command, String label, String[] args) {
-        return Collections.emptyList();
+        return plugin.getServer().getOnlinePlayers().stream().filter(p -> ((Player) sender).canSee(p)).map(Player::getName).filter(n -> n.toLowerCase().startsWith(args[0].toLowerCase())).collect(Collectors.toList());
     }
 
 }

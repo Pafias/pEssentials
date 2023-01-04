@@ -44,17 +44,15 @@ public class Reflection {
 
     public static void setGameProfile(Player player, GameProfile profile) {
         try {
-            Class cp = player.getClass();
-            Class el = cp.getDeclaredMethod("getHandle").invoke(player).getClass();
-            Class eh = el.getSuperclass();
+            Object el = player.getClass().getMethod("getHandle").invoke(player);
+            Class eh = el.getClass().getSuperclass();
             Field[] fields = eh.getDeclaredFields();
             Field field = null;
-            for (Field f : fields) {
+            for (Field f : fields)
                 if (f.getType().getSimpleName().equals("GameProfile")) {
                     field = f;
                     break;
                 }
-            }
             if (field == null)
                 throw new NullPointerException("GameProfile field not found.");
             field.setAccessible(true);
