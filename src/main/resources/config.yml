@@ -1,9 +1,7 @@
 hub_server: 'hub'
 staffchat_format: '&e&l[STAFF] &r&9{player}&r: {message}'
-log4j_exploit_protection: true
 hide_plugins: true
 join_message_enabled: false
 quit_message_enabled: false
 kick_on_high_ping: false
 ping_kick_threshold: 150
-rickroll_resourcepack_link: 'https://www.dropbox.com/s/47f8tdkc0gpqwie/RickRoll.zip?dl=1'

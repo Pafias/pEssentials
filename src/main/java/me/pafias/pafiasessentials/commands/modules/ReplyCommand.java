@@ -36,6 +36,10 @@ public class ReplyCommand extends ICommand {
                 sender.sendMessage(CC.t("&cThe person you were chatting with is no longer online!"));
                 return;
             }
+            if (target.isBlockingPMs() && !player.getPlayer().hasPermission("essentials.msgtoggle.bypass")) {
+                sender.sendMessage(CC.t("&cThat player has private messages turned off."));
+                return;
+            }
             StringBuilder sb = new StringBuilder();
             for (String arg : args) sb.append(arg).append(" ");
             String message = sb.toString();

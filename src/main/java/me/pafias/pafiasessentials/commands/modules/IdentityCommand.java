@@ -1,7 +1,6 @@
 package me.pafias.pafiasessentials.commands.modules;
 
 import com.mojang.authlib.GameProfile;
-import me.pafias.pafiasessentials.PafiasEssentials;
 import me.pafias.pafiasessentials.commands.ICommand;
 import me.pafias.pafiasessentials.objects.User;
 import me.pafias.pafiasessentials.util.CC;
@@ -20,7 +19,7 @@ import java.util.stream.Collectors;
 
 public class IdentityCommand extends ICommand {
 
-    public IdentityCommand(PafiasEssentials plugin) {
+    public IdentityCommand() {
         super("identity", "essentials.identity", "Change your identity (disguise)", "/id <reset/<player>> [skin] [-f]", "id");
     }
 

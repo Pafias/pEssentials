@@ -46,7 +46,7 @@ commands:
   lag:
     aliases: [ gc, memory, mem, performance ]
   item:
-    aliases: [ giveitem ]
+    aliases: [ giveitem, i ]
   staffchat:
     aliases: [ sc ]
   vanish:
@@ -77,3 +77,5 @@ commands:
   unfreeze:
   sit:
     aliases: [ chair ]
+  msgtoggle:
+    aliases: [ togglemsg, ignore ]

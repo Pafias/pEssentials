@@ -68,8 +68,10 @@ public class TeleportCommand extends ICommand {
 
     @Override
     public List<String> tabHandler(CommandSender sender, Command command, String label, String[] args) {
-        if (args.length == 1 || args.length == 2)
-            return plugin.getServer().getOnlinePlayers().stream().map(Player::getName).collect(Collectors.toList());
+        if (args.length == 1)
+            return plugin.getServer().getOnlinePlayers().stream().map(Player::getName).filter(n -> n.toLowerCase().startsWith(args[0].toLowerCase())).collect(Collectors.toList());
+        else if (args.length == 2)
+            return plugin.getServer().getOnlinePlayers().stream().map(Player::getName).filter(n -> n.toLowerCase().startsWith(args[1].toLowerCase())).collect(Collectors.toList());
         else return Collections.emptyList();
     }
 
