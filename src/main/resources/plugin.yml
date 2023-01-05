@@ -79,3 +79,5 @@ commands:
     aliases: [ chair ]
   msgtoggle:
     aliases: [ togglemsg, ignore ]
+  invsee:
+    aliases: [ inv ]
