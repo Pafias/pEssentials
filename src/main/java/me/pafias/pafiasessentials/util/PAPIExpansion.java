@@ -45,6 +45,8 @@ public class PAPIExpansion extends PlaceholderExpansion {
                 return String.valueOf(user.isVanished());
             case "frozen":
                 return String.valueOf(user.isFrozen());
+            case "identity":
+                return String.valueOf(user.hasIdentity());
         }
         return null;
     }
