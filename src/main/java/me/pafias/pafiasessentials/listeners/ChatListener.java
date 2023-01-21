@@ -18,7 +18,7 @@ public class ChatListener implements Listener {
     }
 
     @EventHandler(priority = EventPriority.MONITOR)
-    public void onChat(AsyncPlayerChatEvent event) {
+    public void onStaffChat(AsyncPlayerChatEvent event) {
         User user = plugin.getSM().getUserManager().getUser(event.getPlayer());
         if (user == null) return;
         String message = event.getMessage();

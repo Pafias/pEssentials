@@ -71,7 +71,6 @@ public class IdentityCommand extends ICommand {
                             user.setIdentity(profile);
                             sender.sendMessage(CC.t("&aIdentity changed."));
                         } catch (Exception ex) {
-                            ex.printStackTrace();
                             sender.sendMessage(CC.t("&cSomething went wrong. &oDoes that player exist?"));
                         }
                     }
@@ -85,10 +84,10 @@ public class IdentityCommand extends ICommand {
         if (args.length == 1) {
             List<String> list = new ArrayList<>();
             list.add("reset");
-            list.addAll(plugin.getServer().getOnlinePlayers().stream().map(Player::getName).collect(Collectors.toList()));
+            list.addAll(plugin.getServer().getOnlinePlayers().stream().filter(p -> ((Player) sender).canSee(p)).map(Player::getName).filter(n -> n.toLowerCase().startsWith(args[0].toLowerCase())).collect(Collectors.toList()));
             return list;
         } else if (args.length == 2)
-            return plugin.getServer().getOnlinePlayers().stream().map(Player::getName).collect(Collectors.toList());
+            return plugin.getServer().getOnlinePlayers().stream().filter(p -> ((Player) sender).canSee(p)).map(Player::getName).filter(n -> n.toLowerCase().startsWith(args[1].toLowerCase())).collect(Collectors.toList());
         else if (args.length == 3)
             return Collections.singletonList("-f");
         else return Collections.emptyList();

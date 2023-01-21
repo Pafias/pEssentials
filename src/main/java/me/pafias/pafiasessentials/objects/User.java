@@ -82,6 +82,7 @@ public class User {
         }
         Reflection.setGameProfile(player, profile);
         hideAndShow();
+        player.setDisplayName(profile.getName());
     }
 
     private void hideAndShow() {

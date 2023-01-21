@@ -3,6 +3,7 @@ package me.pafias.pafiasessentials.commands.modules;
 import me.pafias.pafiasessentials.commands.ICommand;
 import me.pafias.pafiasessentials.util.CC;
 import org.bukkit.Material;
+import org.bukkit.NamespacedKey;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.enchantments.Enchantment;
@@ -73,14 +74,23 @@ public class ItemstackCommand extends ICommand {
                 help(sender, label);
                 return;
             }
-            Enchantment enchantment = Enchantment.getByName(args[1]);
+            Enchantment enchantment;
+            if (plugin.parseVersion() > 16) {
+                enchantment = Enchantment.getByName(args[1].toUpperCase().trim());
+                if (enchantment == null)
+                    enchantment = Enchantment.getByKey(NamespacedKey.minecraft(args[1].toLowerCase().trim()));
+            } else
+                enchantment = Enchantment.getByName(args[1].toUpperCase().trim());
             if (enchantment == null) {
                 sender.sendMessage(CC.t("&cInvalid enchantment."));
                 return;
             }
             int level;
             try {
-                level = Integer.parseInt(args[2]);
+                if (args[2].equalsIgnoreCase("max"))
+                    level = Integer.MAX_VALUE;
+                else
+                    level = Integer.parseInt(args[2]);
             } catch (NumberFormatException ex) {
                 sender.sendMessage(CC.t("&cInvalid level."));
                 return;
@@ -101,7 +111,11 @@ public class ItemstackCommand extends ICommand {
     public List<String> tabHandler(CommandSender sender, Command command, String label, String[] args) {
         if (args.length == 1) return Arrays.asList("name", "lore", "enchant");
         else if (args.length == 2 && args[0].equalsIgnoreCase("enchant"))
-            return Arrays.stream(Enchantment.values()).map(Enchantment::getName).filter(e -> e.toLowerCase().startsWith(args[0].toLowerCase())).collect(Collectors.toList());
+            return Arrays
+                    .stream(Enchantment.values())
+                    .map(enchantment -> plugin.parseVersion() > 16 ? enchantment.getKey().getKey() : enchantment.getName())
+                    .filter(e -> e.toLowerCase().startsWith(args[1].toLowerCase()))
+                    .collect(Collectors.toList());
         else return Collections.emptyList();
     }
 

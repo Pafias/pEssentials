@@ -112,8 +112,8 @@ public class Reflection {
 
     public static void playSound(Player player, Sound sound, double x, double y, double z, float volume, float pitch) {
         PacketContainer packet = new PacketContainer(PacketType.Play.Server.NAMED_SOUND_EFFECT);
-        packet.getIntegers().write(0, sound.ordinal());
-        packet.getIntegers().write(1, 0);
+        packet.getModifier().write(0, sound.ordinal());
+        packet.getModifier().write(1, 0);
         packet.getIntegers().write(2, (int) x);
         packet.getIntegers().write(3, (int) y);
         packet.getIntegers().write(4, (int) z);
