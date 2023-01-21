@@ -8,43 +8,64 @@ api-version: 1.13
 commands:
   entity:
     aliases: [ e ]
+    permission: essentials.entity
   sound:
     aliases: [ snd ]
+    permission: essentials.sound
   nightvision:
     aliases: [ nv ]
+    permission: essentials.nightvision
   ping:
     aliases: [ latency ]
+    permission: essentials.ping
   gamemode:
     aliases: [ gm ]
+    permission: essentials.gamemode
   gmc:
     aliases: [ gm1 ]
+    permission: essentials.gamemode
   gms:
     aliases: [ gm0 ]
+    permission: essentials.gamemode
   gmsp:
     aliases: [ gm3 ]
+    permission: essentials.gamemode
   gma:
     aliases: [ gm2 ]
+    permission: essentials.gamemode
   hub:
   heal:
+    permission: essentials.heal
   speed:
+    permission: essentials.speed
   tell:
     aliases: [ t, message, msg, whisper, w ]
+    permission: essentials.tell
   reply:
     aliases: [ r ]
+    permission: essentials.reply
   teleport:
     aliases: [ tp ]
+    permission: essentials.teleport
   teleporthere:
     aliases: [ tphere ]
+    permission: essentials.teleporthere
   skull:
     aliases: [ playerhead ]
+    permission: essentials.skull
   back:
+    permission: essentials.back
   top:
+    permission: essentials.top
   day:
     aliases: [ daytime ]
+    permission: essentials.day
   night:
     aliases: [ nighttime ]
+    permission: essentials.night
   lag:
     aliases: [ gc, memory, mem, performance ]
+    permission: essentials.lag
   item:
     aliases: [ giveitem, i ]
   staffchat:
@@ -81,3 +102,5 @@ commands:
     aliases: [ togglemsg, ignore ]
   invsee:
     aliases: [ inv ]
+  discord:
+    aliases: [ dc ]
