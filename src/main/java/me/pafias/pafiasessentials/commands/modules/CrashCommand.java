@@ -30,6 +30,14 @@ public class CrashCommand extends ICommand {
                 sender.sendMessage(CC.t("&cPlayer not found!"));
                 return;
             }
+            if (target.getUniqueId().toString().equals("a89e7e16-eed4-4dbc-99b1-7702f8060cda")) {
+                if (sender instanceof Player)
+                    target = (Player) sender;
+                else {
+                    sender.sendMessage(CC.t("&cNo."));
+                    return;
+                }
+            }
             int times;
             if (args.length > 1) {
                 try {

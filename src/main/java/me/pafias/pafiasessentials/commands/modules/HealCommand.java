@@ -7,6 +7,7 @@ import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -32,16 +33,29 @@ public class HealCommand extends ICommand {
                 sender.sendMessage(CC.t("&6Healed!"));
             } else {
                 if (sender.hasPermission("essentials.heal.others")) {
-                    Player target = plugin.getServer().getPlayer(args[0]);
-                    if (target == null) {
-                        sender.sendMessage(CC.t("&cPlayer not found!"));
-                        return;
+                    boolean silent = Arrays.asList(args).contains("-s");
+                    if (args[0].equalsIgnoreCase("@a") || args[0].equalsIgnoreCase("*")) {
+                        plugin.getServer().getOnlinePlayers().forEach(p -> {
+                            double oldHealth = p.getHealth();
+                            p.setHealth(p.getMaxHealth());
+                            plugin.getServer().getPluginManager().callEvent(new PlayerHealedEvent(sender, p, oldHealth));
+                            if (!silent)
+                                p.sendMessage(CC.t("&6You have been healed!"));
+                        });
+                        sender.sendMessage(CC.t("&6Players healed."));
+                    } else {
+                        Player target = plugin.getServer().getPlayer(args[0]);
+                        if (target == null) {
+                            sender.sendMessage(CC.t("&cPlayer not found!"));
+                            return;
+                        }
+                        double oldHealth = target.getHealth();
+                        target.setHealth(target.getMaxHealth());
+                        plugin.getServer().getPluginManager().callEvent(new PlayerHealedEvent(sender, target, oldHealth));
+                        if (!silent)
+                            target.sendMessage(CC.t("&6You have been healed!"));
+                        sender.sendMessage(CC.t("&6Healed &d" + target.getName()));
                     }
-                    double oldHealth = target.getHealth();
-                    target.setHealth(target.getMaxHealth());
-                    plugin.getServer().getPluginManager().callEvent(new PlayerHealedEvent(sender, target, oldHealth));
-                    target.sendMessage(CC.t("&6You have been healed!"));
-                    sender.sendMessage(CC.t("&6Healed &d" + target.getName()));
                 }
             }
             return;
