@@ -41,12 +41,16 @@ public class CopyinventoryCommand extends ICommand {
                     sender.sendMessage(CC.t("&cPlayer " + args[0] + " not found!"));
                     return;
                 }
-                Player to = plugin.getServer().getPlayer(args[1]);
-                if (to == null) {
-                    sender.sendMessage(CC.t("&cPlayer " + args[1] + " not found!"));
-                    return;
+                if (args[1].equalsIgnoreCase("@a") || args[1].equalsIgnoreCase("*"))
+                    plugin.getServer().getOnlinePlayers().forEach(p -> copy(from, p));
+                else {
+                    Player to = plugin.getServer().getPlayer(args[1]);
+                    if (to == null) {
+                        sender.sendMessage(CC.t("&cPlayer " + args[1] + " not found!"));
+                        return;
+                    }
+                    copy(from, to);
                 }
-                copy(from, to);
                 sender.sendMessage(CC.t("&aInventory copied!"));
             }
         }

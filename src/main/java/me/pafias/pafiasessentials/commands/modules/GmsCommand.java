@@ -7,6 +7,7 @@ import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
+import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -30,14 +31,24 @@ public class GmsCommand extends ICommand {
             }
         } else {
             if (sender.hasPermission("essentials.gamemode.others")) {
-                Player target = plugin.getServer().getPlayer(args[0]);
-                if (target == null) {
-                    sender.sendMessage(CC.t("&cPlayer not found!"));
-                    return;
+                boolean silent = Arrays.asList(args).contains("-s");
+                if (args[0].equalsIgnoreCase("@a") || args[0].equalsIgnoreCase("*"))
+                    plugin.getServer().getOnlinePlayers().forEach(p -> {
+                        p.setGameMode(GameMode.SURVIVAL);
+                        if (!silent)
+                            p.sendMessage(CC.t("&6Gamemode: &aSurvival"));
+                    });
+                else {
+                    Player target = plugin.getServer().getPlayer(args[0]);
+                    if (target == null) {
+                        sender.sendMessage(CC.t("&cPlayer not found!"));
+                        return;
+                    }
+                    target.setGameMode(GameMode.SURVIVAL);
+                    if (!silent)
+                        target.sendMessage(CC.t("&6Gamemode: &aSurvival"));
+                    sender.sendMessage(CC.t("&7" + target.getName() + "&6 " + (target.getName().endsWith("s") ? "'" : "'s") + "&6gamemode: &aSurvival"));
                 }
-                target.setGameMode(GameMode.SURVIVAL);
-                target.sendMessage(CC.t("&6Gamemode: &aSurvival"));
-                sender.sendMessage(CC.t("&7" + target.getName() + "&6 " + (target.getName().endsWith("s") ? "'" : "'s") + "&6gamemode: &aSurvival"));
             }
         }
         return;

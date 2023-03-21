@@ -6,6 +6,7 @@ import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -28,15 +29,26 @@ public class FeedCommand extends ICommand {
                 player.setFoodLevel(20);
                 sender.sendMessage(CC.t("&6Fed!"));
             } else {
-                if (sender.hasPermission("essentials.heal.others")) {
-                    Player target = plugin.getServer().getPlayer(args[0]);
-                    if (target == null) {
-                        sender.sendMessage(CC.t("&cPlayer not found!"));
-                        return;
+                if (sender.hasPermission("essentials.feed.others")) {
+                    boolean silent = Arrays.asList(args).contains("-s");
+                    if (args[0].equalsIgnoreCase("@a") || args[0].equalsIgnoreCase("*")) {
+                        plugin.getServer().getOnlinePlayers().forEach(p -> {
+                            p.setFoodLevel(20);
+                            if (!silent)
+                                p.sendMessage(CC.t("&6You have been fed!"));
+                        });
+                        sender.sendMessage(CC.t("&6Players fed."));
+                    } else {
+                        Player target = plugin.getServer().getPlayer(args[0]);
+                        if (target == null) {
+                            sender.sendMessage(CC.t("&cPlayer not found!"));
+                            return;
+                        }
+                        target.setFoodLevel(20);
+                        if (!silent)
+                            target.sendMessage(CC.t("&6You have been fed!"));
+                        sender.sendMessage(CC.t("&6Fed &d" + target.getName()));
                     }
-                    target.setFoodLevel(20);
-                    target.sendMessage(CC.t("&6You have been fed!"));
-                    sender.sendMessage(CC.t("&6Fed &d" + target.getName()));
                 }
             }
             return;

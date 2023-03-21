@@ -1,6 +1,7 @@
 package me.pafias.pafiasessentials.commands.modules;
 
 import me.pafias.pafiasessentials.commands.ICommand;
+import me.pafias.pafiasessentials.util.CC;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
@@ -16,15 +17,28 @@ public class NightvisionCommand extends ICommand {
         super("nightvision", "essentials.nightvision", "Nightvision", "/nv", "nv");
     }
 
-    @Override
-    public void commandHandler(CommandSender sender, Command command, String label, String[] args) {
-        if (!(sender instanceof Player))
-            return;
-        Player player = (Player) sender;
+    private void toggleNightvision(Player player) {
         if (player.hasPotionEffect(PotionEffectType.NIGHT_VISION)) {
             player.removePotionEffect(PotionEffectType.NIGHT_VISION);
         } else {
             player.addPotionEffect(new PotionEffect(PotionEffectType.NIGHT_VISION, 1000000, 1, false, false));
+        }
+    }
+
+    @Override
+    public void commandHandler(CommandSender sender, Command command, String label, String[] args) {
+        if (!(sender instanceof Player))
+            return;
+        if (args.length == 0)
+            toggleNightvision((Player) sender);
+        else {
+            Player target = plugin.getServer().getPlayer(args[0]);
+            if (target == null) {
+                sender.sendMessage(CC.t("&cPlayer not found."));
+                return;
+            }
+            toggleNightvision(target);
+            sender.sendMessage(CC.tf("&6Nightvision for %s: %s", target.getName(), target.hasPotionEffect(PotionEffectType.NIGHT_VISION) ? CC.t("&aON") : CC.t("&cOFF")));
         }
     }
 

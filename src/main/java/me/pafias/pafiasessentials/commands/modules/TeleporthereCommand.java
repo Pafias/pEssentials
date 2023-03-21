@@ -14,7 +14,7 @@ import java.util.stream.Collectors;
 public class TeleporthereCommand extends ICommand {
 
     public TeleporthereCommand() {
-        super("teleporthere", "essentials.tphere", "Teleport someone to you", "/tphere <player>/all","tphere");
+        super("teleporthere", "essentials.tphere", "Teleport someone to you", "/tphere <player>/all", "tphere");
     }
 
     @Override
@@ -29,10 +29,8 @@ public class TeleporthereCommand extends ICommand {
                 return;
             }
             User player1 = plugin.getSM().getUserManager().getUser((Player) sender);
-            if (args[0].equalsIgnoreCase("all") || args[0].equalsIgnoreCase("*")) {
-                plugin.getServer().getOnlinePlayers().forEach(p -> {
-                    p.teleport(player1.getPlayer());
-                });
+            if (args[0].equalsIgnoreCase("@a") || args[0].equalsIgnoreCase("*")) {
+                plugin.getServer().getOnlinePlayers().forEach(p -> p.teleport(player1.getPlayer()));
                 sender.sendMessage(CC.t("&6Teleported everyone to you"));
                 return;
             } else {

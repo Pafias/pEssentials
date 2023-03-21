@@ -65,8 +65,7 @@ public final class PafiasEssentials extends JavaPlugin {
         String[] var = version.split("\\.", 2);
         String[] var2 = var[1].split("-");
         String var3 = var2[0];
-        double d = Double.parseDouble(var3);
-        return d;
+        return Double.parseDouble(var3);
     }
 
 }

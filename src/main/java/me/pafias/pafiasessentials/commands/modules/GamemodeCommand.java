@@ -47,11 +47,6 @@ public class GamemodeCommand extends ICommand {
                 ((Player) sender).setGameMode(gamemode);
                 sender.sendMessage(CC.t("&6Gamemode: &a" + gamemode.name().toLowerCase()));
             } else {
-                Player target = plugin.getServer().getPlayer(args[1]);
-                if (target == null) {
-                    sender.sendMessage(CC.t("&cPlayer not found!"));
-                    return;
-                }
                 GameMode gamemode = null;
                 try {
                     gamemode = GameMode.getByValue(Integer.parseInt(args[0]));
@@ -71,9 +66,25 @@ public class GamemodeCommand extends ICommand {
                     sender.sendMessage(CC.t("&cInvalid gamemode!"));
                     return;
                 }
-                target.setGameMode(gamemode);
-                target.sendMessage(CC.t("&6Gamemode: &a" + gamemode.name().toLowerCase()));
-                sender.sendMessage(CC.t("&7" + target.getName() + "&6 " + (target.getName().endsWith("s") ? "'" : "'s") + "&6gamemode: &a" + gamemode.name().toLowerCase()));
+                boolean silent = Arrays.asList(args).contains("-s");
+                if (args[1].equalsIgnoreCase("@a") || args[1].equalsIgnoreCase("*")) {
+                    GameMode finalGamemode = gamemode;
+                    plugin.getServer().getOnlinePlayers().forEach(p -> {
+                        p.setGameMode(finalGamemode);
+                        if (!silent)
+                            p.sendMessage(CC.t("&6Gamemode: &a" + finalGamemode.name().toLowerCase()));
+                    });
+                } else {
+                    Player target = plugin.getServer().getPlayer(args[1]);
+                    if (target == null) {
+                        sender.sendMessage(CC.t("&cPlayer not found!"));
+                        return;
+                    }
+                    target.setGameMode(gamemode);
+                    if (!silent)
+                        target.sendMessage(CC.t("&6Gamemode: &a" + gamemode.name().toLowerCase()));
+                    sender.sendMessage(CC.t("&7" + target.getName() + "&6 " + (target.getName().endsWith("s") ? "'" : "'s") + "&6gamemode: &a" + gamemode.name().toLowerCase()));
+                }
             }
         }
     }
