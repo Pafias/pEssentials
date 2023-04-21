@@ -34,7 +34,10 @@ jobs:
         echo "<toolchains><toolchain><type>jdk</type><provides><version>17</version><vendor>Java</vendor></provides><configuration><jdkHome>/opt/hostedtoolcache/Java_Temurin-Hotspot_jdk/17.0.6-10/x64/</jdkHome></configuration></toolchain></toolchains>" > ~/.m2/toolchains.xml
     - name: Build with Maven
       run: mvn -B package --file pom.xml
-      
+    - name: show me what the fuck is there
+      run: |
+        ls .
+        ls . -R
     - name: Download a Build Artifact
       uses: actions/download-artifact@v2.1.1
       with:
