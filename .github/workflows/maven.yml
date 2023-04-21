@@ -41,4 +41,4 @@ jobs:
         # Artifact name
         name: PafiasEssentials-1.0-SNAPSHOT.jar
         # Destination path
-        path: target/PafiasEssentials-1.0-SNAPSHOT.jar
+        path: ./target/PafiasEssentials-1.0-SNAPSHOT.jar
