@@ -1,9 +1,9 @@
-name: PafiasEssentials
+name: pEssentials
 version: ${project.version}
-main: me.pafias.pafiasessentials.PafiasEssentials
+main: me.pafias.pessentials.pEssentials
 softdepend: [ ProtocolLib, PlaceholderAPI ]
 author: Pafias
-description: PafiasEssentials
+description: Various useful features
 api-version: 1.13
 commands:
   entity:
