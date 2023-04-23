@@ -1,0 +1,39 @@
+package me.pafias.pessentials.services;
+
+import me.pafias.pessentials.objects.User;
+import org.bukkit.entity.Player;
+
+import java.util.HashSet;
+import java.util.Set;
+import java.util.UUID;
+
+public class UserManager {
+
+    private final Set<User> users = new HashSet<>();
+
+    public Set<User> getUsers() {
+        return users;
+    }
+
+    public User getUser(UUID uuid) {
+        return users.stream().filter(u -> u.getUUID().equals(uuid)).findAny().orElse(null);
+    }
+
+    public User getUser(Player player) {
+        return getUser(player.getUniqueId());
+    }
+
+    public User getUser(String name) {
+        return users.stream().filter(u -> u.getName().toLowerCase().startsWith(name.toLowerCase().trim())).findAny().orElse(null);
+    }
+
+    public void addUser(Player player) {
+        users.add(new User(player));
+    }
+
+    public void removeUser(Player player) {
+        User user = getUser(player);
+        users.remove(user);
+    }
+
+}
