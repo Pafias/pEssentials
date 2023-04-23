@@ -38,5 +38,5 @@ jobs:
     - name: 'Upload Artifact'
       uses: actions/upload-artifact@v3
       with:
-        name: PafiasEssentials-1.0-SNAPSHOT.jar
-        path: target/PafiasEssentials-1.0-SNAPSHOT.jar
+        name: PafiasEssentials.jar
+        path: target/*.jar
