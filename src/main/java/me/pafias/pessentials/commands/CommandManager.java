@@ -11,6 +11,7 @@ public class CommandManager {
     public CommandManager(pEssentials plugin) {
         commands = new HashSet<>();
         for (String command : plugin.getDescription().getCommands().keySet()) {
+            if (plugin.getSM().getVariables().disabledCommands.contains(command)) continue;
             try {
                 Class<?> c = Class.forName("me.pafias.pessentials.commands.modules." + StringUtils.capitalize(command) + "Command");
                 commands.add((ICommand) c.getDeclaredConstructor().newInstance());

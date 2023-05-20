@@ -3,20 +3,20 @@ package me.pafias.pessentials.services;
 import me.pafias.pessentials.objects.User;
 import org.bukkit.entity.Player;
 
-import java.util.HashSet;
-import java.util.Set;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.UUID;
 
 public class UserManager {
 
-    private final Set<User> users = new HashSet<>();
+    private final Map<UUID, User> users = new HashMap<>();
 
-    public Set<User> getUsers() {
+    public Map<UUID, User> getUsers() {
         return users;
     }
 
     public User getUser(UUID uuid) {
-        return users.stream().filter(u -> u.getUUID().equals(uuid)).findAny().orElse(null);
+        return users.get(uuid);
     }
 
     public User getUser(Player player) {
@@ -24,16 +24,15 @@ public class UserManager {
     }
 
     public User getUser(String name) {
-        return users.stream().filter(u -> u.getName().toLowerCase().startsWith(name.toLowerCase().trim())).findAny().orElse(null);
+        return users.values().stream().filter(u -> u.getName().toLowerCase().startsWith(name.toLowerCase().trim())).findAny().orElse(null);
     }
 
     public void addUser(Player player) {
-        users.add(new User(player));
+        users.put(player.getUniqueId(), new User(player));
     }
 
     public void removeUser(Player player) {
-        User user = getUser(player);
-        users.remove(user);
+        users.remove(player.getUniqueId());
     }
 
 }

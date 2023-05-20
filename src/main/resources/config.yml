@@ -6,3 +6,4 @@ quit_message_enabled: false
 kick_on_high_ping: false
 ping_kick_threshold: 150
 discord_link: 'https://discord.gg/'
+disabled_commands: []
