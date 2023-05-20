@@ -1,7 +1,7 @@
 package me.pafias.pessentials.listeners;
 
-import me.pafias.pessentials.pEssentials;
 import me.pafias.pessentials.objects.User;
+import me.pafias.pessentials.pEssentials;
 import me.pafias.pessentials.util.CC;
 import me.pafias.pessentials.util.RandomUtils;
 import org.bukkit.event.EventHandler;
