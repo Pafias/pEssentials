@@ -9,7 +9,7 @@ public class ServicesManager {
 
     public ServicesManager(pEssentials plugin) {
         variables = new Variables(plugin);
-        commandManager = new CommandManager(plugin);
+        commandManager = new CommandManager(plugin, variables);
         userManager = new UserManager();
         vanishManager = new VanishManager(plugin);
         freezeManager = new FreezeManager(plugin);
