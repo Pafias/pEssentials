@@ -17,7 +17,6 @@ commands:
     permission: essentials.nightvision
   ping:
     aliases: [ latency ]
-    permission: essentials.ping
   gamemode:
     aliases: [ gm ]
     permission: essentials.gamemode
@@ -40,10 +39,8 @@ commands:
     permission: essentials.speed
   tell:
     aliases: [ t, message, msg, whisper, w ]
-    permission: essentials.tell
   reply:
     aliases: [ r ]
-    permission: essentials.reply
   teleport:
     aliases: [ tp ]
     permission: essentials.teleport
@@ -104,3 +101,14 @@ commands:
     aliases: [ inv ]
   discord:
     aliases: [ dc ]
+permissions:
+  essentials.ping.others:
+    default: true
+    children:
+      essentials.ping: true
+  essentials.ping:
+    default: true
+  essentials.tell:
+    default: true
+    children:
+      essentials.reply: true

@@ -34,7 +34,10 @@ public class ItemCommand extends ICommand {
     @Override
     public List<String> tabHandler(CommandSender sender, Command command, String label, String[] args) {
         if (args.length == 1)
-            return Arrays.stream(Material.values()).map(Material::name).filter(m -> m.toLowerCase().startsWith(args[0].toLowerCase())).collect(Collectors.toList());
+            return Arrays.stream(Material.values())
+                    .map(Material::name)
+                    .filter(m -> m.toLowerCase().startsWith(args[0].toLowerCase()))
+                    .collect(Collectors.toList());
         else return Collections.emptyList();
     }
 

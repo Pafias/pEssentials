@@ -31,7 +31,8 @@ public abstract class ICommand implements CommandExecutor, TabExecutor {
         PluginCommand pc = plugin.getCommand(name);
         if (pc == null) return;
         pc.setDescription(description);
-        pc.setPermission(permission);
+        if (permission != null)
+            pc.setPermission(permission);
         pc.setUsage(usage);
         pc.setAliases(aliases);
         pc.setExecutor(this);

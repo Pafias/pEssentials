@@ -13,7 +13,7 @@ import java.util.stream.Collectors;
 public class TellCommand extends ICommand {
 
     public TellCommand() {
-        super("tell", "essentials.tell", "Private messaging", "/tell <player> <message>", "t", "whisper", "w", "message", "msg");
+        super("tell", null, "Private messaging", "/tell <player> <message>", "t", "whisper", "w", "message", "msg");
     }
 
     public static Map<UUID, UUID> msg = new WeakHashMap<>();
@@ -42,8 +42,13 @@ public class TellCommand extends ICommand {
             for (int i = 1; i < args.length; i++)
                 sb.append(args[i]).append(" ");
             String message = sb.toString();
-            target.getPlayer().sendMessage(CC.t("&e[Tell] &c" + player.getName() + "&6: &r" + message));
-            player.getPlayer().sendMessage(CC.t("&e[Tell] &c" + player.getName() + " &6-> &c" + target.getName() + " &6: &r" + message));
+            try {
+                target.getPlayer().sendMessage(CC.a("&e[Tell] &c" + player.getName() + "&6: &r" + message));
+                player.getPlayer().sendMessage(CC.a("&e[Tell] &c" + player.getName() + " &6-> &c" + target.getName() + " &6: &r" + message));
+            } catch (Exception ex) {
+                target.getPlayer().sendMessage(CC.t("&e[Tell] &c" + player.getName() + "&6: &r" + message));
+                player.getPlayer().sendMessage(CC.t("&e[Tell] &c" + player.getName() + " &6-> &c" + target.getName() + " &6: &r" + message));
+            }
             msg.put(player.getUUID(), target.getUUID());
             msg.put(target.getUUID(), player.getUUID());
         }
@@ -53,7 +58,11 @@ public class TellCommand extends ICommand {
     @Override
     public List<String> tabHandler(CommandSender sender, Command command, String label, String[] args) {
         if (args.length == 1)
-            return plugin.getServer().getOnlinePlayers().stream().filter(p -> ((Player) sender).canSee(p)).map(Player::getName).filter(n -> n.toLowerCase().startsWith(args[0].toLowerCase())).collect(Collectors.toList());
+            return plugin.getServer().getOnlinePlayers().stream()
+                    .filter(p -> ((Player) sender).canSee(p))
+                    .map(Player::getName)
+                    .filter(n -> n.toLowerCase().startsWith(args[0].toLowerCase()))
+                    .collect(Collectors.toList());
         else return Collections.emptyList();
     }
 

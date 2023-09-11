@@ -51,7 +51,11 @@ public class ItemstackCommand extends ICommand {
                 sb.append(args[i]).append(i == args.length - 1 ? "" : " ");
             String name = sb.toString();
             ItemMeta meta = is.getItemMeta();
-            meta.setDisplayName(CC.t(name));
+            try {
+                meta.displayName(CC.a(name));
+            } catch (Exception ex) {
+                meta.setDisplayName(CC.t(name));
+            }
             is.setItemMeta(meta);
             sender.sendMessage(CC.t("&aName changed."));
         } else if (args[0].equalsIgnoreCase("lore")) {
@@ -66,7 +70,11 @@ public class ItemstackCommand extends ICommand {
             String arg = sb.toString();
             String[] lore = arg.split("\\|");
             ItemMeta meta = is.getItemMeta();
-            meta.setLore(CC.t(Arrays.asList(lore)));
+            try {
+                meta.lore(CC.a(Arrays.asList(lore)));
+            } catch (Exception ex) {
+                meta.setLore(CC.t(Arrays.asList(lore)));
+            }
             is.setItemMeta(meta);
             sender.sendMessage(CC.t("&aLore changed."));
         } else if (args[0].equalsIgnoreCase("enchant")) {
