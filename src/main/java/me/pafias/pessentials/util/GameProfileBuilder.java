@@ -58,7 +58,7 @@ public class GameProfileBuilder {
         if (!forceNew && cache.containsKey(uuid) && cache.get(uuid).isValid()) {
             return cache.get(uuid).profile;
         } else {
-            HttpURLConnection connection = (HttpURLConnection) new URL(String.format(SERVICE_URL, UUIDTypeAdapter.fromUUID(uuid))).openConnection();
+            HttpURLConnection connection = (HttpURLConnection) new URL(String.format(SERVICE_URL, uuid.toString())).openConnection();
             connection.setReadTimeout(5000);
 
             if (connection.getResponseCode() == HttpURLConnection.HTTP_OK) {
@@ -111,7 +111,7 @@ public class GameProfileBuilder {
 
         List<Object> args = new ArrayList<>();
         args.add(System.currentTimeMillis());
-        args.add(UUIDTypeAdapter.fromUUID(uuid));
+        args.add(uuid.toString());
         args.add(name);
         args.add(skinUrl);
         if (cape) args.add(capeUrl);

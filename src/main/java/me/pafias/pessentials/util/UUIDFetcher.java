@@ -118,7 +118,7 @@ public class UUIDFetcher {
             return nameCache.get(uuid);
         }
         try {
-            HttpURLConnection connection = (HttpURLConnection) new URL(String.format(NAME_URL, UUIDTypeAdapter.fromUUID(uuid))).openConnection();
+            HttpURLConnection connection = (HttpURLConnection) new URL(String.format(NAME_URL, uuid.toString())).openConnection();
             connection.setReadTimeout(5000);
             UUIDFetcher[] nameHistory = gson.fromJson(new BufferedReader(new InputStreamReader(connection.getInputStream())), UUIDFetcher[].class);
             UUIDFetcher currentNameData = nameHistory[nameHistory.length - 1];
