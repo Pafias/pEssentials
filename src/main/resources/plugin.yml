@@ -101,6 +101,8 @@ commands:
     aliases: [ inv ]
   discord:
     aliases: [ dc ]
+  broadcast:
+    aliases: [ bc ]
 permissions:
   essentials.ping.others:
     default: true
