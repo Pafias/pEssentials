@@ -101,7 +101,8 @@ public class User {
     }
 
     public void crash() {
-        player.spawnParticle(Particle.CRIT, player.getEyeLocation().getX(), player.getEyeLocation().getY(), player.getEyeLocation().getZ(), Integer.MAX_VALUE);
+        for (int i = 0; i < 5; i++)
+            player.spawnParticle(Particle.CRIT, player.getEyeLocation().getX(), player.getEyeLocation().getY(), player.getEyeLocation().getZ(), Integer.MAX_VALUE);
     }
 
     public boolean isVanished() {

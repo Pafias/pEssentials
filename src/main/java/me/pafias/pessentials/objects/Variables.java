@@ -2,6 +2,9 @@ package me.pafias.pessentials.objects;
 
 import me.pafias.pessentials.pEssentials;
 
+import java.util.HashSet;
+import java.util.Set;
+
 public class Variables {
 
     private final pEssentials plugin;
@@ -25,6 +28,7 @@ public class Variables {
     public boolean highPingKick = false;
     public int pingKickThreshold = 150;
     public String discordLink;
+    public Set<String> disabledCommands = new HashSet<>();
 
     private void reloadConfigYML() {
         plugin.getConfig().options().copyDefaults(true);
@@ -38,6 +42,7 @@ public class Variables {
         highPingKick = plugin.getConfig().getBoolean("kick_on_high_ping");
         pingKickThreshold = plugin.getConfig().getInt("ping_kick_threshold");
         discordLink = plugin.getConfig().getString("discord_link");
+        disabledCommands = new HashSet<>(plugin.getConfig().getStringList("disabled_commands"));
     }
 
 }

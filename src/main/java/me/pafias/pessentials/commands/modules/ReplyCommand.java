@@ -13,7 +13,7 @@ import java.util.List;
 public class ReplyCommand extends ICommand {
 
     public ReplyCommand() {
-        super("reply", "essentials.reply", "Reply", "/r <message>", "r");
+        super("reply", null, "Reply", "/r <message>", "r");
     }
 
     @Override
@@ -43,8 +43,13 @@ public class ReplyCommand extends ICommand {
             StringBuilder sb = new StringBuilder();
             for (String arg : args) sb.append(arg).append(" ");
             String message = sb.toString();
-            target.getPlayer().sendMessage(CC.t("&e[Tell] &c" + player.getName() + "&6: &r" + message));
-            player.getPlayer().sendMessage(CC.t("&e[Tell] &c" + player.getName() + " &6-> &c" + target.getName() + " &6: &r" + message));
+            try {
+                target.getPlayer().sendMessage(CC.a("&e[Tell] &c" + player.getName() + "&6: &r" + message));
+                player.getPlayer().sendMessage(CC.a("&e[Tell] &c" + player.getName() + " &6-> &c" + target.getName() + " &6: &r" + message));
+            } catch (Exception ex) {
+                target.getPlayer().sendMessage(CC.t("&e[Tell] &c" + player.getName() + "&6: &r" + message));
+                player.getPlayer().sendMessage(CC.t("&e[Tell] &c" + player.getName() + " &6-> &c" + target.getName() + " &6: &r" + message));
+            }
         }
         return;
     }

@@ -13,7 +13,7 @@ import java.util.*;
 public class RussianrouletteCommand extends ICommand {
 
     public RussianrouletteCommand() {
-        super("russianroulette", "essentials.russianroulette", "Russian roulette!", "/russianroulette");
+        super("russianroulette", "essentials.russianroulette", "Russian roulette!", "/russianroulette [chance]");
     }
 
     private Set<UUID> cooldown = new HashSet<>();
@@ -48,7 +48,7 @@ public class RussianrouletteCommand extends ICommand {
                     public void run() {
                         cooldown.remove(((Player) sender).getUniqueId());
                     }
-                }.runTaskLaterAsynchronously(plugin, (5 * 60 * 20));
+                }.runTaskLaterAsynchronously(plugin, (30 * 20));
             }
         }
         return;

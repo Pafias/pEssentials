@@ -1,5 +1,6 @@
 package me.pafias.pessentials.commands;
 
+import me.pafias.pessentials.objects.Variables;
 import me.pafias.pessentials.pEssentials;
 import org.apache.commons.lang.StringUtils;
 
@@ -8,9 +9,10 @@ import java.util.Set;
 
 public class CommandManager {
 
-    public CommandManager(pEssentials plugin) {
+    public CommandManager(pEssentials plugin, Variables variables) {
         commands = new HashSet<>();
         for (String command : plugin.getDescription().getCommands().keySet()) {
+            if (variables.disabledCommands.contains(command)) continue;
             try {
                 Class<?> c = Class.forName("me.pafias.pessentials.commands.modules." + StringUtils.capitalize(command) + "Command");
                 commands.add((ICommand) c.getDeclaredConstructor().newInstance());

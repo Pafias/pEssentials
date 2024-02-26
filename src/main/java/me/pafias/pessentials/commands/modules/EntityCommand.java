@@ -16,6 +16,7 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 public class EntityCommand extends ICommand {
 
@@ -195,7 +196,11 @@ public class EntityCommand extends ICommand {
                 for (int i = 1; i < args.length; i++)
                     sb.append(args[i]).append(i == args.length - 1 ? "" : " ");
                 entity.setCustomNameVisible(true);
-                entity.setCustomName(CC.t(sb.toString()));
+                try {
+                    entity.customName(CC.a(sb.toString()));
+                } catch (Exception ex) {
+                    entity.setCustomName(CC.t(sb.toString()));
+                }
                 Reflection.sendActionbar(user.getPlayer(), CC.t("&6Entity name: &r" + entity.getCustomName()));
             } else if (args[0].equalsIgnoreCase("ride") && sender.hasPermission("essentials.entity.ride")) {
                 if (args.length == 2 && args[1].equalsIgnoreCase("-d")) {
@@ -262,7 +267,9 @@ public class EntityCommand extends ICommand {
     @Override
     public List<String> tabHandler(CommandSender sender, Command command, String label, String[] args) {
         if (args.length == 1)
-            return Arrays.asList("spawn", "delete", "fly", "gravity", "age", "tp", "god", "glow", "name", "ride", "invis", "ai");
+            return Stream.of("spawn", "delete", "fly", "gravity", "age", "tp", "god", "glow", "name", "ride", "invis", "ai")
+                    .filter(s -> s.toLowerCase().startsWith(args[0].toLowerCase()))
+                    .collect(Collectors.toList());
         else if (args.length == 2 && (args[0].equalsIgnoreCase("spawn") || args[0].equalsIgnoreCase("s")))
             return Arrays.stream(EntityType.values()).map(EntityType::getName).filter(e -> e.toLowerCase().startsWith(args[1].toLowerCase())).collect(Collectors.toList());
         else if (args.length == 2 && args[0].equalsIgnoreCase("ride"))
