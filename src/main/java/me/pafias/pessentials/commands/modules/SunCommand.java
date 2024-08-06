@@ -25,7 +25,10 @@ public class SunCommand extends ICommand {
         }
         if (sender.hasPermission("essentials.sun") && Arrays.stream(args).noneMatch(arg -> arg.toLowerCase().contains("-p"))) {
             Player player = (Player) sender;
-            player.getWorld().setClearWeatherDuration(0);
+            try {
+                player.getWorld().setClearWeatherDuration(0);
+            } catch (Throwable ignored) {
+            }
             player.getWorld().setThundering(false);
             player.sendMessage(CC.t("&6Weather cleared."));
         } else {

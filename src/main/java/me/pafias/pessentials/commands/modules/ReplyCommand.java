@@ -46,7 +46,7 @@ public class ReplyCommand extends ICommand {
             try {
                 target.getPlayer().sendMessage(CC.a("&e[Tell] &c" + player.getName() + "&6: &r" + message));
                 player.getPlayer().sendMessage(CC.a("&e[Tell] &c" + player.getName() + " &6-> &c" + target.getName() + " &6: &r" + message));
-            } catch (Exception ex) {
+            } catch (Throwable ex) {
                 target.getPlayer().sendMessage(CC.t("&e[Tell] &c" + player.getName() + "&6: &r" + message));
                 player.getPlayer().sendMessage(CC.t("&e[Tell] &c" + player.getName() + " &6-> &c" + target.getName() + " &6: &r" + message));
             }
