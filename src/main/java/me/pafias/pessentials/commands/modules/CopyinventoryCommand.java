@@ -64,9 +64,14 @@ public class CopyinventoryCommand extends ICommand {
     }
 
     private void copy(Player from, Player to) {
-        to.getInventory().setStorageContents(from.getInventory().getStorageContents());
-        to.getInventory().setArmorContents(from.getInventory().getArmorContents());
-        to.getInventory().setExtraContents(from.getInventory().getExtraContents());
+        try {
+            to.getInventory().setStorageContents(from.getInventory().getStorageContents());
+            to.getInventory().setArmorContents(from.getInventory().getArmorContents());
+            to.getInventory().setExtraContents(from.getInventory().getExtraContents());
+        } catch (Throwable t) {
+            to.getInventory().setContents(from.getInventory().getContents());
+            to.getInventory().setArmorContents(from.getInventory().getArmorContents());
+        }
     }
 
 }
