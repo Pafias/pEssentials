@@ -53,7 +53,7 @@ public class ItemstackCommand extends ICommand {
             ItemMeta meta = is.getItemMeta();
             try {
                 meta.displayName(CC.a(name));
-            } catch (Exception ex) {
+            } catch (Throwable ex) {
                 meta.setDisplayName(CC.t(name));
             }
             is.setItemMeta(meta);
@@ -72,7 +72,7 @@ public class ItemstackCommand extends ICommand {
             ItemMeta meta = is.getItemMeta();
             try {
                 meta.lore(CC.a(Arrays.asList(lore)));
-            } catch (Exception ex) {
+            } catch (Throwable ex) {
                 meta.setLore(CC.t(Arrays.asList(lore)));
             }
             is.setItemMeta(meta);
