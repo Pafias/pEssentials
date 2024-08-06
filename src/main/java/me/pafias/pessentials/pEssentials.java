@@ -3,6 +3,7 @@ package me.pafias.pessentials;
 import me.pafias.pessentials.listeners.*;
 import me.pafias.pessentials.objects.User;
 import me.pafias.pessentials.services.ServicesManager;
+import me.pafias.pessentials.tasks.AutoUpdaterTask;
 import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.java.JavaPlugin;
 
@@ -23,6 +24,7 @@ public final class pEssentials extends JavaPlugin {
     @Override
     public void onEnable() {
         plugin = this;
+        new AutoUpdaterTask(plugin).run();
         getServer().getMessenger().registerOutgoingPluginChannel(this, "BungeeCord");
         servicesManager = new ServicesManager(plugin);
         getServer().getOnlinePlayers().forEach(p -> servicesManager.getUserManager().addUser(p));
