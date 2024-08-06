@@ -198,7 +198,7 @@ public class EntityCommand extends ICommand {
                 entity.setCustomNameVisible(true);
                 try {
                     entity.customName(CC.a(sb.toString()));
-                } catch (Exception ex) {
+                } catch (Throwable ex) {
                     entity.setCustomName(CC.t(sb.toString()));
                 }
                 Reflection.sendActionbar(user.getPlayer(), CC.t("&6Entity name: &r" + entity.getCustomName()));
