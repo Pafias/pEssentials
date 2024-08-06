@@ -6,7 +6,7 @@
 
     <groupId>me.pafias</groupId>
     <artifactId>pEssentials</artifactId>
-    <version>1.0-SNAPSHOT</version>
+    <version>1.1-SNAPSHOT</version>
     <packaging>jar</packaging>
 
     <name>pEssentials</name>
@@ -117,7 +117,7 @@
         <dependency>
             <groupId>com.comphenix.protocol</groupId>
             <artifactId>ProtocolLib</artifactId>
-            <version>5.0.0-SNAPSHOT</version>
+            <version>5.0.0</version>
             <scope>provided</scope>
         </dependency>
         <dependency>
