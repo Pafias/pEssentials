@@ -118,8 +118,8 @@ public class ArmorstandCommand extends ICommand {
                 }
                 ArmorStand as = (ArmorStand) vehicle;
 
-                ItemStack item = player.getInventory().getItemInMainHand();
-                as.getEquipment().setItemInMainHand(item);
+                ItemStack item = player.getInventory().getItemInHand();
+                as.getEquipment().setItemInHand(item);
                 sender.sendMessage(CC.t("&aArmorStand main hand item set."));
                 return;
             } else if (args[0].equalsIgnoreCase("setoffhand")) {
