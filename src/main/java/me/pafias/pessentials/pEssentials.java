@@ -59,7 +59,6 @@ public final class pEssentials extends JavaPlugin {
         servicesManager.getUserManager().getUsers().values().stream().filter(User::hasIdentity).forEach(user -> user.setIdentity(user.getOriginalGameProfile()));
         if (getServer().getPluginManager().getPlugin("PlaceholderAPI") != null)
             servicesManager.getPAPIExpansion().unregister();
-        plugin = null;
     }
 
     public double parseVersion() {
