@@ -24,7 +24,7 @@ public class UserManager {
     }
 
     public User getUser(String name) {
-        return users.values().stream().filter(u -> u.getName().toLowerCase().startsWith(name.toLowerCase().trim())).findAny().orElse(null);
+        return users.values().stream().filter(u -> u.getName().equalsIgnoreCase(name) || u.getName().toLowerCase().startsWith(name.toLowerCase().trim())).findFirst().orElse(null);
     }
 
     public void addUser(Player player) {
