@@ -103,6 +103,9 @@ commands:
     aliases: [ dc ]
   broadcast:
     aliases: [ bc ]
+  lightning:
+    aliases: [ strike ]
+  nuke:
 permissions:
   essentials.ping.others:
     default: true
