@@ -37,17 +37,23 @@ public class SudoCommand extends ICommand {
                 return;
             }
             String[] argsParsed = Arrays.copyOfRange(args, 2, args.length);
-            PermissionAttachment attachment = target.addAttachment(plugin);
-            boolean hasPerm = cmd.testPermissionSilent(target);
-            boolean removePerm;
-            if (!hasPerm && cmd.getPermission() != null) {
-                attachment.setPermission(cmd.getPermission(), true);
-                removePerm = true;
-            } else removePerm = false;
-            cmd.execute(target, args[1], argsParsed);
-            if (removePerm)
-                attachment.unsetPermission(cmd.getPermission());
-            target.removeAttachment(attachment);
+            if(argsParsed[0].equalsIgnoreCase("chat")){
+                String[] msgArgs = Arrays.copyOfRange(argsParsed, 1, argsParsed.length);
+                String message = String.join(" ", msgArgs);
+                target.chat(message);
+            } else {
+                PermissionAttachment attachment = target.addAttachment(plugin);
+                boolean hasPerm = cmd.testPermissionSilent(target);
+                boolean removePerm;
+                if (!hasPerm && cmd.getPermission() != null) {
+                    attachment.setPermission(cmd.getPermission(), true);
+                    removePerm = true;
+                } else removePerm = false;
+                cmd.execute(target, args[1], argsParsed);
+                if (removePerm)
+                    attachment.unsetPermission(cmd.getPermission());
+                target.removeAttachment(attachment);
+            }
             sender.sendMessage(CC.t("&aSudo executed."));
         }
         return;
