@@ -33,7 +33,11 @@ public class RussianrouletteCommand extends ICommand {
             int num1 = new Random().nextInt(6);
             int num2 = new Random().nextInt(6);
             if (num1 == num2) {
-                player.sendTitle(CC.t("&c&lUh oh!"), CC.t("&4&lYou were unlucky!"), 2, 20, 20);
+                try {
+                    player.sendTitle(CC.t("&c&lUh oh!"), CC.t("&4&lYou were unlucky!"), 2, 20, 20);
+                } catch (Throwable t) {
+                    player.sendTitle(CC.t("&c&lUh oh!"), CC.t("&4&lYou were unlucky!"));
+                }
                 new BukkitRunnable() {
                     @Override
                     public void run() {

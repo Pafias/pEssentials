@@ -37,7 +37,7 @@ public class StaffchatCommand extends ICommand {
                 try {
                     RandomUtils.getStaffOnline("essentials.staffchat").forEach(p -> p.sendMessage(CC.formatStaffchatModern(sender.getName(), message)));
                     plugin.getServer().getConsoleSender().sendMessage(CC.formatStaffchatModern(sender.getName(), message));
-                } catch (Exception ex) {
+                } catch (Throwable ex) {
                     RandomUtils.getStaffOnline("essentials.staffchat").forEach(p -> p.sendMessage(CC.formatStaffchat(sender.getName(), message)));
                     plugin.getServer().getConsoleSender().sendMessage(CC.formatStaffchat(sender.getName(), message));
                 }

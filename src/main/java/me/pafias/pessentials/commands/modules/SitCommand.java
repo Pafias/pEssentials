@@ -36,7 +36,11 @@ public class SitCommand extends ICommand {
                 map.remove(player);
             } else {
                 Location location = player.getLocation().clone();
-                location.subtract(0, player.getHeight(), 0);
+                try {
+                    location.subtract(0, player.getHeight(), 0);
+                }catch(Throwable t){
+                    location.subtract(0, 1, 0);
+                }
                 location.add(0, 0.1, 0);
                 ArmorStand as = player.getWorld().spawn(location, ArmorStand.class);
                 as.setGravity(false);
