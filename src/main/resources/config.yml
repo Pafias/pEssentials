@@ -7,3 +7,15 @@ kick_on_high_ping: false
 ping_kick_threshold: 150
 discord_link: 'https://discord.gg/'
 disabled_commands: []
+bad_people_filter:
+  movement_verification: true
+  username_check: true
+  anti_advertising:
+    enabled: true
+    shadow_disallow: true
+  anti_spam:
+    enabled: true
+    max_messages: 12
+    time_period_millis: 5000
+    auto_mute: true
+    mute_duration_millis: 10000
