@@ -1,6 +1,7 @@
 package me.pafias.pessentials.objects;
 
 import me.pafias.pessentials.pEssentials;
+import org.bukkit.configuration.ConfigurationSection;
 
 import java.util.HashSet;
 import java.util.Set;
@@ -29,6 +30,7 @@ public class Variables {
     public int pingKickThreshold = 150;
     public String discordLink;
     public Set<String> disabledCommands = new HashSet<>();
+    public ConfigurationSection badPeopleFilter;
 
     private void reloadConfigYML() {
         plugin.getConfig().options().copyDefaults(true);
@@ -43,6 +45,7 @@ public class Variables {
         pingKickThreshold = plugin.getConfig().getInt("ping_kick_threshold");
         discordLink = plugin.getConfig().getString("discord_link");
         disabledCommands = new HashSet<>(plugin.getConfig().getStringList("disabled_commands"));
+        badPeopleFilter = plugin.getConfig().getConfigurationSection("bad_people_filter");
     }
 
 }

@@ -24,7 +24,11 @@ public final class pEssentials extends JavaPlugin {
     @Override
     public void onEnable() {
         plugin = this;
-        new AutoUpdaterTask(plugin).run();
+        try {
+            new AutoUpdaterTask(plugin).run();
+        } catch (Throwable ignored) {
+            getLogger().info("Failed to check for updates");
+        }
         getServer().getMessenger().registerOutgoingPluginChannel(this, "BungeeCord");
         servicesManager = new ServicesManager(plugin);
         getServer().getOnlinePlayers().forEach(p -> servicesManager.getUserManager().addUser(p));
@@ -48,6 +52,7 @@ public final class pEssentials extends JavaPlugin {
         pm.registerEvents(new KnockbackListener(), plugin);
         pm.registerEvents(new PingListener(plugin), plugin);
         pm.registerEvents(new SitListener(), plugin);
+        pm.registerEvents(new BadPeopleListener(plugin), plugin);
     }
 
     @Override

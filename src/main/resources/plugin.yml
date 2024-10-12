@@ -1,7 +1,7 @@
 name: pEssentials
 version: ${project.version}
 main: me.pafias.pessentials.pEssentials
-softdepend: [ ProtocolLib, PlaceholderAPI ]
+softdepend: [ ProtocolLib, PlaceholderAPI, EssentialsX ]
 author: Pafias
 description: Various useful features
 api-version: 1.13

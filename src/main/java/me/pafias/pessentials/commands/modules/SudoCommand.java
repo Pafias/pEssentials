@@ -12,6 +12,8 @@ import org.jetbrains.annotations.NotNull;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
+import java.util.Objects;
+import java.util.stream.Collectors;
 
 public class SudoCommand extends ICommand {
 
@@ -31,17 +33,16 @@ public class SudoCommand extends ICommand {
                 sender.sendMessage(CC.t("&cPlayer not found!"));
                 return;
             }
-            PluginCommand cmd = plugin.getServer().getPluginCommand(args[1]);
-            if (cmd == null) {
-                sender.sendMessage(CC.t("&cCommand not found!"));
-                return;
-            }
             String[] argsParsed = Arrays.copyOfRange(args, 2, args.length);
-            if(argsParsed[0].equalsIgnoreCase("chat")){
-                String[] msgArgs = Arrays.copyOfRange(argsParsed, 1, argsParsed.length);
-                String message = String.join(" ", msgArgs);
+            if (args[1].equalsIgnoreCase("chat")) {
+                String message = String.join(" ", argsParsed);
                 target.chat(message);
             } else {
+                PluginCommand cmd = plugin.getServer().getPluginCommand(args[1]);
+                if (cmd == null) {
+                    sender.sendMessage(CC.t("&cCommand not found!"));
+                    return;
+                }
                 PermissionAttachment attachment = target.addAttachment(plugin);
                 boolean hasPerm = cmd.testPermissionSilent(target);
                 boolean removePerm;
@@ -61,7 +62,23 @@ public class SudoCommand extends ICommand {
 
     @Override
     public List<String> tabHandler(CommandSender sender, Command command, String label, String[] args) {
-        return Collections.emptyList();
+        if (args.length == 1)
+            return plugin.getServer().getOnlinePlayers()
+                    .stream()
+                    .filter(p -> ((Player) sender).canSee(p))
+                    .map(Player::getName)
+                    .filter(s -> s.toLowerCase().startsWith(args[0].toLowerCase()))
+                    .collect(Collectors.toList());
+        else if (args.length == 2)
+            return plugin.getServer().getCommandAliases().keySet()
+                    .stream()
+                    .map(cmd -> plugin.getServer().getPluginCommand(cmd))
+                    .filter(Objects::nonNull)
+                    .filter(cmd -> cmd.getPermission() == null || sender.hasPermission(cmd.getPermission()))
+                    .map(PluginCommand::getName)
+                    .filter(s -> s.toLowerCase().startsWith(args[1].toLowerCase()))
+                    .collect(Collectors.toList());
+        else return Collections.singletonList("<args>");
     }
 
 }
