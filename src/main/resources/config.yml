@@ -10,9 +10,12 @@ disabled_commands: []
 bad_people_filter:
   movement_verification: true
   username_check: true
+  username_regex: '^[a-zA-Z0-9_]{3,16}$'
   anti_advertising:
     enabled: true
     shadow_disallow: true
+    regex1: '.*\b\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}\b.*'
+    regex2: '.*\b\w+\.(?:gg|mc|craft|play|mine|server|network|pvp|net|com)\b.*'
   anti_spam:
     enabled: true
     max_messages: 12
