@@ -14,6 +14,7 @@ import org.bukkit.event.player.PlayerMoveEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.scheduler.BukkitTask;
 
+import javax.annotation.RegEx;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
@@ -31,7 +32,17 @@ public class BadPeopleListener implements Listener {
         MAX_MESSAGES = config.getInt("anti_spam.max_messages", 12);
         TIME_PERIOD = config.getInt("anti_spam.time_period_millis", 5000);
         MUTE_DURATION = config.getInt("anti_spam.mute_duration_millis", 10000);
+        usernameRegex = config.getString("username_regex");
+        regex1 = config.getString("anti_advertising.regex1");
+        regex2 = config.getString("anti_advertising.regex2");
     }
+
+    @RegEx
+    private final String usernameRegex;
+    @RegEx
+    private final String regex1;
+    @RegEx
+    private final String regex2;
 
     private Map<UUID, BukkitTask> toVerify = new HashMap<>();
 
@@ -44,9 +55,8 @@ public class BadPeopleListener implements Listener {
     private boolean isValidUsername(String username) {
         if (username.length() < 2 || username.length() > 16)
             return false;
-        return username.matches("^[a-zA-Z0-9_]{3,16}$");
+        return username.matches(usernameRegex);
     }
-
 
     @EventHandler(priority = EventPriority.LOWEST)
     public void onPreLogin(AsyncPlayerPreLoginEvent event) {
@@ -101,10 +111,10 @@ public class BadPeopleListener implements Listener {
         }
 
         // Anti advertising
-        if (config.getBoolean("anti_advertising.enabled")) {
+        if (config.getBoolean("anti_advertising.enabled") && !event.getPlayer().hasPermission("essentials.bypass.advertising")) {
             String message = event.getMessage().toLowerCase();
-            if (message.matches(".*\\b\\d{1,3}\\.\\d{1,3}\\.\\d{1,3}\\.\\d{1,3}\\b.*") ||
-                    message.matches(".*\\b\\w+\\.(?:gg|mc|craft|play|mine|server|network|pvp|net|com)\\b.*")) {
+            if (message.matches(regex1) ||
+                    message.matches(regex2)) {
                 if (config.getBoolean("anti_advertising.shadow_disallow")) {
                     event.getRecipients().removeIf(p -> !p.equals(event.getPlayer()));
                 } else {
@@ -118,7 +128,8 @@ public class BadPeopleListener implements Listener {
 
         // Anti spam
 
-        if (!config.getBoolean("anti_spam.enabled")) return;
+        if (!config.getBoolean("anti_spam.enabled") || event.getPlayer().hasPermission("essentials.bypass.antispam"))
+            return;
 
         PlayerChatData data = chatData.getOrDefault(uuid, new PlayerChatData());
         long currentTime = System.currentTimeMillis();
