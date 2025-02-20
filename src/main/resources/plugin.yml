@@ -85,8 +85,6 @@ commands:
   sun:
     aliases: [ sunny ]
   rain:
-  knockback:
-    aliases: [ kb ]
   feed:
   sudo:
   russianroulette:
