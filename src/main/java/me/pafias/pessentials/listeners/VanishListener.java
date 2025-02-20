@@ -10,13 +10,8 @@ import com.comphenix.protocol.wrappers.WrappedGameProfile;
 import com.comphenix.protocol.wrappers.WrappedServerPing;
 import com.google.common.collect.ImmutableList;
 import me.pafias.pessentials.pEssentials;
-import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
-import org.bukkit.event.player.PlayerJoinEvent;
-import org.bukkit.event.player.PlayerQuitEvent;
 
-import java.util.Set;
-import java.util.UUID;
 import java.util.stream.Collectors;
 
 public class VanishListener implements Listener {
@@ -36,25 +31,6 @@ public class VanishListener implements Listener {
                 event.setPacket(packet);
             }
         });
-    }
-
-    @EventHandler
-    public void onJoin(PlayerJoinEvent event) {
-        Set<UUID> vanished = pe.getSM().getVanishManager().getVanishedPlayers();
-        if (vanished.isEmpty()) return;
-        vanished.stream()
-                .filter(uuid -> !uuid.equals(event.getPlayer().getUniqueId()))
-                .filter(uuid -> pe.getServer().getPlayer(uuid) != null)
-                .forEach(uuid -> {
-                    if (!event.getPlayer().hasPermission("essentials.vanish.bypass"))
-                        event.getPlayer().hidePlayer(pe.getServer().getPlayer(uuid));
-                });
-    }
-
-    @EventHandler
-    public void onQuit(PlayerQuitEvent event) {
-        if (pe.getSM().getVanishManager().isVanished(event.getPlayer()))
-            pe.getSM().getVanishManager().unvanish(event.getPlayer());
     }
 
 }
