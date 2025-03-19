@@ -35,7 +35,17 @@ public class ItemCommand extends ICommand {
     public List<String> tabHandler(CommandSender sender, Command command, String label, String[] args) {
         if (args.length == 1)
             return Arrays.stream(Material.values())
-                    .map(Material::name)
+                    .map(m -> {
+                        try {
+                            return m.key().asString();
+                        } catch (Throwable ignored) {
+                            try {
+                                return m.getKey().asString();
+                            } catch (Throwable ignored2) {
+                                return m.name().toLowerCase();
+                            }
+                        }
+                    })
                     .filter(m -> m.toLowerCase().startsWith(args[0].toLowerCase()))
                     .collect(Collectors.toList());
         else return Collections.emptyList();
