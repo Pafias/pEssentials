@@ -6,7 +6,7 @@
 
     <groupId>me.pafias</groupId>
     <artifactId>pEssentials</artifactId>
-    <version>1.4-SNAPSHOT</version>
+    <version>1.5-SNAPSHOT</version>
     <packaging>jar</packaging>
 
     <name>pEssentials</name>
