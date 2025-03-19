@@ -94,7 +94,7 @@ commands:
   sit:
     aliases: [ chair ]
   msgtoggle:
-    aliases: [ togglemsg, ignore ]
+    aliases: [ togglemsg ]
   invsee:
     aliases: [ inv ]
   discord:
@@ -103,6 +103,8 @@ commands:
     aliases: [ bc ]
   lightning:
     aliases: [ strike ]
+  block:
+    aliases: [ ignore ]
 permissions:
   essentials.ping.others:
     default: true
@@ -114,3 +116,5 @@ permissions:
     default: true
     children:
       essentials.reply: true
+  essentials.reply:
+    default: true

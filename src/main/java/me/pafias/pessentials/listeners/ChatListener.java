@@ -9,6 +9,8 @@ import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.AsyncPlayerChatEvent;
 
+import java.util.stream.Collectors;
+
 public class ChatListener implements Listener {
 
     private final pEssentials plugin;
@@ -32,6 +34,17 @@ public class ChatListener implements Listener {
             event.getRecipients().addAll(RandomUtils.getStaffOnline("essentials.staffchat"));
             event.setFormat(CC.formatStaffchat(user.getPlayer().getName(), event.getMessage()));
         }
+    }
+
+    @EventHandler
+    public void onBlockedChat(AsyncPlayerChatEvent event) {
+        event.getRecipients().removeAll(
+                plugin.getSM().getUserManager().getUsers().values()
+                        .stream()
+                        .filter(u -> u.getBlocking().contains(event.getPlayer().getUniqueId()) && !event.getPlayer().hasPermission("essentials.block.bypass"))
+                        .map(User::getPlayer)
+                        .collect(Collectors.toSet())
+        );
     }
 
 }
