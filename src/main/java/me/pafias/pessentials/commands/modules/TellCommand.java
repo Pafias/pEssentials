@@ -43,14 +43,18 @@ public class TellCommand extends ICommand {
                 sb.append(args[i]).append(" ");
             String message = sb.toString();
             try {
-                target.getPlayer().sendMessage(CC.a("&e[Tell] &c" + player.getName() + "&6: &r" + message));
+                if (!target.getBlocking().contains(player.getUUID()) || player.getPlayer().hasPermission("essentials.block.bypass"))
+                    target.getPlayer().sendMessage(CC.a("&e[Tell] &c" + player.getName() + "&6: &r" + message));
                 player.getPlayer().sendMessage(CC.a("&e[Tell] &c" + player.getName() + " &6-> &c" + target.getName() + " &6: &r" + message));
             } catch (Throwable ex) {
-                target.getPlayer().sendMessage(CC.t("&e[Tell] &c" + player.getName() + "&6: &r" + message));
+                if (!target.getBlocking().contains(player.getUUID()) || player.getPlayer().hasPermission("essentials.block.bypass"))
+                    target.getPlayer().sendMessage(CC.t("&e[Tell] &c" + player.getName() + "&6: &r" + message));
                 player.getPlayer().sendMessage(CC.t("&e[Tell] &c" + player.getName() + " &6-> &c" + target.getName() + " &6: &r" + message));
             }
+
             msg.put(player.getUUID(), target.getUUID());
-            msg.put(target.getUUID(), player.getUUID());
+            if (!target.getBlocking().contains(player.getUUID()) || player.getPlayer().hasPermission("essentials.block.bypass"))
+                msg.put(target.getUUID(), player.getUUID());
         }
         return;
     }

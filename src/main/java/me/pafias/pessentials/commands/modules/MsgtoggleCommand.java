@@ -12,7 +12,7 @@ import java.util.List;
 public class MsgtoggleCommand extends ICommand {
 
     public MsgtoggleCommand() {
-        super("msgtoggle", "essentials.msgtoggle", "Toggle your private messages", "/msgtoggle", "togglemsg", "ignore");
+        super("msgtoggle", "essentials.msgtoggle", "Toggle your private messages", "/msgtoggle", "togglemsg");
     }
 
     @Override

@@ -10,6 +10,8 @@ import org.bukkit.entity.Player;
 import org.bukkit.scheduler.BukkitRunnable;
 import org.bukkit.scheduler.BukkitTask;
 
+import java.util.HashSet;
+import java.util.Set;
 import java.util.UUID;
 
 public class User {
@@ -24,6 +26,7 @@ public class User {
     private GameProfile newIdentity;
     private BukkitTask idTask;
     private boolean blockingPMs;
+    private Set<UUID> blocking = new HashSet<>();
 
     public User(Player player) {
         this.player = player;
@@ -126,6 +129,10 @@ public class User {
 
     public void setBlockingPMs(boolean blockingPMs) {
         this.blockingPMs = blockingPMs;
+    }
+
+    public Set<UUID> getBlocking() {
+        return blocking;
     }
 
 }
