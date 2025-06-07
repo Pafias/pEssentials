@@ -13,7 +13,7 @@ import java.util.List;
 public class DayCommand extends ICommand {
 
     public DayCommand() {
-        super("day", "essentials.day", "Make it day", "/day", "daytime");
+        super("day", null, "Make it day", "/day", "daytime");
     }
 
     @Override

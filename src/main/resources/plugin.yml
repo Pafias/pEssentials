@@ -56,10 +56,8 @@ commands:
     permission: essentials.top
   day:
     aliases: [ daytime ]
-    permission: essentials.day
   night:
     aliases: [ nighttime ]
-    permission: essentials.night
   lag:
     aliases: [ gc, memory, mem, performance ]
     permission: essentials.lag

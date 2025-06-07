@@ -13,7 +13,7 @@ import java.util.List;
 public class NightCommand extends ICommand {
 
     public NightCommand() {
-        super("night", "essentials.night", "Make it night", "/night", "nighttime");
+        super("night", null, "Make it night", "/night", "nighttime");
     }
 
     @Override

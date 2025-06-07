@@ -14,7 +14,7 @@ import java.util.List;
 public class RainCommand extends ICommand {
 
     public RainCommand() {
-        super("rain", "essentials.rain", "Make it rain", "/rain [-p]", "storm", "thunder");
+        super("rain", null, "Make it rain", "/rain [-p]", "storm", "thunder");
     }
 
     @Override
