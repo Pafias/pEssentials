@@ -14,7 +14,7 @@ import java.util.List;
 public class SunCommand extends ICommand {
 
     public SunCommand() {
-        super("sun", "essentials.sun", "Make it sun", "/sun [-p]", "sunny");
+        super("sun", null, "Make it sun", "/sun [-p]", "sunny");
     }
 
     @Override
