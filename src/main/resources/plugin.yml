@@ -116,3 +116,5 @@ permissions:
       essentials.reply: true
   essentials.reply:
     default: true
+  essentials.block:
+    default: true
