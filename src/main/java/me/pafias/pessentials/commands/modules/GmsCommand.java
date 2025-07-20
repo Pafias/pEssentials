@@ -23,32 +23,36 @@ public class GmsCommand extends ICommand {
             sender.sendMessage(CC.t("&cOnly players!"));
             return;
         }
+        if (!sender.hasPermission(GamemodeCommand.gamemodePermissions.get(GameMode.SURVIVAL))) {
+            sender.sendMessage(CC.t("&cYou do not have permission for this gamemode!"));
+            return;
+        }
         if (args.length == 0) {
-            if (sender.hasPermission("essentials.gamemode")) {
-                Player player = (Player) sender;
-                player.setGameMode(GameMode.SURVIVAL);
-                player.sendMessage(CC.t("&6Gamemode: &aSurvival"));
-            }
+            Player player = (Player) sender;
+            player.setGameMode(GameMode.SURVIVAL);
+            player.sendMessage(CC.t("&6Gamemode: &asurvival"));
         } else {
-            if (sender.hasPermission("essentials.gamemode.others")) {
-                boolean silent = Arrays.asList(args).contains("-s");
-                if (args[0].equalsIgnoreCase("@a") || args[0].equalsIgnoreCase("*"))
-                    plugin.getServer().getOnlinePlayers().forEach(p -> {
-                        p.setGameMode(GameMode.SURVIVAL);
-                        if (!silent)
-                            p.sendMessage(CC.t("&6Gamemode: &aSurvival"));
-                    });
-                else {
-                    Player target = plugin.getServer().getPlayer(args[0]);
-                    if (target == null) {
-                        sender.sendMessage(CC.t("&cPlayer not found!"));
-                        return;
-                    }
-                    target.setGameMode(GameMode.SURVIVAL);
+            if (!sender.hasPermission("essentials.gamemode.others")) {
+                sender.sendMessage(CC.t("&cYou do not have permission to change other players' gamemodes!"));
+                return;
+            }
+            boolean silent = Arrays.asList(args).contains("-s");
+            if (args[0].equalsIgnoreCase("@a") || args[0].equalsIgnoreCase("*"))
+                plugin.getServer().getOnlinePlayers().forEach(p -> {
+                    p.setGameMode(GameMode.SURVIVAL);
                     if (!silent)
-                        target.sendMessage(CC.t("&6Gamemode: &aSurvival"));
-                    sender.sendMessage(CC.t("&7" + target.getName() + "&6 " + (target.getName().endsWith("s") ? "'" : "'s") + "&6gamemode: &aSurvival"));
+                        p.sendMessage(CC.t("&6Gamemode: &asurvival"));
+                });
+            else {
+                Player target = plugin.getServer().getPlayer(args[0]);
+                if (target == null) {
+                    sender.sendMessage(CC.t("&cPlayer not found!"));
+                    return;
                 }
+                target.setGameMode(GameMode.SURVIVAL);
+                if (!silent)
+                    target.sendMessage(CC.t("&6Gamemode: &asurvival"));
+                sender.sendMessage(CC.tf("&6Gamemode for &7%s&6: &asurvival", target.getName()));
             }
         }
         return;
