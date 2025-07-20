@@ -118,3 +118,25 @@ permissions:
     default: true
   essentials.block:
     default: true
+  essentials.gamemode.others:
+    default: op
+    children:
+      essentials.gamemode: true
+  essentials.gamemode:
+    default: op
+  essentials.gamemode.survival:
+    default: op
+    children:
+      essentials.gamemode: true
+  essentials.gamemode.creative:
+    default: op
+    children:
+      essentials.gamemode: true
+  essentials.gamemode.adventure:
+    default: op
+    children:
+      essentials.gamemode: true
+  essentials.gamemode.spectator:
+    default: op
+    children:
+      essentials.gamemode: true
