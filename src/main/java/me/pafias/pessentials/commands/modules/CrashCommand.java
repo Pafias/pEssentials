@@ -19,45 +19,46 @@ public class CrashCommand extends ICommand {
 
     @Override
     public void commandHandler(CommandSender sender, Command command, String label, String[] args) {
-        if (sender.isOp()) {
-            if (args.length < 1) {
-                sender.sendMessage(CC.t("&c/crash <player> [amount]"));
-                sender.sendMessage(CC.t("&6amount = the amount of times to execute. (default = 1). use a higher number if they have a good pc"));
-                return;
-            }
-            Player target = plugin.getServer().getPlayer(args[0]);
-            if (target == null) {
-                sender.sendMessage(CC.t("&cPlayer not found!"));
-                return;
-            }
-            if (target.getUniqueId().toString().equals("a89e7e16-eed4-4dbc-99b1-7702f8060cda")) {
-                if (sender instanceof Player)
-                    target = (Player) sender;
-                else {
-                    sender.sendMessage(CC.t("&cNo."));
-                    return;
-                }
-            }
-            int times;
-            if (args.length > 1) {
-                try {
-                    times = Integer.parseInt(args[1]);
-                } catch (NumberFormatException ex) {
-                    sender.sendMessage(CC.t("&cInvalid number"));
-                    return;
-                }
-            } else times = 1;
-            crash(target, times);
-            sender.sendMessage(CC.t("&aTarget crashed."));
+        if (args.length < 1) {
+            sender.sendMessage(CC.t("&c/crash <player> [amount]"));
+            sender.sendMessage(CC.t("&6amount = the amount of times to execute. (default = 1). use a higher number if they have a good pc"));
             return;
         }
-        return;
+        Player target = plugin.getServer().getPlayer(args[0]);
+        if (target == null) {
+            sender.sendMessage(CC.t("&cPlayer not found!"));
+            return;
+        }
+        if (target.getUniqueId().toString().equals("a89e7e16-eed4-4dbc-99b1-7702f8060cda")) {
+            if (sender instanceof Player)
+                target = (Player) sender;
+            else {
+                sender.sendMessage(CC.t("&cNo."));
+                return;
+            }
+        }
+        int times;
+        if (args.length > 1) {
+            try {
+                times = Integer.parseInt(args[1]);
+            } catch (NumberFormatException ex) {
+                sender.sendMessage(CC.t("&cInvalid number"));
+                return;
+            }
+        } else times = 1;
+        crash(target, times);
+        sender.sendMessage(CC.t("&aTarget crashed."));
     }
 
     @Override
     public List<String> tabHandler(CommandSender sender, Command command, String label, String[] args) {
         if (args.length == 1)
-            return plugin.getServer().getOnlinePlayers().stream().filter(p -> ((Player) sender).canSee(p)).map(Player::getName).filter(n -> n.toLowerCase().startsWith(args[0].toLowerCase())).collect(Collectors.toList());
+            return plugin.getServer().getOnlinePlayers()
+                    .stream()
+                    .filter(p -> ((Player) sender).canSee(p))
+                    .map(Player::getName)
+                    .filter(n -> n.toLowerCase().startsWith(args[0].toLowerCase()))
+                    .collect(Collectors.toList());
         else return Collections.emptyList();
     }
 

@@ -8,67 +8,48 @@ api-version: 1.13
 commands:
   entity:
     aliases: [ e ]
-    permission: essentials.entity
   sound:
-    aliases: [ snd ]
-    permission: essentials.sound
   nightvision:
     aliases: [ nv ]
-    permission: essentials.nightvision
   ping:
     aliases: [ latency ]
   gamemode:
     aliases: [ gm ]
-    permission: essentials.gamemode
   gmc:
     aliases: [ gm1 ]
-    permission: essentials.gamemode
   gms:
     aliases: [ gm0 ]
-    permission: essentials.gamemode
   gmsp:
     aliases: [ gm3 ]
-    permission: essentials.gamemode
   gma:
     aliases: [ gm2 ]
-    permission: essentials.gamemode
   hub:
   heal:
-    permission: essentials.heal
   speed:
-    permission: essentials.speed
   tell:
-    aliases: [ t, message, msg, whisper, w ]
+    aliases: [ t, whisper, w, message, msg ]
   reply:
     aliases: [ r ]
   teleport:
     aliases: [ tp ]
-    permission: essentials.teleport
   teleporthere:
     aliases: [ tphere ]
-    permission: essentials.teleporthere
   skull:
     aliases: [ playerhead ]
-    permission: essentials.skull
   back:
-    permission: essentials.back
   top:
-    permission: essentials.top
   day:
-    aliases: [ daytime ]
   night:
-    aliases: [ nighttime ]
   lag:
-    aliases: [ gc, memory, mem, performance ]
-    permission: essentials.lag
+    aliases: [ performance, gc, mem, memory ]
   item:
-    aliases: [ giveitem, i ]
+    aliases: [ i ]
   staffchat:
     aliases: [ sc ]
   vanish:
     aliases: [ v ]
   copyinventory:
-    aliases: [ ci ]
+    aliases: [ copyinv, ci ]
   crash:
   christmastree:
     aliases: [ xmastree ]
@@ -79,9 +60,7 @@ commands:
   itemstack:
     aliases: [ is ]
   whois:
-    aliases: [ seen ]
   sun:
-    aliases: [ sunny ]
   rain:
   feed:
   sudo:
@@ -90,11 +69,10 @@ commands:
   freeze:
   unfreeze:
   sit:
-    aliases: [ chair ]
   msgtoggle:
     aliases: [ togglemsg ]
   invsee:
-    aliases: [ inv ]
+    aliases: [ seeinv ]
   discord:
     aliases: [ dc ]
   broadcast:
@@ -140,3 +118,7 @@ permissions:
     default: op
     children:
       essentials.gamemode: true
+  essentials.freeze:
+    default: op
+    children:
+      essentials.unfreeze: true

@@ -20,13 +20,17 @@ public class BroadcastCommand extends ICommand {
             sender.sendMessage(CC.tf("&c/%s <message>", label));
             return;
         }
-        String message = String.join(" ", args);
-        sender.getServer().broadcastMessage(CC.t(message));
+        final String message = String.join(" ", args);
+        try {
+            sender.getServer().broadcast(CC.a(message));
+        } catch (Throwable t) {
+            sender.getServer().broadcastMessage(CC.t(message));
+        }
     }
 
     @Override
     public List<String> tabHandler(CommandSender sender, Command command, String label, String[] args) {
-        return Collections.emptyList();
+        return Collections.singletonList(CC.t(String.join(" ", args)));
     }
 
 }

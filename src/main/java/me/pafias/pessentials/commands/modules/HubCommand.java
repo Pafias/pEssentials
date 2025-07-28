@@ -23,15 +23,15 @@ public class HubCommand extends ICommand {
             sender.sendMessage(CC.t("&cOnly players!"));
             return;
         }
-        String hubserver = plugin.getSM().getVariables().hubServer;
-        if (hubserver == null) {
+        final String hubserver = plugin.getConfig().getString("hub_server");
+        if (hubserver == null || hubserver.isEmpty()) {
             sender.sendMessage(CC.t("&cInvalid hub server. Contact server admin."));
             return;
         }
-        ByteArrayDataOutput out = ByteStreams.newDataOutput();
+        final ByteArrayDataOutput out = ByteStreams.newDataOutput();
         out.writeUTF("Connect");
         out.writeUTF(hubserver);
-        Player player = ((Player) sender);
+        final Player player = ((Player) sender);
         player.sendPluginMessage(plugin, "BungeeCord", out.toByteArray());
     }
 

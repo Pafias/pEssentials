@@ -23,33 +23,34 @@ public class SkullCommand extends ICommand {
 
     @Override
     public void commandHandler(CommandSender sender, Command command, String label, String[] args) {
-        if (sender.hasPermission("essentials.skull")) {
-            if (args.length < 1) {
-                sender.sendMessage(CC.t("&c/" + label + " <player>"));
-                return;
-            }
-            if (!(sender instanceof Player)) {
-                sender.sendMessage(CC.t("&cOnly players!"));
-                return;
-            }
-            Player player = (Player) sender;
-            // ItemStack skull = new ItemStack(Material.PLAYER_HEAD, 1, (short) SkullType.PLAYER.ordinal());
-            ItemStack skull = Reflection.getSkull();
-            SkullMeta meta = (SkullMeta) skull.getItemMeta();
-            getOwner(args[0]).thenAccept(owner -> {
-                meta.setOwner(owner.getName());
-                skull.setItemMeta(meta);
-                player.getInventory().addItem(skull);
-                sender.sendMessage(CC.t("&6Received skull of &d" + owner.getName()));
-            });
+        if (args.length < 1) {
+            sender.sendMessage(CC.t("&c/" + label + " <player>"));
+            return;
         }
-        return;
+        if (!(sender instanceof Player)) {
+            sender.sendMessage(CC.t("&cOnly players!"));
+            return;
+        }
+        final Player player = (Player) sender;
+        final ItemStack skull = Reflection.getSkull();
+        final SkullMeta meta = (SkullMeta) skull.getItemMeta();
+        getOwner(args[0]).thenAccept(owner -> {
+            meta.setOwner(owner.getName());
+            skull.setItemMeta(meta);
+            player.getInventory().addItem(skull);
+            sender.sendMessage(CC.t("&6Received skull of &d" + owner.getName()));
+        });
     }
 
     @Override
     public List<String> tabHandler(CommandSender sender, Command command, String label, String[] args) {
         if (args.length == 1)
-            return plugin.getServer().getOnlinePlayers().stream().map(Player::getName).filter(p -> p.toLowerCase().startsWith(args[0].toLowerCase())).collect(Collectors.toList());
+            return plugin.getServer().getOnlinePlayers()
+                    .stream()
+                    .filter(p -> ((Player) sender).canSee(p))
+                    .map(Player::getName)
+                    .filter(p -> p.toLowerCase().startsWith(args[0].toLowerCase()))
+                    .collect(Collectors.toList());
         else return Collections.emptyList();
     }
 

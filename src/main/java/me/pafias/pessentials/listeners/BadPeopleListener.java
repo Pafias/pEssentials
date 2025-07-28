@@ -28,7 +28,7 @@ public class BadPeopleListener implements Listener {
 
     public BadPeopleListener(pEssentials plugin) {
         this.plugin = plugin;
-        config = plugin.getSM().getVariables().badPeopleFilter;
+        config = plugin.getConfig().getConfigurationSection("bad_people_filter");
         MAX_MESSAGES = config.getInt("anti_spam.max_messages", 12);
         TIME_PERIOD = config.getInt("anti_spam.time_period_millis", 5000);
         MUTE_DURATION = config.getInt("anti_spam.mute_duration_millis", 10000);
@@ -44,7 +44,7 @@ public class BadPeopleListener implements Listener {
     @RegEx
     private final String regex2;
 
-    private Map<UUID, BukkitTask> toVerify = new HashMap<>();
+    private final Map<UUID, BukkitTask> toVerify = new HashMap<>();
 
     private final Map<UUID, PlayerChatData> chatData = new HashMap<>();
 
@@ -60,8 +60,8 @@ public class BadPeopleListener implements Listener {
 
     @EventHandler(priority = EventPriority.LOWEST)
     public void onPreLogin(AsyncPlayerPreLoginEvent event) {
-        UUID playerUUID = event.getUniqueId();
-        String playerName = event.getName();
+        final UUID playerUUID = event.getUniqueId();
+        final String playerName = event.getName();
 
         if (config.getBoolean("username_check")) {
             if (!isValidUsername(playerName)) {
@@ -72,7 +72,7 @@ public class BadPeopleListener implements Listener {
         }
 
         if (config.getBoolean("movement_verification")) {
-            BukkitTask verificationTask = Tasks.runLaterAsync(30 * 20, () -> {
+            final BukkitTask verificationTask = Tasks.runLaterAsync(30 * 20, () -> {
                 if (toVerify.containsKey(playerUUID)) {
                     event.disallow(AsyncPlayerPreLoginEvent.Result.KICK_OTHER, "Failed to verify your account.");
                     plugin.getLogger().log(Level.INFO, String.format("Player %s has been disallowed login due to failed verification.", event.getName()));
@@ -91,8 +91,8 @@ public class BadPeopleListener implements Listener {
     @EventHandler
     public void onMove(PlayerMoveEvent event) {
         if (!config.getBoolean("movement_verification")) return;
-        UUID playerUUID = event.getPlayer().getUniqueId();
-        BukkitTask task = toVerify.remove(playerUUID);
+        final UUID playerUUID = event.getPlayer().getUniqueId();
+        final BukkitTask task = toVerify.remove(playerUUID);
         if (task != null) {
             task.cancel();
             plugin.getLogger().log(Level.INFO, String.format("Player %s has been verified by movement.", event.getPlayer().getName()));
@@ -101,7 +101,7 @@ public class BadPeopleListener implements Listener {
 
     @EventHandler(priority = EventPriority.LOW)
     public void onChat(AsyncPlayerChatEvent event) {
-        UUID uuid = event.getPlayer().getUniqueId();
+        final UUID uuid = event.getPlayer().getUniqueId();
 
         // No talking when unverified
         if (toVerify.containsKey(uuid)) {
@@ -112,7 +112,7 @@ public class BadPeopleListener implements Listener {
 
         // Anti advertising
         if (config.getBoolean("anti_advertising.enabled") && !event.getPlayer().hasPermission("essentials.bypass.advertising")) {
-            String message = event.getMessage().toLowerCase();
+            final String message = event.getMessage().toLowerCase();
             if (message.matches(regex1) ||
                     message.matches(regex2)) {
                 if (config.getBoolean("anti_advertising.shadow_disallow")) {
@@ -131,8 +131,8 @@ public class BadPeopleListener implements Listener {
         if (!config.getBoolean("anti_spam.enabled") || event.getPlayer().hasPermission("essentials.bypass.antispam"))
             return;
 
-        PlayerChatData data = chatData.getOrDefault(uuid, new PlayerChatData());
-        long currentTime = System.currentTimeMillis();
+        final PlayerChatData data = chatData.getOrDefault(uuid, new PlayerChatData());
+        final long currentTime = System.currentTimeMillis();
         data.addMessageTime(currentTime);
         data.cleanupMessages(currentTime - TIME_PERIOD);
 
@@ -162,7 +162,7 @@ public class BadPeopleListener implements Listener {
 
     @EventHandler
     public void onQuit(PlayerQuitEvent event) {
-        UUID uuid = event.getPlayer().getUniqueId();
+        final UUID uuid = event.getPlayer().getUniqueId();
         toVerify.remove(uuid);
         chatData.remove(uuid);
     }

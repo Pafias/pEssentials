@@ -5,45 +5,29 @@ import org.bukkit.scheduler.BukkitTask;
 
 public class Tasks {
 
-    private static pEssentials plugin = pEssentials.get();
+    private static final pEssentials plugin = pEssentials.get();
 
-    public static BukkitTask runSync(Runnable runnable) {
+    public static BukkitTask runSync(final Runnable runnable) {
         return plugin.getServer().getScheduler().runTask(plugin, runnable);
     }
 
-    public static BukkitTask runAsync(Runnable runnable) {
+    public static BukkitTask runAsync(final Runnable runnable) {
         return plugin.getServer().getScheduler().runTaskAsynchronously(plugin, runnable);
     }
 
-    public static BukkitTask runLaterSync(long delay, Runnable runnable) {
+    public static BukkitTask runLaterSync(final long delay, final Runnable runnable) {
         return plugin.getServer().getScheduler().runTaskLater(plugin, runnable, delay);
     }
 
-    public static BukkitTask runLaterAsync(long delay, Runnable runnable) {
+    public static BukkitTask runLaterAsync(final long delay, final Runnable runnable) {
         return plugin.getServer().getScheduler().runTaskLaterAsynchronously(plugin, runnable, delay);
     }
 
-    public static BukkitTask runLaterSync(Runnable runnable, long delay) {
-        return plugin.getServer().getScheduler().runTaskLater(plugin, runnable, delay);
-    }
-
-    public static BukkitTask runLaterAsync(Runnable runnable, long delay) {
-        return plugin.getServer().getScheduler().runTaskLaterAsynchronously(plugin, runnable, delay);
-    }
-
-    public static BukkitTask runRepeatingSync(long delay, long period, Runnable runnable) {
+    public static BukkitTask runRepeatingSync(final long delay, final long period, final Runnable runnable) {
         return plugin.getServer().getScheduler().runTaskTimer(plugin, runnable, delay, period);
     }
 
-    public static BukkitTask runRepeatingAsync(long delay, long period, Runnable runnable) {
-        return plugin.getServer().getScheduler().runTaskTimerAsynchronously(plugin, runnable, delay, period);
-    }
-
-    public static BukkitTask runRepeatingSync(Runnable runnable, long delay, long period) {
-        return plugin.getServer().getScheduler().runTaskTimer(plugin, runnable, delay, period);
-    }
-
-    public static BukkitTask runRepeatingAsync(Runnable runnable, long delay, long period) {
+    public static BukkitTask runRepeatingAsync(final long delay, final long period, final Runnable runnable) {
         return plugin.getServer().getScheduler().runTaskTimerAsynchronously(plugin, runnable, delay, period);
     }
 

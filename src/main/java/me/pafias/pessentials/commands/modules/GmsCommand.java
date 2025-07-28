@@ -28,7 +28,7 @@ public class GmsCommand extends ICommand {
             return;
         }
         if (args.length == 0) {
-            Player player = (Player) sender;
+            final Player player = (Player) sender;
             player.setGameMode(GameMode.SURVIVAL);
             player.sendMessage(CC.t("&6Gamemode: &asurvival"));
         } else {
@@ -44,7 +44,7 @@ public class GmsCommand extends ICommand {
                         p.sendMessage(CC.t("&6Gamemode: &asurvival"));
                 });
             else {
-                Player target = plugin.getServer().getPlayer(args[0]);
+                final Player target = plugin.getServer().getPlayer(args[0]);
                 if (target == null) {
                     sender.sendMessage(CC.t("&cPlayer not found!"));
                     return;
@@ -60,7 +60,12 @@ public class GmsCommand extends ICommand {
 
     @Override
     public List<String> tabHandler(CommandSender sender, Command command, String label, String[] args) {
-        return plugin.getServer().getOnlinePlayers().stream().filter(p -> ((Player) sender).canSee(p)).map(Player::getName).filter(n -> n.toLowerCase().startsWith(args[0].toLowerCase())).collect(Collectors.toList());
+        return plugin.getServer().getOnlinePlayers()
+                .stream()
+                .filter(p -> ((Player) sender).canSee(p))
+                .map(Player::getName)
+                .filter(n -> n.toLowerCase().startsWith(args[0].toLowerCase()))
+                .collect(Collectors.toList());
     }
 
 }

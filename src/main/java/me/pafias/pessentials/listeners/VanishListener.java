@@ -23,10 +23,14 @@ public class VanishListener implements Listener {
         ProtocolLibrary.getProtocolManager().addPacketListener(new PacketAdapter(pe, ListenerPriority.HIGH, PacketType.Status.Server.SERVER_INFO) {
             @Override
             public void onPacketSending(PacketEvent event) {
-                PacketContainer packet = event.getPacket();
-                WrappedServerPing ping = packet.getServerPings().read(0);
-                ImmutableList<WrappedGameProfile> players = ping.getPlayers();
-                ping.setPlayers(players.stream().filter(p -> !pe.getSM().getVanishManager().getVanishedPlayers().contains(p.getUUID())).collect(Collectors.toSet()));
+                final PacketContainer packet = event.getPacket();
+                final WrappedServerPing ping = packet.getServerPings().read(0);
+                final ImmutableList<WrappedGameProfile> players = ping.getPlayers();
+                ping.setPlayers(players
+                        .stream()
+                        .filter(p -> !pe.getSM().getVanishManager().getVanishedPlayers().contains(p.getUUID()))
+                        .collect(Collectors.toSet())
+                );
                 packet.getServerPings().write(0, ping);
                 event.setPacket(packet);
             }

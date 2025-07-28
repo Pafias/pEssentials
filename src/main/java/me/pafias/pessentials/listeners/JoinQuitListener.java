@@ -23,13 +23,13 @@ public class JoinQuitListener implements Listener {
 
     @EventHandler(priority = EventPriority.HIGH)
     public void onJoin(PlayerJoinEvent event) {
-        if (!plugin.getSM().getVariables().joinMessage)
+        if (!plugin.getConfig().getBoolean("join_message_enabled"))
             event.setJoinMessage(null);
     }
 
     @EventHandler(priority = EventPriority.HIGH)
     public void onQuit(PlayerQuitEvent event) {
-        if (!plugin.getSM().getVariables().quitMessage)
+        if (!plugin.getConfig().getBoolean("quit_message_enabled"))
             event.setQuitMessage(null);
         plugin.getSM().getUserManager().removeUser(event.getPlayer());
     }

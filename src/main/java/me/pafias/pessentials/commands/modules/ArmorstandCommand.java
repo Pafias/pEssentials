@@ -12,9 +12,10 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.util.EulerAngle;
 import org.jetbrains.annotations.NotNull;
 
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 public class ArmorstandCommand extends ICommand {
 
@@ -36,173 +37,163 @@ public class ArmorstandCommand extends ICommand {
 
     @Override
     public void commandHandler(@NotNull CommandSender sender, @NotNull Command command, @NotNull String label, @NotNull String[] args) {
-        if (sender.hasPermission("essentials.armorstand")) {
-            if (args.length == 0) {
+        if (args.length == 0) {
+            help(sender, label);
+            return;
+        }
+        if (!(sender instanceof Player)) {
+            sender.sendMessage(CC.t("&cOnly players!"));
+            return;
+        }
+        final Player player = (Player) sender;
+        if (args[0].equalsIgnoreCase("spawn")) {
+            player.getLocation().getWorld().spawnEntity(player.getLocation(), EntityType.ARMOR_STAND);
+            player.sendMessage(CC.t("&aArmorStand spawned."));
+        } else if (args[0].equalsIgnoreCase("arms")) {
+            if (!player.isInsideVehicle()) {
+                sender.sendMessage(CC.t("&cYou need to be on the target armorstand to do this. Use &b/e ride"));
+                return;
+            }
+            final Entity vehicle = player.getVehicle();
+            if (!(vehicle instanceof ArmorStand)) {
+                sender.sendMessage(CC.t("&cYou are not on an ArmorStand."));
+                return;
+            }
+            final ArmorStand as = (ArmorStand) vehicle;
+            as.setArms(!as.hasArms());
+            sender.sendMessage(CC.t("&6ArmorStand arms: " + (as.hasArms() ? "&aON" : "&cOFF")));
+        } else if (args[0].equalsIgnoreCase("plate") || args[0].equalsIgnoreCase("baseplate")) {
+            if (!player.isInsideVehicle()) {
+                sender.sendMessage(CC.t("&cYou need to be on the target armorstand to do this. Use &b/e ride"));
+                return;
+            }
+            final Entity vehicle = player.getVehicle();
+            if (!(vehicle instanceof ArmorStand)) {
+                sender.sendMessage(CC.t("&cYou are not on an ArmorStand."));
+                return;
+            }
+            final ArmorStand as = (ArmorStand) vehicle;
+            as.setBasePlate(!as.hasBasePlate());
+            sender.sendMessage(CC.t("&6ArmorStand baseplate: " + (as.hasBasePlate() ? "&aON" : "&cOFF")));
+        } else if (args[0].equalsIgnoreCase("size")) {
+            if (!player.isInsideVehicle()) {
+                sender.sendMessage(CC.t("&cYou need to be on the target armorstand to do this. Use &b/e ride"));
+                return;
+            }
+            final Entity vehicle = player.getVehicle();
+            if (!(vehicle instanceof ArmorStand)) {
+                sender.sendMessage(CC.t("&cYou are not on an ArmorStand."));
+                return;
+            }
+            final ArmorStand as = (ArmorStand) vehicle;
+            as.setSmall(!as.isSmall());
+            sender.sendMessage(CC.t("&6ArmorStand size: " + (as.isSmall() ? "&bsmall" : "&bnormal")));
+        } else if (args[0].equalsIgnoreCase("marker")) {
+            if (!player.isInsideVehicle()) {
+                sender.sendMessage(CC.t("&cYou need to be on the target armorstand to do this. Use &b/e ride"));
+                return;
+            }
+            final Entity vehicle = player.getVehicle();
+            if (!(vehicle instanceof ArmorStand)) {
+                sender.sendMessage(CC.t("&cYou are not on an ArmorStand."));
+                return;
+            }
+            final ArmorStand as = (ArmorStand) vehicle;
+            as.setMarker(!as.isMarker());
+            sender.sendMessage(CC.t("&6ArmorStand collision box size: " + (as.isMarker() ? "&bsmall" : "&bnormal")));
+        } else if (args[0].equalsIgnoreCase("setmainhand")) {
+            if (!player.isInsideVehicle()) {
+                sender.sendMessage(CC.t("&cYou need to be on the target armorstand to do this. Use &b/e ride"));
+                return;
+            }
+            final Entity vehicle = player.getVehicle();
+            if (!(vehicle instanceof ArmorStand)) {
+                sender.sendMessage(CC.t("&cYou are not on an ArmorStand."));
+                return;
+            }
+            final ArmorStand as = (ArmorStand) vehicle;
+
+            final ItemStack item = player.getInventory().getItemInHand();
+            as.getEquipment().setItemInHand(item);
+            sender.sendMessage(CC.t("&aArmorStand main hand item set."));
+        } else if (args[0].equalsIgnoreCase("setoffhand")) {
+            if (!player.isInsideVehicle()) {
+                sender.sendMessage(CC.t("&cYou need to be on the target armorstand to do this. Use &b/e ride"));
+                return;
+            }
+            final Entity vehicle = player.getVehicle();
+            if (!(vehicle instanceof ArmorStand)) {
+                sender.sendMessage(CC.t("&cYou are not on an ArmorStand."));
+                return;
+            }
+            final ArmorStand as = (ArmorStand) vehicle;
+
+            final ItemStack item = player.getInventory().getItemInMainHand();
+            as.getEquipment().setItemInOffHand(item);
+            sender.sendMessage(CC.t("&aArmorStand off-hand item set."));
+        } else if (args[0].equalsIgnoreCase("setpose")) {
+            if (args.length < 5) {
                 help(sender, label);
                 return;
             }
-            if (!(sender instanceof Player)) {
-                sender.sendMessage(CC.t("&cOnly players!"));
+            if (!player.isInsideVehicle()) {
+                sender.sendMessage(CC.t("&cYou need to be on the target armorstand to do this. Use &b/e ride"));
                 return;
             }
-            Player player = (Player) sender;
-            if (args[0].equalsIgnoreCase("spawn")) {
-                player.getLocation().getWorld().spawnEntity(player.getLocation(), EntityType.ARMOR_STAND);
-                player.sendMessage(CC.t("&aArmorStand spawned."));
-                return;
-            } else if (args[0].equalsIgnoreCase("arms")) {
-                if (!player.isInsideVehicle()) {
-                    sender.sendMessage(CC.t("&cYou need to be on the target armorstand to do this. Use &b/e ride"));
-                    return;
-                }
-                Entity vehicle = player.getVehicle();
-                if (!(vehicle instanceof ArmorStand)) {
-                    sender.sendMessage(CC.t("&cYou are not on an ArmorStand."));
-                    return;
-                }
-                ArmorStand as = (ArmorStand) vehicle;
-                as.setArms(!as.hasArms());
-                sender.sendMessage(CC.t("&6ArmorStand arms: " + (as.hasArms() ? "&aON" : "&cOFF")));
-                return;
-            } else if (args[0].equalsIgnoreCase("plate") || args[0].equalsIgnoreCase("baseplate")) {
-                if (!player.isInsideVehicle()) {
-                    sender.sendMessage(CC.t("&cYou need to be on the target armorstand to do this. Use &b/e ride"));
-                    return;
-                }
-                Entity vehicle = player.getVehicle();
-                if (!(vehicle instanceof ArmorStand)) {
-                    sender.sendMessage(CC.t("&cYou are not on an ArmorStand."));
-                    return;
-                }
-                ArmorStand as = (ArmorStand) vehicle;
-                as.setBasePlate(!as.hasBasePlate());
-                sender.sendMessage(CC.t("&6ArmorStand baseplate: " + (as.hasBasePlate() ? "&aON" : "&cOFF")));
-                return;
-            } else if (args[0].equalsIgnoreCase("size")) {
-                if (!player.isInsideVehicle()) {
-                    sender.sendMessage(CC.t("&cYou need to be on the target armorstand to do this. Use &b/e ride"));
-                    return;
-                }
-                Entity vehicle = player.getVehicle();
-                if (!(vehicle instanceof ArmorStand)) {
-                    sender.sendMessage(CC.t("&cYou are not on an ArmorStand."));
-                    return;
-                }
-                ArmorStand as = (ArmorStand) vehicle;
-                as.setSmall(!as.isSmall());
-                sender.sendMessage(CC.t("&6ArmorStand size: " + (as.isSmall() ? "&bsmall" : "&bnormal")));
-                return;
-            } else if (args[0].equalsIgnoreCase("marker")) {
-                if (!player.isInsideVehicle()) {
-                    sender.sendMessage(CC.t("&cYou need to be on the target armorstand to do this. Use &b/e ride"));
-                    return;
-                }
-                Entity vehicle = player.getVehicle();
-                if (!(vehicle instanceof ArmorStand)) {
-                    sender.sendMessage(CC.t("&cYou are not on an ArmorStand."));
-                    return;
-                }
-                ArmorStand as = (ArmorStand) vehicle;
-                as.setMarker(!as.isMarker());
-                sender.sendMessage(CC.t("&6ArmorStand collision box size: " + (as.isMarker() ? "&bsmall" : "&bnormal")));
-                return;
-            } else if (args[0].equalsIgnoreCase("setmainhand")) {
-                if (!player.isInsideVehicle()) {
-                    sender.sendMessage(CC.t("&cYou need to be on the target armorstand to do this. Use &b/e ride"));
-                    return;
-                }
-                Entity vehicle = player.getVehicle();
-                if (!(vehicle instanceof ArmorStand)) {
-                    sender.sendMessage(CC.t("&cYou are not on an ArmorStand."));
-                    return;
-                }
-                ArmorStand as = (ArmorStand) vehicle;
-
-                ItemStack item = player.getInventory().getItemInHand();
-                as.getEquipment().setItemInHand(item);
-                sender.sendMessage(CC.t("&aArmorStand main hand item set."));
-                return;
-            } else if (args[0].equalsIgnoreCase("setoffhand")) {
-                if (!player.isInsideVehicle()) {
-                    sender.sendMessage(CC.t("&cYou need to be on the target armorstand to do this. Use &b/e ride"));
-                    return;
-                }
-                Entity vehicle = player.getVehicle();
-                if (!(vehicle instanceof ArmorStand)) {
-                    sender.sendMessage(CC.t("&cYou are not on an ArmorStand."));
-                    return;
-                }
-                ArmorStand as = (ArmorStand) vehicle;
-
-                ItemStack item = player.getInventory().getItemInMainHand();
-                as.getEquipment().setItemInOffHand(item);
-                sender.sendMessage(CC.t("&aArmorStand off-hand item set."));
-                return;
-            } else if (args[0].equalsIgnoreCase("setpose")) {
-                if (args.length < 5) {
-                    help(sender, label);
-                    return;
-                }
-                if (!player.isInsideVehicle()) {
-                    sender.sendMessage(CC.t("&cYou need to be on the target armorstand to do this. Use &b/e ride"));
-                    return;
-                }
-                Entity vehicle = player.getVehicle();
-                if (!(vehicle instanceof ArmorStand)) {
-                    sender.sendMessage(CC.t("&cYou are not on an ArmorStand."));
-                    return;
-                }
-                ArmorStand as = (ArmorStand) vehicle;
-
-                double x;
-                double y;
-                double z;
-                try {
-                    x = Double.parseDouble(args[2]);
-                    y = Double.parseDouble(args[3]);
-                    z = Double.parseDouble(args[4]);
-                } catch (NumberFormatException ex) {
-                    sender.sendMessage(CC.t("&cInvalid angle values."));
-                    return;
-                }
-
-                switch (args[1].toLowerCase()) {
-                    case "head":
-                        as.setHeadPose(new EulerAngle(Math.toDegrees(x), Math.toDegrees(y), Math.toDegrees(z)));
-                        break;
-                    case "body":
-                        as.setBodyPose(new EulerAngle(Math.toDegrees(x), Math.toDegrees(y), Math.toDegrees(z)));
-                        break;
-                    case "larm":
-                        as.setLeftArmPose(new EulerAngle(Math.toDegrees(x), Math.toDegrees(y), Math.toDegrees(z)));
-                        break;
-                    case "rarm":
-                        as.setRightArmPose(new EulerAngle(Math.toDegrees(x), Math.toDegrees(y), Math.toDegrees(z)));
-                        break;
-                    case "lleg":
-                        as.setLeftLegPose(new EulerAngle(Math.toDegrees(x), Math.toDegrees(y), Math.toDegrees(z)));
-                        break;
-                    case "rleg":
-                        as.setRightLegPose(new EulerAngle(Math.toDegrees(x), Math.toDegrees(y), Math.toDegrees(z)));
-                        break;
-                }
-
-                sender.sendMessage(CC.t("&aPose changed."));
-                return;
-
-            } else {
-                help(sender, label);
+            final Entity vehicle = player.getVehicle();
+            if (!(vehicle instanceof ArmorStand)) {
+                sender.sendMessage(CC.t("&cYou are not on an ArmorStand."));
                 return;
             }
+            final ArmorStand as = (ArmorStand) vehicle;
+
+            double x, y, z;
+            try {
+                x = Double.parseDouble(args[2]);
+                y = Double.parseDouble(args[3]);
+                z = Double.parseDouble(args[4]);
+            } catch (NumberFormatException ex) {
+                sender.sendMessage(CC.t("&cInvalid angle values."));
+                return;
+            }
+
+            switch (args[1].toLowerCase()) {
+                case "head":
+                    as.setHeadPose(new EulerAngle(Math.toDegrees(x), Math.toDegrees(y), Math.toDegrees(z)));
+                    break;
+                case "body":
+                    as.setBodyPose(new EulerAngle(Math.toDegrees(x), Math.toDegrees(y), Math.toDegrees(z)));
+                    break;
+                case "larm":
+                    as.setLeftArmPose(new EulerAngle(Math.toDegrees(x), Math.toDegrees(y), Math.toDegrees(z)));
+                    break;
+                case "rarm":
+                    as.setRightArmPose(new EulerAngle(Math.toDegrees(x), Math.toDegrees(y), Math.toDegrees(z)));
+                    break;
+                case "lleg":
+                    as.setLeftLegPose(new EulerAngle(Math.toDegrees(x), Math.toDegrees(y), Math.toDegrees(z)));
+                    break;
+                case "rleg":
+                    as.setRightLegPose(new EulerAngle(Math.toDegrees(x), Math.toDegrees(y), Math.toDegrees(z)));
+                    break;
+            }
+
+            sender.sendMessage(CC.t("&aPose changed."));
+        } else {
+            help(sender, label);
         }
     }
 
     @Override
     public List<String> tabHandler(CommandSender sender, Command command, String label, String[] args) {
         if (args.length == 1)
-            return Arrays.asList("spawn", "arms", "plate", "size", "marker", "setmainhand", "setoffhand", "setpose");
+            return Stream.of("spawn", "arms", "plate", "size", "marker", "setmainhand", "setoffhand", "setpose")
+                    .filter(s -> s.toLowerCase().startsWith(args[0].toLowerCase()))
+                    .collect(Collectors.toList());
         else if (args.length == 2 && args[0].equalsIgnoreCase("setpose"))
-            return Arrays.asList("head", "body", "Larm", "Rarm", "Lleg", "Rleg");
+            return Stream.of("head", "body", "Larm", "Rarm", "Lleg", "Rleg")
+                    .filter(s -> s.toLowerCase().startsWith(args[1].toLowerCase()))
+                    .collect(Collectors.toList());
         else if ((args.length == 3 || args.length == 4 || args.length == 5) && args[0].equalsIgnoreCase("setpose"))
             return Collections.singletonList("x y z");
         else return Collections.emptyList();

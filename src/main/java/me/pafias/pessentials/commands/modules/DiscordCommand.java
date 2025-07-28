@@ -19,10 +19,11 @@ public class DiscordCommand extends ICommand {
 
     @Override
     public void commandHandler(CommandSender sender, Command command, String label, String[] args) {
-        String link = plugin.getSM().getVariables().discordLink;
-        ComponentBuilder builder = new ComponentBuilder(link);
-        builder.event(new ClickEvent(ClickEvent.Action.OPEN_URL, link));
-        builder.event(new HoverEvent(HoverEvent.Action.SHOW_TEXT, new ComponentBuilder(CC.t("&7&oClick to open")).create()));
+        final String link = plugin.getConfig().getString("discord_link");
+        if (link == null || link.isEmpty()) {
+            sender.sendMessage(CC.t("&cThere is no discord link available :("));
+            return;
+        }
         CommandSender target;
         if (args.length >= 1 && sender.hasPermission("essentials.discord.others"))
             target = plugin.getServer().getPlayer(args[0]);
@@ -31,7 +32,16 @@ public class DiscordCommand extends ICommand {
             sender.sendMessage(CC.t("&cPlayer not found!"));
             return;
         }
-        sender.sendMessage(builder.create());
+        try {
+            sender.sendMessage(CC.a(link)
+                    .clickEvent(net.kyori.adventure.text.event.ClickEvent.openUrl(link))
+                    .hoverEvent(net.kyori.adventure.text.event.HoverEvent.showText(CC.a("&7&oClick to open"))));
+        } catch (Throwable t) {
+            final ComponentBuilder builder = new ComponentBuilder(link);
+            builder.event(new ClickEvent(ClickEvent.Action.OPEN_URL, link));
+            builder.event(new HoverEvent(HoverEvent.Action.SHOW_TEXT, new ComponentBuilder(CC.t("&7&oClick to open")).create()));
+            sender.sendMessage(builder.create());
+        }
     }
 
     @Override

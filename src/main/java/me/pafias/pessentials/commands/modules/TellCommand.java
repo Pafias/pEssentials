@@ -16,20 +16,19 @@ public class TellCommand extends ICommand {
         super("tell", null, "Private messaging", "/tell <player> <message>", "t", "whisper", "w", "message", "msg");
     }
 
-    public static Map<UUID, UUID> msg = new WeakHashMap<>();
+    public final static Map<UUID, UUID> msg = new WeakHashMap<>();
 
     @Override
     public void commandHandler(CommandSender sender, Command command, String label, String[] args) {
-        if (args.length < 2) {
+        if (args.length < 2)
             sender.sendMessage(CC.t("&c/" + label + " <player> <message>"));
-            return;
-        } else {
+        else {
             if (!(sender instanceof Player)) {
                 sender.sendMessage(CC.t("&cOnly players!"));
                 return;
             }
-            User player = plugin.getSM().getUserManager().getUser((Player) sender);
-            User target = plugin.getSM().getUserManager().getUser(args[0]);
+            final User player = plugin.getSM().getUserManager().getUser((Player) sender);
+            final User target = plugin.getSM().getUserManager().getUser(args[0]);
             if (target == null || target.isVanished()) {
                 sender.sendMessage(CC.t("&cPlayer not found!"));
                 return;
@@ -38,10 +37,10 @@ public class TellCommand extends ICommand {
                 sender.sendMessage(CC.t("&cThat player has private messages turned off."));
                 return;
             }
-            StringBuilder sb = new StringBuilder();
+            final StringBuilder sb = new StringBuilder();
             for (int i = 1; i < args.length; i++)
                 sb.append(args[i]).append(" ");
-            String message = sb.toString();
+            final String message = sb.toString();
             try {
                 if (!target.getBlocking().contains(player.getUUID()) || player.getPlayer().hasPermission("essentials.block.bypass"))
                     target.getPlayer().sendMessage(CC.a("&e[Tell] &c" + player.getName() + "&6: &r" + message));
@@ -56,7 +55,6 @@ public class TellCommand extends ICommand {
             if (!target.getBlocking().contains(player.getUUID()) || player.getPlayer().hasPermission("essentials.block.bypass"))
                 msg.put(target.getUUID(), player.getUUID());
         }
-        return;
     }
 
     @Override

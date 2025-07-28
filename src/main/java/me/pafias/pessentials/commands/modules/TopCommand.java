@@ -19,21 +19,18 @@ public class TopCommand extends ICommand {
 
     @Override
     public void commandHandler(CommandSender sender, Command command, String label, String[] args) {
-        if (sender.hasPermission("essentials.top")) {
-            if (!(sender instanceof Player)) {
-                sender.sendMessage(CC.t("&cOnly players!"));
-                return;
-            }
-            Player player = (Player) sender;
-            Block highest = player.getLocation().getWorld().getHighestBlockAt(player.getLocation());
-            if (highest == null || highest.getType().equals(Material.AIR)) {
-                player.sendMessage(CC.t("&cNo highest block found."));
-                return;
-            }
-            player.teleport(highest.getLocation());
-            player.sendMessage(CC.t("&6Teleported to the highest block!"));
+        if (!(sender instanceof Player)) {
+            sender.sendMessage(CC.t("&cOnly players!"));
+            return;
         }
-        return;
+        final Player player = (Player) sender;
+        final Block highest = player.getLocation().getWorld().getHighestBlockAt(player.getLocation());
+        if (highest == null || highest.getType().equals(Material.AIR)) {
+            player.sendMessage(CC.t("&cNo highest block found."));
+            return;
+        }
+        player.teleport(highest.getLocation());
+        player.sendMessage(CC.t("&6Teleported to the highest block!"));
     }
 
     @Override

@@ -21,34 +21,37 @@ public class LaunchCommand extends ICommand {
 
     @Override
     public void commandHandler(@NotNull CommandSender sender, @NotNull Command command, @NotNull String label, @NotNull String[] args) {
-        if (sender.hasPermission("essentials.launch")) {
-            if (args.length == 0) {
-                sender.sendMessage(CC.tf("&c/%s <player>", label));
-                return;
-            }
-            Player target = plugin.getServer().getPlayer(args[0]);
-            if (target == null) {
-                sender.sendMessage(CC.t("&cPlayer not found!"));
-                return;
-            }
-            double height = 1.5;
-            if (args.length >= 2)
-                try {
-                    height = Double.parseDouble(args[1]);
-                } catch (NumberFormatException ex) {
-                    sender.sendMessage(CC.t("&cInvalid number."));
-                    return;
-                }
-            target.setVelocity(target.getVelocity().add(new Vector(0, height, 0)));
-            plugin.getServer().getPluginManager().callEvent(new PlayerLaunchedEvent(sender, target, height));
-            sender.sendMessage(CC.tf("&aLaunched &d%s", target.getName()));
+        if (args.length == 0) {
+            sender.sendMessage(CC.tf("&c/%s <player>", label));
+            return;
         }
+        final Player target = plugin.getServer().getPlayer(args[0]);
+        if (target == null) {
+            sender.sendMessage(CC.t("&cPlayer not found!"));
+            return;
+        }
+        double height = 1.5;
+        if (args.length >= 2)
+            try {
+                height = Double.parseDouble(args[1]);
+            } catch (NumberFormatException ex) {
+                sender.sendMessage(CC.t("&cInvalid number."));
+                return;
+            }
+        target.setVelocity(target.getVelocity().add(new Vector(0, height, 0)));
+        plugin.getServer().getPluginManager().callEvent(new PlayerLaunchedEvent(sender, target, height));
+        sender.sendMessage(CC.tf("&aLaunched &d%s", target.getName()));
     }
 
     @Override
     public List<String> tabHandler(CommandSender sender, Command command, String label, String[] args) {
         if (args.length == 1)
-            return plugin.getServer().getOnlinePlayers().stream().filter(p -> ((Player) sender).canSee(p)).map(Player::getName).filter(n -> n.toLowerCase().startsWith(args[0].toLowerCase())).collect(Collectors.toList());
+            return plugin.getServer().getOnlinePlayers()
+                    .stream()
+                    .filter(p -> ((Player) sender).canSee(p))
+                    .map(Player::getName)
+                    .filter(n -> n.toLowerCase().startsWith(args[0].toLowerCase()))
+                    .collect(Collectors.toList());
         else return Collections.emptyList();
     }
 

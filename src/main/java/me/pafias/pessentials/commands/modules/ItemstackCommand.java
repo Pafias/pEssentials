@@ -39,18 +39,18 @@ public class ItemstackCommand extends ICommand {
             sender.sendMessage(CC.t("&cOnly players!"));
             return;
         }
-        Player player = (Player) sender;
+        final Player player = (Player) sender;
         if (args[0].equalsIgnoreCase("name") || args[0].equalsIgnoreCase("rename")) {
-            ItemStack is = player.getInventory().getItemInHand();
+            final ItemStack is = player.getInventory().getItemInHand();
             if (!validItem(is)) {
                 sender.sendMessage(CC.t("&cInvalid item."));
                 return;
             }
-            StringBuilder sb = new StringBuilder();
+            final StringBuilder sb = new StringBuilder();
             for (int i = 1; i < args.length; i++)
                 sb.append(args[i]).append(i == args.length - 1 ? "" : " ");
-            String name = sb.toString();
-            ItemMeta meta = is.getItemMeta();
+            final String name = sb.toString();
+            final ItemMeta meta = is.getItemMeta();
             try {
                 meta.displayName(CC.a(name));
             } catch (Throwable ex) {
@@ -59,17 +59,17 @@ public class ItemstackCommand extends ICommand {
             is.setItemMeta(meta);
             sender.sendMessage(CC.t("&aName changed."));
         } else if (args[0].equalsIgnoreCase("lore")) {
-            ItemStack is = player.getInventory().getItemInHand();
+            final ItemStack is = player.getInventory().getItemInHand();
             if (!validItem(is)) {
                 sender.sendMessage(CC.t("&cInvalid item."));
                 return;
             }
-            StringBuilder sb = new StringBuilder();
+            final StringBuilder sb = new StringBuilder();
             for (int i = 1; i < args.length; i++)
                 sb.append(args[i]).append(i == args.length - 1 ? "" : " ");
-            String arg = sb.toString();
-            String[] lore = arg.split("\\|");
-            ItemMeta meta = is.getItemMeta();
+            final String arg = sb.toString();
+            final String[] lore = arg.split("\\|");
+            final ItemMeta meta = is.getItemMeta();
             try {
                 meta.lore(CC.a(Arrays.asList(lore)));
             } catch (Throwable ex) {
@@ -103,12 +103,12 @@ public class ItemstackCommand extends ICommand {
                 sender.sendMessage(CC.t("&cInvalid level."));
                 return;
             }
-            ItemStack is = player.getInventory().getItemInHand();
+            final ItemStack is = player.getInventory().getItemInHand();
             if (!validItem(is)) {
                 sender.sendMessage(CC.t("&cInvalid item."));
                 return;
             }
-            ItemMeta meta = is.getItemMeta();
+            final ItemMeta meta = is.getItemMeta();
             meta.addEnchant(enchantment, level, true);
             is.setItemMeta(meta);
             sender.sendMessage(CC.t("&aItem enchanted."));

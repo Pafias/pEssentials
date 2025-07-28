@@ -19,31 +19,24 @@ public class StaffchatCommand extends ICommand {
 
     @Override
     public void commandHandler(CommandSender sender, Command command, String label, String[] args) {
-        if (sender.hasPermission("essentials.staffchat")) {
-            if (args.length < 1) {
-                if (!(sender instanceof Player)) {
-                    sender.sendMessage(CC.t("&cOnly players can toggle staffchat. You can chat in staffchat by putting a message after the command."));
-                    return;
-                }
-                User player = plugin.getSM().getUserManager().getUser((Player) sender);
-                player.setInStaffchat(!player.isInStaffChat());
-                player.getPlayer().sendMessage(CC.t("&6Staffchat: " + (player.isInStaffChat() ? "&aON" : "&cOFF")));
-            } else {
-                StringBuilder sb = new StringBuilder();
-                for (String arg : args) {
-                    sb.append(arg).append(" ");
-                }
-                String message = sb.toString();
-                try {
-                    RandomUtils.getStaffOnline("essentials.staffchat").forEach(p -> p.sendMessage(CC.formatStaffchatModern(sender.getName(), message)));
-                    plugin.getServer().getConsoleSender().sendMessage(CC.formatStaffchatModern(sender.getName(), message));
-                } catch (Throwable ex) {
-                    RandomUtils.getStaffOnline("essentials.staffchat").forEach(p -> p.sendMessage(CC.formatStaffchat(sender.getName(), message)));
-                    plugin.getServer().getConsoleSender().sendMessage(CC.formatStaffchat(sender.getName(), message));
-                }
+        if (args.length < 1) {
+            if (!(sender instanceof Player)) {
+                sender.sendMessage(CC.t("&cOnly players can toggle staffchat. You can chat in staffchat by putting a message after the command."));
+                return;
+            }
+            final User player = plugin.getSM().getUserManager().getUser((Player) sender);
+            player.setInStaffchat(!player.isInStaffChat());
+            player.getPlayer().sendMessage(CC.t("&6Staffchat: " + (player.isInStaffChat() ? "&aON" : "&cOFF")));
+        } else {
+            final String message = String.join(" ", args);
+            try {
+                RandomUtils.getStaffOnline("essentials.staffchat").forEach(p -> p.sendMessage(CC.formatStaffchatModern(sender.getName(), message)));
+                plugin.getServer().getConsoleSender().sendMessage(CC.formatStaffchatModern(sender.getName(), message));
+            } catch (Throwable ex) {
+                RandomUtils.getStaffOnline("essentials.staffchat").forEach(p -> p.sendMessage(CC.formatStaffchat(sender.getName(), message)));
+                plugin.getServer().getConsoleSender().sendMessage(CC.formatStaffchat(sender.getName(), message));
             }
         }
-        return;
     }
 
     @Override

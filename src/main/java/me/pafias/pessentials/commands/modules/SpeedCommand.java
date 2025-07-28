@@ -18,67 +18,68 @@ public class SpeedCommand extends ICommand {
 
     @Override
     public void commandHandler(CommandSender sender, Command command, String label, String[] args) {
-        if (sender.hasPermission("essentials.speed")) {
-            if (args.length == 0) {
-                if (!(sender instanceof Player)) {
-                    sender.sendMessage(CC.t("&cOnly players!"));
+        if (args.length == 0) {
+            if (!(sender instanceof Player)) {
+                sender.sendMessage(CC.t("&cOnly players!"));
+                return;
+            }
+            final Player player = (Player) sender;
+            sender.sendMessage(CC.t("&6Currently, your walking speed is &7" + player.getWalkSpeed() + " &6and your flying speed is &7" + player.getFlySpeed()));
+            sender.sendMessage(CC.t("&6Use /speed <speed> to change it"));
+        } else if (args.length == 1) {
+            if (!(sender instanceof Player)) {
+                sender.sendMessage(CC.t("&cOnly players!"));
+                return;
+            }
+            final Player player = (Player) sender;
+            final boolean flying = player.isFlying();
+            float speed;
+            if (args[0].equalsIgnoreCase("reset"))
+                speed = 1;
+            else
+                speed = getMoveSpeed(args[0]);
+            if (flying) {
+                player.setFlySpeed(getRealMoveSpeed(speed, flying));
+                player.sendMessage(CC.t("&6Your fly speed multiplier is now &7" + speed));
+            } else {
+                player.setWalkSpeed(getRealMoveSpeed(speed, flying));
+                player.sendMessage(CC.t("&6Your walk speed multiplier is now &7" + speed));
+            }
+        } else {
+            if (sender.hasPermission("essentials.speed.others")) {
+                final Player target = plugin.getServer().getPlayer(args[1]);
+                if (target == null) {
+                    sender.sendMessage(CC.t("&cPlayer not found!"));
                     return;
                 }
-                Player player = (Player) sender;
-                sender.sendMessage(CC.t("&6Currently, your walking speed is &7" + player.getWalkSpeed() + " &6and your flying speed is &7" + player.getFlySpeed()));
-                sender.sendMessage(CC.t("&6Use /speed <speed> to change it"));
-            } else if (args.length == 1) {
-                if (!(sender instanceof Player)) {
-                    sender.sendMessage(CC.t("&cOnly players!"));
-                    return;
-                }
-                Player player = (Player) sender;
-                boolean flying = player.isFlying();
+                final boolean flying = target.isFlying();
                 float speed;
                 if (args[0].equalsIgnoreCase("reset"))
                     speed = 1;
                 else
                     speed = getMoveSpeed(args[0]);
                 if (flying) {
-                    player.setFlySpeed(getRealMoveSpeed(speed, flying));
-                    player.sendMessage(CC.t("&6Your fly speed multiplier is now &7" + speed));
+                    target.setFlySpeed(getRealMoveSpeed(speed, flying));
+                    target.sendMessage(CC.t("&6Your fly speed multiplier is now &7" + speed));
+                    sender.sendMessage(CC.t("&6Changed players' fly speed multiplier to &7" + speed));
                 } else {
-                    player.setWalkSpeed(getRealMoveSpeed(speed, flying));
-                    player.sendMessage(CC.t("&6Your walk speed multiplier is now &7" + speed));
-                }
-            } else {
-                if (sender.hasPermission("essentials.speed.others")) {
-                    Player target = plugin.getServer().getPlayer(args[1]);
-                    if (target == null) {
-                        sender.sendMessage(CC.t("&cPlayer not found!"));
-                        return;
-                    }
-                    boolean flying = target.isFlying();
-                    float speed;
-                    if (args[0].equalsIgnoreCase("reset"))
-                        speed = 1;
-                    else
-                        speed = getMoveSpeed(args[0]);
-                    if (flying) {
-                        target.setFlySpeed(getRealMoveSpeed(speed, flying));
-                        target.sendMessage(CC.t("&6Your fly speed multiplier is now &7" + speed));
-                        sender.sendMessage(CC.t("&6Changed players' fly speed multiplier to &7" + speed));
-                    } else {
-                        target.setWalkSpeed(getRealMoveSpeed(speed, flying));
-                        target.sendMessage(CC.t("&6Your walk speed multiplier is now &7" + speed));
-                        sender.sendMessage(CC.t("&6Changed players' walk speed multiplier to &7" + speed));
-                    }
+                    target.setWalkSpeed(getRealMoveSpeed(speed, flying));
+                    target.sendMessage(CC.t("&6Your walk speed multiplier is now &7" + speed));
+                    sender.sendMessage(CC.t("&6Changed players' walk speed multiplier to &7" + speed));
                 }
             }
-            return;
         }
-        return;
     }
 
     @Override
     public List<String> tabHandler(CommandSender sender, Command command, String label, String[] args) {
         if (args.length == 2)
-            return plugin.getServer().getOnlinePlayers().stream().map(Player::getName).filter(p -> p.toLowerCase().startsWith(args[1].toLowerCase())).collect(Collectors.toList());
+            return plugin.getServer().getOnlinePlayers()
+                    .stream()
+                    .filter(p -> ((Player) sender).canSee(p))
+                    .map(Player::getName)
+                    .filter(p -> p.toLowerCase().startsWith(args[1].toLowerCase()))
+                    .collect(Collectors.toList());
         else return Collections.emptyList();
     }
 

@@ -4,10 +4,10 @@ import com.mojang.authlib.GameProfile;
 import me.pafias.pessentials.pEssentials;
 import me.pafias.pessentials.util.CC;
 import me.pafias.pessentials.util.Reflection;
+import me.pafias.pessentials.util.Tasks;
 import org.bukkit.Location;
 import org.bukkit.Particle;
 import org.bukkit.entity.Player;
-import org.bukkit.scheduler.BukkitRunnable;
 import org.bukkit.scheduler.BukkitTask;
 
 import java.util.HashSet;
@@ -19,6 +19,7 @@ public class User {
     private final pEssentials plugin = pEssentials.get();
 
     private final Player player;
+
     public boolean flyingEntity, movingEntity;
     public Location lastLocation;
     private boolean inStaffchat;
@@ -76,12 +77,9 @@ public class User {
             this.newIdentity = profile;
             if (idTask != null)
                 idTask.cancel();
-            idTask = new BukkitRunnable() {
-                @Override
-                public void run() {
-                    Reflection.sendActionbar(player, CC.t(String.format("&aCurrently disguised. &6Name: &b%s", getName())));
-                }
-            }.runTaskTimer(plugin, 2, 40);
+            idTask = Tasks.runRepeatingSync(2, 40, () -> {
+                Reflection.sendActionbar(player, CC.t(String.format("&aCurrently disguised. &6Name: &b%s", getName())));
+            });
         }
         Reflection.setGameProfile(player, profile);
         hideAndShow();
@@ -89,18 +87,8 @@ public class User {
     }
 
     private void hideAndShow() {
-        new BukkitRunnable() {
-            @Override
-            public void run() {
-                plugin.getServer().getOnlinePlayers().forEach(p -> p.hidePlayer(player));
-            }
-        }.runTask(plugin);
-        new BukkitRunnable() {
-            @Override
-            public void run() {
-                plugin.getServer().getOnlinePlayers().forEach(p -> p.showPlayer(player));
-            }
-        }.runTaskLater(plugin, 2);
+        Tasks.runSync(() -> plugin.getServer().getOnlinePlayers().forEach(p -> p.hidePlayer(player)));
+        Tasks.runLaterSync(2, () -> plugin.getServer().getOnlinePlayers().forEach(p -> p.showPlayer(player)));
     }
 
     public void crash() {

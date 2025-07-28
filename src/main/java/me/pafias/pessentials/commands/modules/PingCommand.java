@@ -15,7 +15,7 @@ import java.util.stream.Collectors;
 public class PingCommand extends ICommand {
 
     public PingCommand() {
-        super("ping", null, "Ping", "/ping [player]", "latency");
+        super("ping", "essentials.ping", "Ping", "/ping [player]", "latency");
     }
 
     private int getPing(Player player) {
@@ -24,28 +24,38 @@ public class PingCommand extends ICommand {
 
     @Override
     public void commandHandler(CommandSender sender, Command command, String label, String[] args) {
-        if (!(sender instanceof Player)) return;
-        if (args.length == 0) {
-            Player player = (Player) sender;
-            int ping = getPing(player);
-            String sping = (ping < 30 ? ChatColor.DARK_GREEN.toString() + ping : ping < 50 ? ChatColor.GREEN.toString() + ping : ping < 100 ? ChatColor.YELLOW.toString() + ping : ChatColor.RED.toString() + ping);
-            player.sendMessage(CC.t("&6Ping: " + sping + "&7ms"));
-        } else {
-            Player target = plugin.getServer().getPlayer(args[0]);
-            if (target == null) {
-                sender.sendMessage(CC.t("&cPlayer not found."));
-                return;
-            }
-            int ping = getPing(target);
-            String sping = (ping < 30 ? ChatColor.DARK_GREEN.toString() + ping : ping < 50 ? ChatColor.GREEN.toString() + ping : ping < 100 ? ChatColor.YELLOW.toString() + ping : ChatColor.RED.toString() + ping);
-            sender.sendMessage(CC.t("&d" + target.getName() + (target.getName().endsWith("s") ? "&6'" : "&6's") + " &6ping: " + sping + "&7ms"));
+        Player target;
+        if (args.length == 0 && sender instanceof Player) {
+            target = (Player) sender;
+        } else if (sender.hasPermission("essentials.ping.others"))
+            target = plugin.getServer().getPlayer(args[0]);
+        else {
+            sender.sendMessage(CC.t("&cYou don't have permission to check other players' ping ;("));
+            return;
         }
+        if (target == null) {
+            sender.sendMessage(CC.t("&cPlayer not found."));
+            return;
+        }
+        final int ping = getPing(target);
+        final String pingColored = (ping < 30 ? ChatColor.DARK_GREEN.toString() + ping : ping < 50 ? ChatColor.GREEN.toString() + ping : ping < 100 ? ChatColor.YELLOW.toString() + ping : ChatColor.RED.toString() + ping);
+        final String pingMsg;
+        if (target == sender)
+            pingMsg = CC.t("&6Ping: " + pingColored + "&7ms");
+        else
+            pingMsg = CC.t("&d" + target.getName() + (target.getName().endsWith("s") ? "&6'" : "&6's") + " &6ping: " + pingColored + "&7ms");
+        sender.sendMessage(pingMsg);
     }
 
     @Override
     public List<String> tabHandler(CommandSender sender, Command command, String label, String[] args) {
         if (args.length == 1)
-            return plugin.getServer().getOnlinePlayers().stream().map(Player::getName).filter(p -> p.toLowerCase().startsWith(args[0].toLowerCase())).collect(Collectors.toList());
+            return plugin.getServer().getOnlinePlayers()
+                    .stream()
+                    .filter(p -> ((Player) sender).canSee(p))
+                    .map(Player::getName)
+                    .filter(p -> p.toLowerCase().startsWith(args[0].toLowerCase()))
+                    .collect(Collectors.toList());
         else return Collections.emptyList();
     }
 

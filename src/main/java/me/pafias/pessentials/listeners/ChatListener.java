@@ -21,18 +21,18 @@ public class ChatListener implements Listener {
 
     @EventHandler(priority = EventPriority.MONITOR)
     public void onStaffChat(AsyncPlayerChatEvent event) {
-        User user = plugin.getSM().getUserManager().getUser(event.getPlayer());
+        final User user = plugin.getSM().getUserManager().getUser(event.getPlayer());
         if (user == null) return;
-        String message = event.getMessage();
+        final String message = event.getMessage();
         if ((user.isInStaffChat() && message.startsWith("!")) || (message.startsWith("#") && event.getPlayer().hasPermission("essentials.staffchat")))
             if (user.isInStaffChat() && message.startsWith("!"))
                 event.setMessage(message.substring(1));
             else if (message.startsWith("#") && event.getPlayer().hasPermission("essentials.staffchat"))
                 event.setMessage(message.substring(1));
         if ((user.isInStaffChat() && !message.startsWith("!")) || (message.startsWith("#") && event.getPlayer().hasPermission("essentials.staffchat"))) {
+            event.setFormat(CC.formatStaffchat(user.getPlayer().getName(), event.getMessage()));
             event.getRecipients().clear();
             event.getRecipients().addAll(RandomUtils.getStaffOnline("essentials.staffchat"));
-            event.setFormat(CC.formatStaffchat(user.getPlayer().getName(), event.getMessage()));
         }
     }
 

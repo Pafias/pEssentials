@@ -26,12 +26,12 @@ public class ReplyCommand extends ICommand {
                 sender.sendMessage(CC.t("&cOnly players!"));
                 return;
             }
-            User player = plugin.getSM().getUserManager().getUser((Player) sender);
+            final User player = plugin.getSM().getUserManager().getUser((Player) sender);
             if (!TellCommand.msg.containsKey(player.getUUID())) {
                 player.getPlayer().sendMessage(CC.t("&cYou haven't messaged anybody recently!"));
                 return;
             }
-            User target = plugin.getSM().getUserManager().getUser(TellCommand.msg.get(player.getUUID()));
+            final User target = plugin.getSM().getUserManager().getUser(TellCommand.msg.get(player.getUUID()));
             if (target == null || target.isVanished()) {
                 sender.sendMessage(CC.t("&cThe person you were chatting with is no longer online!"));
                 return;
@@ -40,9 +40,9 @@ public class ReplyCommand extends ICommand {
                 sender.sendMessage(CC.t("&cThat player has private messages turned off."));
                 return;
             }
-            StringBuilder sb = new StringBuilder();
+            final StringBuilder sb = new StringBuilder();
             for (String arg : args) sb.append(arg).append(" ");
-            String message = sb.toString();
+            final String message = sb.toString();
             try {
                 target.getPlayer().sendMessage(CC.a("&e[Tell] &c" + player.getName() + "&6: &r" + message));
                 player.getPlayer().sendMessage(CC.a("&e[Tell] &c" + player.getName() + " &6-> &c" + target.getName() + " &6: &r" + message));
@@ -51,7 +51,6 @@ public class ReplyCommand extends ICommand {
                 player.getPlayer().sendMessage(CC.t("&e[Tell] &c" + player.getName() + " &6-> &c" + target.getName() + " &6: &r" + message));
             }
         }
-        return;
     }
 
     @Override
