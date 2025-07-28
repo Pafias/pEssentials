@@ -18,19 +18,17 @@ public class BackCommand extends ICommand {
 
     @Override
     public void commandHandler(CommandSender sender, Command command, String label, String[] args) {
-        if (sender.hasPermission("essentials.back")) {
-            if (!(sender instanceof Player)) {
-                sender.sendMessage(CC.t("&cOnly players!"));
-                return;
-            }
-            User player = plugin.getSM().getUserManager().getUser((Player) sender);
-            if (player.lastLocation == null) {
-                sender.sendMessage(CC.t("&cNo last location available."));
-                return;
-            }
-            player.getPlayer().teleport(player.lastLocation);
-            sender.sendMessage(CC.t("&6Teleported to last location."));
+        if (!(sender instanceof Player)) {
+            sender.sendMessage(CC.t("&cOnly players!"));
+            return;
         }
+        final User player = plugin.getSM().getUserManager().getUser((Player) sender);
+        if (player.lastLocation == null) {
+            sender.sendMessage(CC.t("&cNo last location available."));
+            return;
+        }
+        player.getPlayer().teleport(player.lastLocation);
+        sender.sendMessage(CC.t("&6Teleported to last location."));
     }
 
     @Override

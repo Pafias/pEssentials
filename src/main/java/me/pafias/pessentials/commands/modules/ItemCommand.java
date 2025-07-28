@@ -20,14 +20,14 @@ public class ItemCommand extends ICommand {
 
     @Override
     public void commandHandler(CommandSender sender, Command command, String label, String[] args) {
-        StringBuilder sb = new StringBuilder();
+        final StringBuilder sb = new StringBuilder();
         for (String arg : args)
             sb.append(arg).append(" ");
         if (!(sender instanceof Player)) {
             sender.sendMessage(CC.t("&cOnly players!"));
             return;
         }
-        Player player = (Player) sender;
+        final Player player = (Player) sender;
         player.performCommand("give " + player.getName() + " " + sb.toString());
     }
 

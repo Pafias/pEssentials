@@ -24,11 +24,11 @@ public class RainCommand extends ICommand {
             return;
         }
         if (sender.hasPermission("essentials.rain") && !Arrays.stream(args).anyMatch(arg -> arg.toLowerCase().contains("-p"))) {
-            Player player = (Player) sender;
+            final Player player = (Player) sender;
             player.getWorld().setStorm(true);
             player.sendMessage(CC.t("&6Weather set to storming (rain)."));
         } else {
-            Player player = (Player) sender;
+            final Player player = (Player) sender;
             if (player.getPlayerWeather() != null && player.getPlayerWeather().equals(WeatherType.DOWNFALL)) {
                 player.resetPlayerWeather();
                 player.sendMessage(CC.t("&6Personal weather reset."));
@@ -37,7 +37,6 @@ public class RainCommand extends ICommand {
                 player.sendMessage(CC.t("&6Personal weather set to raining"));
             }
         }
-        return;
     }
 
     @Override

@@ -26,8 +26,8 @@ public class InvseeCommand extends ICommand {
             sender.sendMessage(CC.t("&cOnly players!"));
             return;
         }
-        Player player = (Player) sender;
-        Player target = plugin.getServer().getPlayer(args[0]);
+        final Player player = (Player) sender;
+        final Player target = plugin.getServer().getPlayer(args[0]);
         if (target == null) {
             sender.sendMessage(CC.t("&cPlayer not found!"));
             return;
@@ -38,7 +38,12 @@ public class InvseeCommand extends ICommand {
     @Override
     public List<String> tabHandler(CommandSender sender, Command command, String label, String[] args) {
         if (args.length == 1)
-            return plugin.getServer().getOnlinePlayers().stream().filter(p -> ((Player) sender).canSee(p)).map(Player::getName).filter(n -> n.toLowerCase().startsWith(args[0].toLowerCase())).collect(Collectors.toList());
+            return plugin.getServer().getOnlinePlayers()
+                    .stream()
+                    .filter(p -> ((Player) sender).canSee(p))
+                    .map(Player::getName)
+                    .filter(n -> n.toLowerCase().startsWith(args[0].toLowerCase()))
+                    .collect(Collectors.toList());
         return Collections.emptyList();
     }
 

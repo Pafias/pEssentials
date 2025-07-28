@@ -1,7 +1,7 @@
 package me.pafias.pessentials.listeners;
 
-import me.pafias.pessentials.pEssentials;
 import me.pafias.pessentials.objects.User;
+import me.pafias.pessentials.pEssentials;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerTeleportEvent;
@@ -16,7 +16,7 @@ public class TeleportListener implements Listener {
 
     @EventHandler
     public void onTeleport(PlayerTeleportEvent event) {
-        User user = plugin.getSM().getUserManager().getUser(event.getPlayer());
+        final User user = plugin.getSM().getUserManager().getUser(event.getPlayer());
         if (user == null) return;
         user.lastLocation = event.getFrom();
     }

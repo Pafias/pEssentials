@@ -22,7 +22,7 @@ public class Reflection {
 
     private static final pEssentials plugin = pEssentials.get();
 
-    public static int getPing(Player player) {
+    public static int getPing(final Player player) {
         if (plugin.parseVersion() >= 17) {
             try {
                 return (int) player.getClass().getDeclaredMethod("getPing").invoke(player);
@@ -32,8 +32,8 @@ public class Reflection {
             }
         } else {
             try {
-                Object o = player.getClass().getDeclaredMethod("getHandle").invoke(player);
-                Field f = o.getClass().getDeclaredField("ping");
+                final Object o = player.getClass().getDeclaredMethod("getHandle").invoke(player);
+                final Field f = o.getClass().getDeclaredField("ping");
                 return f.getInt(o);
             } catch (Exception ex) {
                 ex.printStackTrace();
@@ -42,11 +42,11 @@ public class Reflection {
         }
     }
 
-    public static void setGameProfile(Player player, GameProfile profile) {
+    public static void setGameProfile(final Player player, final GameProfile profile) {
         try {
-            Object el = player.getClass().getMethod("getHandle").invoke(player);
-            Class eh = el.getClass().getSuperclass();
-            Field[] fields = eh.getDeclaredFields();
+            final Object el = player.getClass().getMethod("getHandle").invoke(player);
+            final Class eh = el.getClass().getSuperclass();
+            final Field[] fields = eh.getDeclaredFields();
             Field field = null;
             for (Field f : fields)
                 if (f.getType().getSimpleName().equals("GameProfile")) {
@@ -63,7 +63,7 @@ public class Reflection {
         }
     }
 
-    public static GameProfile getGameProfile(Player player) {
+    public static GameProfile getGameProfile(final Player player) {
         try {
             return (GameProfile) player.getClass().getDeclaredMethod("getProfile").invoke(player);
         } catch (IllegalAccessException | InvocationTargetException | NoSuchMethodException e) {
@@ -72,21 +72,25 @@ public class Reflection {
         }
     }
 
-    public static void sendActionbar(Player player, String text) {
+    public static void sendActionbar(final Player player, final String text) {
         if (plugin.parseVersion() > 9)
-            player.spigot().sendMessage(ChatMessageType.ACTION_BAR, TextComponent.fromLegacyText(text));
+            try {
+                player.sendActionBar(text);
+            } catch (Throwable t) {
+                player.spigot().sendMessage(ChatMessageType.ACTION_BAR, TextComponent.fromLegacyText(text));
+            }
         else {
             try {
-                String version = getVersion();
-                Class cs = Class.forName("net.minecraft.server." + version + ".IChatBaseComponent$ChatSerializer");
-                Object chatComponent = cs.getDeclaredMethod("a", String.class).invoke(null, "{\"text\": \"" + text + "\"}");
-                Class cp = player.getClass();
-                Object ep = cp.getDeclaredMethod("getHandle").invoke(player);
-                Object nm = ep.getClass().getDeclaredField("playerConnection").get(ep);
-                Method sendPacket = nm.getClass().getDeclaredMethod("sendPacket", Class.forName("net.minecraft.server." + version + ".Packet"));
-                Class packetclass = Class.forName("net.minecraft.server." + version + ".PacketPlayOutChat");
-                Constructor constructor = packetclass.getDeclaredConstructor(Class.forName("net.minecraft.server." + version + ".IChatBaseComponent"), byte.class);
-                Object packet = constructor.newInstance(chatComponent, (byte) 2);
+                final String version = getVersion();
+                final Class cs = Class.forName("net.minecraft.server." + version + ".IChatBaseComponent$ChatSerializer");
+                final Object chatComponent = cs.getDeclaredMethod("a", String.class).invoke(null, "{\"text\": \"" + text + "\"}");
+                final Class cp = player.getClass();
+                final Object ep = cp.getDeclaredMethod("getHandle").invoke(player);
+                final Object nm = ep.getClass().getDeclaredField("playerConnection").get(ep);
+                final Method sendPacket = nm.getClass().getDeclaredMethod("sendPacket", Class.forName("net.minecraft.server." + version + ".Packet"));
+                final Class packetclass = Class.forName("net.minecraft.server." + version + ".PacketPlayOutChat");
+                final Constructor constructor = packetclass.getDeclaredConstructor(Class.forName("net.minecraft.server." + version + ".IChatBaseComponent"), byte.class);
+                final Object packet = constructor.newInstance(chatComponent, (byte) 2);
                 sendPacket.invoke(nm, packet);
             } catch (Exception ex) {
                 ex.printStackTrace();
@@ -97,9 +101,9 @@ public class Reflection {
     public static org.bukkit.inventory.ItemStack getSkull() {
         if (plugin.parseVersion() < 13) {
             try {
-                Class clazz = Class.forName("org.bukkit.inventory.ItemStack");
-                Constructor constructor = clazz.getConstructor(int.class, int.class, short.class);
-                Object itemstack = constructor.newInstance(397, 1, (short) SkullType.PLAYER.ordinal());
+                final Class clazz = Class.forName("org.bukkit.inventory.ItemStack");
+                final Constructor constructor = clazz.getConstructor(int.class, int.class, short.class);
+                final Object itemstack = constructor.newInstance(397, 1, (short) SkullType.PLAYER.ordinal());
                 return (ItemStack) itemstack;
             } catch (Exception ex) {
                 ex.printStackTrace();
@@ -110,8 +114,8 @@ public class Reflection {
         }
     }
 
-    public static void playSound(Player player, Sound sound, double x, double y, double z, float volume, float pitch) {
-        PacketContainer packet = new PacketContainer(PacketType.Play.Server.NAMED_SOUND_EFFECT);
+    public static void playSound(final Player player, final Sound sound, final double x, final double y, final double z, final float volume, final float pitch) {
+        final PacketContainer packet = new PacketContainer(PacketType.Play.Server.NAMED_SOUND_EFFECT);
         packet.getModifier().write(0, sound.ordinal());
         packet.getModifier().write(1, 0);
         packet.getIntegers().write(2, (int) x);

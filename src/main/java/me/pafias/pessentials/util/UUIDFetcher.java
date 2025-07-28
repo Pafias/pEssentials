@@ -44,7 +44,7 @@ public class UUIDFetcher {
      * @param name   The name
      * @param action Do what you want to do with the uuid her
      */
-    public static void getUUID(String name, Consumer<UUID> action) {
+    public static void getUUID(final String name, final Consumer<UUID> action) {
         pool.execute(() -> action.accept(getUUID(name)));
     }
 
@@ -54,7 +54,7 @@ public class UUIDFetcher {
      * @param name The name
      * @return The uuid
      */
-    public static UUID getUUID(String name) {
+    public static UUID getUUID(final String name) {
         return getUUIDAt(name, System.currentTimeMillis());
     }
 
@@ -65,7 +65,7 @@ public class UUIDFetcher {
      * @param timestamp Time when the player had this name in milliseconds
      * @param action    Do what you want to do with the uuid her
      */
-    public static void getUUIDAt(String name, long timestamp, Consumer<UUID> action) {
+    public static void getUUIDAt(final String name, final long timestamp, final Consumer<UUID> action) {
         pool.execute(() -> action.accept(getUUIDAt(name, timestamp)));
     }
 
@@ -76,15 +76,15 @@ public class UUIDFetcher {
      * @param timestamp Time when the player had this name in milliseconds
      * @see UUIDFetcher#FEBRUARY_2015
      */
-    public static UUID getUUIDAt(String name, long timestamp) {
+    public static UUID getUUIDAt(String name, final long timestamp) {
         name = name.toLowerCase();
         if (uuidCache.containsKey(name)) {
             return uuidCache.get(name);
         }
         try {
-            HttpURLConnection connection = (HttpURLConnection) new URL(String.format(UUID_URL, name, timestamp / 1000)).openConnection();
+            final HttpURLConnection connection = (HttpURLConnection) new URL(String.format(UUID_URL, name, timestamp / 1000)).openConnection();
             connection.setReadTimeout(5000);
-            UUIDFetcher data = gson.fromJson(new BufferedReader(new InputStreamReader(connection.getInputStream())), UUIDFetcher.class);
+            final UUIDFetcher data = gson.fromJson(new BufferedReader(new InputStreamReader(connection.getInputStream())), UUIDFetcher.class);
 
             uuidCache.put(name, data.id);
             nameCache.put(data.id, data.name);
@@ -103,7 +103,7 @@ public class UUIDFetcher {
      * @param uuid   The uuid
      * @param action Do what you want to do with the name her
      */
-    public static void getName(UUID uuid, Consumer<String> action) {
+    public static void getName(final UUID uuid, final Consumer<String> action) {
         pool.execute(() -> action.accept(getName(uuid)));
     }
 
@@ -113,15 +113,15 @@ public class UUIDFetcher {
      * @param uuid The uuid
      * @return The name
      */
-    public static String getName(UUID uuid) {
+    public static String getName(final UUID uuid) {
         if (nameCache.containsKey(uuid)) {
             return nameCache.get(uuid);
         }
         try {
-            HttpURLConnection connection = (HttpURLConnection) new URL(String.format(NAME_URL, uuid.toString())).openConnection();
+            final HttpURLConnection connection = (HttpURLConnection) new URL(String.format(NAME_URL, uuid.toString())).openConnection();
             connection.setReadTimeout(5000);
-            UUIDFetcher[] nameHistory = gson.fromJson(new BufferedReader(new InputStreamReader(connection.getInputStream())), UUIDFetcher[].class);
-            UUIDFetcher currentNameData = nameHistory[nameHistory.length - 1];
+            final UUIDFetcher[] nameHistory = gson.fromJson(new BufferedReader(new InputStreamReader(connection.getInputStream())), UUIDFetcher[].class);
+            final UUIDFetcher currentNameData = nameHistory[nameHistory.length - 1];
 
             uuidCache.put(currentNameData.name.toLowerCase(), uuid);
             nameCache.put(uuid, currentNameData.name);

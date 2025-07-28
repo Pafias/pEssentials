@@ -19,38 +19,38 @@ public class TeleporthereCommand extends ICommand {
 
     @Override
     public void commandHandler(CommandSender sender, Command command, String label, String[] args) {
-        if (sender.hasPermission("essentials.teleporthere") || sender.hasPermission("essentials.tphere")) {
-            if (args.length < 1) {
-                sender.sendMessage(CC.t("&c/" + label + " <player/all>"));
-                return;
-            }
-            if (!(sender instanceof Player)) {
-                sender.sendMessage(CC.t("&cOnly players!"));
-                return;
-            }
-            User player1 = plugin.getSM().getUserManager().getUser((Player) sender);
-            if (args[0].equalsIgnoreCase("@a") || args[0].equalsIgnoreCase("*")) {
-                plugin.getServer().getOnlinePlayers().forEach(p -> p.teleport(player1.getPlayer()));
-                sender.sendMessage(CC.t("&6Teleported everyone to you"));
-                return;
-            } else {
-                User player2 = plugin.getSM().getUserManager().getUser(args[0]);
-                if (player2 == null) {
-                    sender.sendMessage(CC.t("&cPlayer not found!"));
-                    return;
-                }
-                player2.getPlayer().teleport(player1.getPlayer());
-                sender.sendMessage(CC.t("&6Teleported &d" + player2.getName() + " &6to you"));
-                return;
-            }
+        if (args.length < 1) {
+            sender.sendMessage(CC.t("&c/" + label + " <player/all>"));
+            return;
         }
-        return;
+        if (!(sender instanceof Player)) {
+            sender.sendMessage(CC.t("&cOnly players!"));
+            return;
+        }
+        final User player1 = plugin.getSM().getUserManager().getUser((Player) sender);
+        if (args[0].equalsIgnoreCase("@a") || args[0].equalsIgnoreCase("*")) {
+            plugin.getServer().getOnlinePlayers().forEach(p -> p.teleport(player1.getPlayer()));
+            sender.sendMessage(CC.t("&6Teleported everyone to you"));
+        } else {
+            final User player2 = plugin.getSM().getUserManager().getUser(args[0]);
+            if (player2 == null) {
+                sender.sendMessage(CC.t("&cPlayer not found!"));
+                return;
+            }
+            player2.getPlayer().teleport(player1.getPlayer());
+            sender.sendMessage(CC.t("&6Teleported &d" + player2.getName() + " &6to you"));
+        }
     }
 
     @Override
     public List<String> tabHandler(CommandSender sender, Command command, String label, String[] args) {
         if (args.length == 1)
-            return plugin.getServer().getOnlinePlayers().stream().map(Player::getName).filter(p -> p.toLowerCase().startsWith(args[0].toLowerCase())).collect(Collectors.toList());
+            return plugin.getServer().getOnlinePlayers()
+                    .stream()
+                    .filter(p -> ((Player) sender).canSee(p))
+                    .map(Player::getName)
+                    .filter(p -> p.toLowerCase().startsWith(args[0].toLowerCase()))
+                    .collect(Collectors.toList());
         else return Collections.emptyList();
     }
 

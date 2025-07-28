@@ -26,9 +26,9 @@ public class LightningCommand extends ICommand {
                 sender.sendMessage(CC.t("&cOnly players"));
                 return;
             }
-            Player player = (Player) sender;
+            final Player player = (Player) sender;
             Location location;
-            Entity targetEntity = player.getTargetEntity(32);
+            final Entity targetEntity = player.getTargetEntity(32);
             if (targetEntity != null) {
                 location = targetEntity.getLocation();
             } else {
@@ -46,12 +46,12 @@ public class LightningCommand extends ICommand {
             }
             location.getWorld().strikeLightning(location);
         } else {
-            Player target = plugin.getServer().getPlayer(args[0]);
+            final Player target = plugin.getServer().getPlayer(args[0]);
             if (target == null) {
                 sender.sendMessage(CC.t("&cInvalid player"));
                 return;
             }
-            Location location = target.getLocation();
+            final Location location = target.getLocation();
             location.getWorld().strikeLightning(location);
         }
     }

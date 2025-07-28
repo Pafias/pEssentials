@@ -16,26 +16,25 @@ public class FlyListener implements Listener {
     public FlyListener(final pEssentials ae) {
         try {
             ProtocolLibrary.getProtocolManager().addPacketListener(new PacketAdapter(ae, PacketType.Play.Client.STEER_VEHICLE) {
-
                 public void onPacketReceiving(PacketEvent event) {
                     try {
-                        PacketContainer packet = event.getPacket();
-                        User user = ae.getSM().getUserManager().getUser(event.getPlayer());
+                        final PacketContainer packet = event.getPacket();
+                        final User user = ae.getSM().getUserManager().getUser(event.getPlayer());
                         if (user == null || !user.flyingEntity)
                             return;
-                        Entity entity = user.getPlayer().getVehicle();
+                        final Entity entity = user.getPlayer().getVehicle();
                         if (entity == null)
                             return;
                         event.setCancelled(true);
                         if (packet.getFloat().read(1) > 0) {
-                            Vector v = entity.getVelocity();
+                            final Vector v = entity.getVelocity();
                             v.zero();
                             v.add(user.getPlayer().getLocation().getDirection());
                             v.multiply(1);
                             entity.setVelocity(v);
                         }
                         if (packet.getFloat().read(1) < 0) {
-                            Vector v = entity.getVelocity();
+                            final Vector v = entity.getVelocity();
                             v.zero();
                             v.add(user.getPlayer().getLocation().getDirection());
                             v.multiply(-1);

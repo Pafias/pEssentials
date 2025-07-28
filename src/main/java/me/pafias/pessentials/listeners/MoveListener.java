@@ -24,20 +24,19 @@ public class MoveListener implements Listener {
     public MoveListener(final pEssentials ae) {
         try {
             ProtocolLibrary.getProtocolManager().addPacketListener(new PacketAdapter(ae, PacketType.Play.Client.STEER_VEHICLE) {
-
                 public void onPacketReceiving(PacketEvent event) {
                     try {
-                        User user = ae.getSM().getUserManager().getUser(event.getPlayer());
+                        final User user = ae.getSM().getUserManager().getUser(event.getPlayer());
                         if (user == null || !user.movingEntity)
                             return;
-                        Entity entity = user.getPlayer().getVehicle();
+                        final Entity entity = user.getPlayer().getVehicle();
                         if (entity == null)
                             return;
-                        PacketContainer packet = event.getPacket();
+                        final PacketContainer packet = event.getPacket();
                         event.setCancelled(true);
                         if (!speed.containsKey(user.getUUID()))
                             speed.put(user.getUUID(), 0.1D);
-                        double i = speed.get(user.getUUID());
+                        final double i = speed.get(user.getUUID());
                         Vector v = new Vector();
                         if (packet.getFloat().read(1) > 0) {
                             v = user.getPlayer().getLocation().getDirection();

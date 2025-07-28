@@ -24,7 +24,7 @@ public class SunCommand extends ICommand {
             return;
         }
         if (sender.hasPermission("essentials.sun") && Arrays.stream(args).noneMatch(arg -> arg.toLowerCase().contains("-p"))) {
-            Player player = (Player) sender;
+            final Player player = (Player) sender;
             try {
                 player.getWorld().setClearWeatherDuration(0);
             } catch (Throwable ignored) {
@@ -32,7 +32,7 @@ public class SunCommand extends ICommand {
             player.getWorld().setThundering(false);
             player.sendMessage(CC.t("&6Weather cleared."));
         } else {
-            Player player = (Player) sender;
+            final Player player = (Player) sender;
             if (player.getPlayerWeather() != null && player.getPlayerWeather().equals(WeatherType.CLEAR)) {
                 player.resetPlayerWeather();
                 player.sendMessage(CC.t("&6Personal weather reset."));
@@ -41,7 +41,6 @@ public class SunCommand extends ICommand {
                 player.sendMessage(CC.t("&6Personal weather set to clear"));
             }
         }
-        return;
     }
 
     @Override

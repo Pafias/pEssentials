@@ -23,11 +23,11 @@ public class NightCommand extends ICommand {
             return;
         }
         if (sender.hasPermission("essentials.night") && !Arrays.stream(args).anyMatch(arg -> arg.toLowerCase().contains("-p"))) {
-            Player player = (Player) sender;
+            final Player player = (Player) sender;
             player.getWorld().setTime(14000);
             player.sendMessage(CC.t("&6Time set to night (14000 ticks)"));
         } else {
-            Player player = (Player) sender;
+            final Player player = (Player) sender;
             if (!player.isPlayerTimeRelative()) {
                 player.resetPlayerTime();
                 player.sendMessage(CC.t("&6Personal time reset."));

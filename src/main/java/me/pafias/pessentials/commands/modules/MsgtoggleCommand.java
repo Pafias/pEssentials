@@ -7,6 +7,7 @@ import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
+import java.util.Collections;
 import java.util.List;
 
 public class MsgtoggleCommand extends ICommand {
@@ -21,7 +22,7 @@ public class MsgtoggleCommand extends ICommand {
             sender.sendMessage(CC.t("&cOnly players!"));
             return;
         }
-        User user = plugin.getSM().getUserManager().getUser((Player) sender);
+        final User user = plugin.getSM().getUserManager().getUser((Player) sender);
         user.setBlockingPMs(!user.isBlockingPMs());
         if (user.isBlockingPMs()) {
             sender.sendMessage(CC.t("&cYou will no longer receive private messages."));
@@ -32,7 +33,7 @@ public class MsgtoggleCommand extends ICommand {
 
     @Override
     public List<String> tabHandler(CommandSender sender, Command command, String label, String[] args) {
-        return null;
+        return Collections.emptyList();
     }
 
 }

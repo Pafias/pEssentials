@@ -1,5 +1,6 @@
 package me.pafias.pessentials.services;
 
+import lombok.Getter;
 import me.pafias.pessentials.objects.User;
 import org.bukkit.entity.Player;
 
@@ -9,11 +10,8 @@ import java.util.UUID;
 
 public class UserManager {
 
+    @Getter
     private final Map<UUID, User> users = new HashMap<>();
-
-    public Map<UUID, User> getUsers() {
-        return users;
-    }
 
     public User getUser(UUID uuid) {
         return users.get(uuid);
@@ -24,7 +22,10 @@ public class UserManager {
     }
 
     public User getUser(String name) {
-        return users.values().stream().filter(u -> u.getName().equalsIgnoreCase(name) || u.getName().toLowerCase().startsWith(name.toLowerCase().trim())).findFirst().orElse(null);
+        return users.values()
+                .stream()
+                .filter(u -> u.getName().equalsIgnoreCase(name) || u.getName().toLowerCase().startsWith(name.toLowerCase().trim()))
+                .findFirst().orElse(null);
     }
 
     public void addUser(Player player) {

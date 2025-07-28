@@ -6,7 +6,7 @@
 
     <groupId>me.pafias</groupId>
     <artifactId>pEssentials</artifactId>
-    <version>1.5.2-SNAPSHOT</version>
+    <version>1.6-SNAPSHOT</version>
     <packaging>jar</packaging>
 
     <name>pEssentials</name>
@@ -137,6 +137,12 @@
             <artifactId>httpcore</artifactId>
             <version>4.4.14</version>
             <scope>provided</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.projectlombok</groupId>
+            <artifactId>lombok</artifactId>
+            <version>1.18.34</version>
+            <scope>compile</scope>
         </dependency>
     </dependencies>
 </project>

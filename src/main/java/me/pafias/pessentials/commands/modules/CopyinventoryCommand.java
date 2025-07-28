@@ -13,54 +13,64 @@ import java.util.stream.Collectors;
 public class CopyinventoryCommand extends ICommand {
 
     public CopyinventoryCommand() {
-        super("copyinventory", "essentials.copyinventory", "Copy inventory", "/ci <player> [target]", "ci");
+        super("copyinventory", "essentials.copyinventory", "Copy inventory", "/ci <player> [target]", "copyinv", "ci");
     }
 
     @Override
     public void commandHandler(CommandSender sender, Command command, String label, String[] args) {
-        if (sender.hasPermission("essentials.copyinventory")) {
-            if (args.length == 0) {
-                sender.sendMessage(CC.t("&c/" + label + " <player from> [player to]"));
+        if (args.length == 0)
+            sender.sendMessage(CC.t("&c/" + label + " <player from> [player to]"));
+        else if (args.length == 1) {
+            final Player from = plugin.getServer().getPlayer(args[0]);
+            if (from == null) {
+                sender.sendMessage(CC.t("&cPlayer not found!"));
                 return;
-            } else if (args.length == 1) {
-                Player from = plugin.getServer().getPlayer(args[0]);
-                if (from == null) {
-                    sender.sendMessage(CC.t("&cPlayer not found!"));
-                    return;
-                }
-                if (!(sender instanceof Player)) {
-                    sender.sendMessage(CC.t("&cOnly players!"));
-                    return;
-                }
-                Player to = (Player) sender;
-                copy(from, to);
-                sender.sendMessage(CC.t("&aInventory copied!"));
-            } else {
-                Player from = plugin.getServer().getPlayer(args[0]);
-                if (from == null) {
-                    sender.sendMessage(CC.t("&cPlayer " + args[0] + " not found!"));
-                    return;
-                }
-                if (args[1].equalsIgnoreCase("@a") || args[1].equalsIgnoreCase("*"))
-                    plugin.getServer().getOnlinePlayers().forEach(p -> copy(from, p));
-                else {
-                    Player to = plugin.getServer().getPlayer(args[1]);
-                    if (to == null) {
-                        sender.sendMessage(CC.t("&cPlayer " + args[1] + " not found!"));
-                        return;
-                    }
-                    copy(from, to);
-                }
-                sender.sendMessage(CC.t("&aInventory copied!"));
             }
+            if (!(sender instanceof Player)) {
+                sender.sendMessage(CC.t("&cOnly players!"));
+                return;
+            }
+            final Player to = (Player) sender;
+            copy(from, to);
+            sender.sendMessage(CC.t("&aInventory copied!"));
+        } else {
+            final Player from = plugin.getServer().getPlayer(args[0]);
+            if (from == null) {
+                sender.sendMessage(CC.t("&cPlayer " + args[0] + " not found!"));
+                return;
+            }
+            if (args[1].equalsIgnoreCase("@a") || args[1].equalsIgnoreCase("*"))
+                plugin.getServer().getOnlinePlayers().forEach(p -> copy(from, p));
+            else {
+                final Player to = plugin.getServer().getPlayer(args[1]);
+                if (to == null) {
+                    sender.sendMessage(CC.t("&cPlayer " + args[1] + " not found!"));
+                    return;
+                }
+                copy(from, to);
+            }
+            sender.sendMessage(CC.t("&aInventory copied!"));
         }
-        return;
     }
 
     @Override
     public List<String> tabHandler(CommandSender sender, Command command, String label, String[] args) {
-        if (args.length > 3) return Collections.emptyList();
-        else return plugin.getServer().getOnlinePlayers().stream().map(Player::getName).collect(Collectors.toList());
+        if (args.length == 1)
+            return plugin.getServer().getOnlinePlayers()
+                    .stream()
+                    .filter(p -> ((Player) sender).canSee(p))
+                    .map(Player::getName)
+                    .filter(n -> n.toLowerCase().startsWith(args[0].toLowerCase()))
+                    .collect(Collectors.toList());
+        else if (args.length == 2) {
+            return plugin.getServer().getOnlinePlayers()
+                    .stream()
+                    .filter(p -> ((Player) sender).canSee(p))
+                    .map(Player::getName)
+                    .filter(n -> n.toLowerCase().startsWith(args[1].toLowerCase()))
+                    .collect(Collectors.toList());
+        } else
+            return Collections.emptyList();
     }
 
     private void copy(Player from, Player to) {

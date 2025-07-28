@@ -83,16 +83,16 @@ public class GamemodeCommand extends ICommand {
                 sender.sendMessage(CC.t("&cYou do not have permission for this gamemode!"));
                 return;
             }
-            boolean silent = Arrays.asList(args).contains("-s");
+            final boolean silent = Arrays.asList(args).contains("-s");
             if (args[1].equalsIgnoreCase("@a") || args[1].equalsIgnoreCase("*")) {
-                GameMode finalGamemode = gamemode;
+                final GameMode finalGamemode = gamemode;
                 plugin.getServer().getOnlinePlayers().forEach(p -> {
                     p.setGameMode(finalGamemode);
                     if (!silent)
                         p.sendMessage(CC.t("&6Gamemode: &a" + finalGamemode.name().toLowerCase()));
                 });
             } else {
-                Player target = plugin.getServer().getPlayer(args[1]);
+                final Player target = plugin.getServer().getPlayer(args[1]);
                 if (target == null) {
                     sender.sendMessage(CC.t("&cPlayer not found!"));
                     return;

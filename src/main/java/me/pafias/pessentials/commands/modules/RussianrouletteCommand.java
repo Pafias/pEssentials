@@ -2,10 +2,10 @@ package me.pafias.pessentials.commands.modules;
 
 import me.pafias.pessentials.commands.ICommand;
 import me.pafias.pessentials.util.CC;
+import me.pafias.pessentials.util.Tasks;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
-import org.bukkit.scheduler.BukkitRunnable;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.*;
@@ -16,7 +16,7 @@ public class RussianrouletteCommand extends ICommand {
         super("russianroulette", "essentials.russianroulette", "Russian roulette!", "/russianroulette [chance]");
     }
 
-    private Set<UUID> cooldown = new HashSet<>();
+    private final Set<UUID> cooldown = new HashSet<>();
 
     @Override
     public void commandHandler(@NotNull CommandSender sender, @NotNull Command command, @NotNull String label, @NotNull String[] args) {
@@ -24,38 +24,29 @@ public class RussianrouletteCommand extends ICommand {
             sender.sendMessage(CC.t("&cOnly players!"));
             return;
         }
-        if (sender.hasPermission("essentials.russianroulette")) {
-            Player player = (Player) sender;
-            if (cooldown.contains(player.getUniqueId())) {
-                sender.sendMessage(CC.t("&cYou are on cooldown."));
-                return;
-            }
-            int num1 = new Random().nextInt(6);
-            int num2 = new Random().nextInt(6);
-            if (num1 == num2) {
-                try {
-                    player.sendTitle(CC.t("&c&lUh oh!"), CC.t("&4&lYou were unlucky!"), 2, 20, 20);
-                } catch (Throwable t) {
-                    player.sendTitle(CC.t("&c&lUh oh!"), CC.t("&4&lYou were unlucky!"));
-                }
-                new BukkitRunnable() {
-                    @Override
-                    public void run() {
-                        plugin.getSM().getUserManager().getUser(player).crash();
-                    }
-                }.runTaskLater(plugin, 20);
-            } else {
-                sender.sendMessage(CC.t("&aPhew! You survived."));
-                cooldown.add(((Player) sender).getUniqueId());
-                new BukkitRunnable() {
-                    @Override
-                    public void run() {
-                        cooldown.remove(((Player) sender).getUniqueId());
-                    }
-                }.runTaskLaterAsynchronously(plugin, (30 * 20));
-            }
+        final Player player = (Player) sender;
+        if (cooldown.contains(player.getUniqueId())) {
+            sender.sendMessage(CC.t("&cYou are on cooldown."));
+            return;
         }
-        return;
+        final int num1 = new Random().nextInt(6);
+        final int num2 = new Random().nextInt(6);
+        if (num1 == num2) {
+            try {
+                player.sendTitle(CC.t("&c&lUh oh!"), CC.t("&4&lYou were unlucky!"), 2, 20, 20);
+            } catch (Throwable t) {
+                player.sendTitle(CC.t("&c&lUh oh!"), CC.t("&4&lYou were unlucky!"));
+            }
+            Tasks.runLaterSync(20, () -> {
+                plugin.getSM().getUserManager().getUser(player).crash();
+            });
+        } else {
+            sender.sendMessage(CC.t("&aPhew! You survived."));
+            cooldown.add(((Player) sender).getUniqueId());
+            Tasks.runLaterAsync(600, () -> {
+                cooldown.remove(((Player) sender).getUniqueId());
+            });
+        }
     }
 
     @Override

@@ -28,22 +28,22 @@ public class SudoCommand extends ICommand {
                 sender.sendMessage(CC.t(String.format("&c/%s <player> <command>", label)));
                 return;
             }
-            Player target = plugin.getServer().getPlayer(args[0]);
+            final Player target = plugin.getServer().getPlayer(args[0]);
             if (target == null) {
                 sender.sendMessage(CC.t("&cPlayer not found!"));
                 return;
             }
-            String[] argsParsed = Arrays.copyOfRange(args, 2, args.length);
+            final String[] argsParsed = Arrays.copyOfRange(args, 2, args.length);
             if (args[1].equalsIgnoreCase("chat")) {
-                String message = String.join(" ", argsParsed);
+                final String message = String.join(" ", argsParsed);
                 target.chat(message);
             } else {
-                PluginCommand cmd = plugin.getServer().getPluginCommand(args[1]);
+                final PluginCommand cmd = plugin.getServer().getPluginCommand(args[1]);
                 if (cmd == null) {
                     sender.sendMessage(CC.t("&cCommand not found!"));
                     return;
                 }
-                PermissionAttachment attachment = target.addAttachment(plugin);
+                final PermissionAttachment attachment = target.addAttachment(plugin);
                 boolean hasPerm = cmd.testPermissionSilent(target);
                 boolean removePerm;
                 if (!hasPerm && cmd.getPermission() != null) {
@@ -57,7 +57,6 @@ public class SudoCommand extends ICommand {
             }
             sender.sendMessage(CC.t("&aSudo executed."));
         }
-        return;
     }
 
     @Override

@@ -24,22 +24,31 @@ public final class pEssentials extends JavaPlugin {
     @Override
     public void onEnable() {
         plugin = this;
+
+        plugin.getConfig().options().copyDefaults(true);
+        plugin.saveConfig();
+        plugin.reloadConfig();
+
         try {
             new AutoUpdaterTask(plugin).run();
         } catch (Throwable ignored) {
             getLogger().info("Failed to check for updates");
         }
-        getServer().getMessenger().registerOutgoingPluginChannel(this, "BungeeCord");
+
+        getServer().getMessenger().registerOutgoingPluginChannel(plugin, "BungeeCord");
+
         servicesManager = new ServicesManager(plugin);
-        getServer().getOnlinePlayers().forEach(p -> servicesManager.getUserManager().addUser(p));
+
         register();
+
+        getServer().getOnlinePlayers().forEach(p -> servicesManager.getUserManager().addUser(p));
     }
 
     private void register() {
         PluginManager pm = getServer().getPluginManager();
 
         if (pm.isPluginEnabled("PlaceholderAPI"))
-            servicesManager.getPAPIExpansion().register();
+            servicesManager.getPapiExpansion().register();
 
         pm.registerEvents(new JoinQuitListener(plugin), plugin);
         if (pm.isPluginEnabled("ProtocolLib")) {
@@ -62,15 +71,20 @@ public final class pEssentials extends JavaPlugin {
                 .forEach(p -> servicesManager.getVanishManager().unvanish(p));
         servicesManager.getUserManager().getUsers().values().stream().filter(User::hasIdentity).forEach(user -> user.setIdentity(user.getOriginalGameProfile()));
         if (getServer().getPluginManager().getPlugin("PlaceholderAPI") != null)
-            servicesManager.getPAPIExpansion().unregister();
+            servicesManager.getPapiExpansion().unregister();
     }
 
     public double parseVersion() {
-        String version = getServer().getBukkitVersion();
-        String[] var = version.split("\\.", 2);
-        String[] var2 = var[1].split("-");
-        String var3 = var2[0];
-        return Double.parseDouble(var3);
+        try {
+            String version = getServer().getMinecraftVersion(); // 1.12.2
+            String[] var = version.split("\\.", 2); // [1, 12.2]
+            return Double.parseDouble(var[1]); // 12.2
+        } catch (Throwable t) {
+            String version = getServer().getBukkitVersion(); // 1.12.2-R0.1-SNAPSHOT
+            String[] var = version.split("\\.", 2); // [1, 12.2-R0.1-SNAPSHOT]
+            String[] var2 = var[1].split("-"); // [12.2, R0.1, SNAPSHOT]
+            return Double.parseDouble(var2[0]); // 12.2
+        }
     }
 
 }

@@ -19,10 +19,9 @@ public class FreezeManager implements Listener {
     public FreezeManager(pEssentials plugin) {
         this.plugin = plugin;
         plugin.getServer().getPluginManager().registerEvents(this, plugin);
-        frozen = new HashSet<>();
     }
 
-    private final Set<UUID> frozen;
+    private final Set<UUID> frozen = new HashSet<>();
 
     public Set<UUID> getFrozenUsers() {
         return frozen;

@@ -1,5 +1,6 @@
 package me.pafias.pessentials.services;
 
+import lombok.Getter;
 import me.pafias.pessentials.events.PlayerUnvanishedEvent;
 import me.pafias.pessentials.events.PlayerVanishedEvent;
 import me.pafias.pessentials.pEssentials;
@@ -24,44 +25,44 @@ public class VanishManager implements Listener {
         plugin.getServer().getPluginManager().registerEvents(this, plugin);
     }
 
-    private final Set<UUID> vanished = new HashSet<>();
-
-    public Set<UUID> getVanishedPlayers() {
-        return vanished;
-    }
+    @Getter
+    private final Set<UUID> vanishedPlayers = new HashSet<>();
 
     public boolean isVanished(Player player) {
-        return vanished.contains(player.getUniqueId());
+        return vanishedPlayers.contains(player.getUniqueId());
     }
 
     public void vanish(Player player) {
-        plugin.getServer().getOnlinePlayers().stream()
+        plugin.getServer().getOnlinePlayers()
+                .stream()
                 .filter(p -> p != player && !p.hasPermission("essentials.vanish.bypass"))
                 .forEach(p -> p.hidePlayer(player));
         player.setMetadata("vanished", new FixedMetadataValue(plugin, true));
-        plugin.getServer().getPluginManager().callEvent(new PlayerVanishedEvent(player));
-        vanished.add(player.getUniqueId());
+        vanishedPlayers.add(player.getUniqueId());
         player.sendMessage(CC.t("&6Vanish: &aON"));
+        plugin.getServer().getPluginManager().callEvent(new PlayerVanishedEvent(player));
     }
 
     public void unvanish(Player player) {
         plugin.getServer().getOnlinePlayers()
                 .forEach(p -> p.showPlayer(player));
         player.setMetadata("vanished", new FixedMetadataValue(plugin, false));
-        plugin.getServer().getPluginManager().callEvent(new PlayerUnvanishedEvent(player));
-        vanished.remove(player.getUniqueId());
+        vanishedPlayers.remove(player.getUniqueId());
         player.sendMessage(CC.t("&6Vanish: &cOFF"));
+        plugin.getServer().getPluginManager().callEvent(new PlayerUnvanishedEvent(player));
     }
 
     @EventHandler
     public void onJoin(PlayerJoinEvent event) {
-        if (vanished.isEmpty()) return;
-        vanished.stream()
+        if (vanishedPlayers.isEmpty()) return;
+        vanishedPlayers.stream()
                 .filter(uuid -> !uuid.equals(event.getPlayer().getUniqueId()))
-                .filter(uuid -> plugin.getServer().getPlayer(uuid) != null)
                 .forEach(uuid -> {
-                    if (!event.getPlayer().hasPermission("essentials.vanish.bypass"))
-                        event.getPlayer().hidePlayer(plugin.getServer().getPlayer(uuid));
+                    Player player = plugin.getServer().getPlayer(uuid);
+                    if (player != null) {
+                        if (!event.getPlayer().hasPermission("essentials.vanish.bypass"))
+                            event.getPlayer().hidePlayer(player);
+                    }
                 });
     }
 

@@ -27,21 +27,21 @@ public class AutoUpdaterTask extends BukkitRunnable {
     @Override
     public void run() {
         try {
-            CloseableHttpClient closeableHttpClient = HttpClientBuilder.create().build();
-            HttpGet httpGet = new HttpGet();
+            final CloseableHttpClient closeableHttpClient = HttpClientBuilder.create().build();
+            final HttpGet httpGet = new HttpGet();
             httpGet.setURI(new URI("https://pafias.me/minecraft/pEssentials/pEssentials.jar"));
-            HttpResponse httpResponse = closeableHttpClient.execute(httpGet, new BasicHttpContext());
+            final HttpResponse httpResponse = closeableHttpClient.execute(httpGet, new BasicHttpContext());
 
-            File tempJarFile = new File(plugin.getDataFolder(), "pEssentials_update.jar");
-            File jarFileOnPluginFolder = new File(plugin.getClass().getProtectionDomain().getCodeSource().getLocation().toURI());
+            final File tempJarFile = new File(plugin.getDataFolder(), "pEssentials_update.jar");
+            final File jarFileOnPluginFolder = new File(plugin.getClass().getProtectionDomain().getCodeSource().getLocation().toURI());
 
             if (jarFileOnPluginFolder.length() != httpResponse.getEntity().getContentLength()) {
                 plugin.getLogger().info("Found a new version and downloading the update!");
 
                 try (BufferedInputStream in = new BufferedInputStream(httpResponse.getEntity().getContent());
-                     FileOutputStream out = new FileOutputStream(tempJarFile)) {
+                     final FileOutputStream out = new FileOutputStream(tempJarFile)) {
 
-                    byte[] buffer = new byte[1024];
+                    final byte[] buffer = new byte[1024];
                     int count;
                     while ((count = in.read(buffer)) != -1) {
                         out.write(buffer, 0, count);

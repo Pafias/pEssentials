@@ -42,11 +42,11 @@ public class CC {
     }
 
     public static TextComponent formatStaffchatModern(String name, String message) {
-        return a(pEssentials.get().getSM().getVariables().staffchatFormat.replace("{player}", name).replace("{message}", message));
+        return a(pEssentials.get().getConfig().getString("staffchat_format").replace("{player}", name).replace("{message}", message));
     }
 
     public static String formatStaffchat(String name, String message) {
-        return t(pEssentials.get().getSM().getVariables().staffchatFormat.replace("{player}", name).replace("{message}", message));
+        return t(pEssentials.get().getConfig().getString("staffchat_format").replace("{player}", name).replace("{message}", message));
     }
 
 }

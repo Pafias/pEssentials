@@ -1,8 +1,8 @@
 package me.pafias.pessentials.util;
 
 import me.clip.placeholderapi.expansion.PlaceholderExpansion;
-import me.pafias.pessentials.pEssentials;
 import me.pafias.pessentials.objects.User;
+import me.pafias.pessentials.pEssentials;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 
@@ -32,7 +32,7 @@ public class PAPIExpansion extends PlaceholderExpansion {
     @Override
     public String onPlaceholderRequest(Player player, @NotNull String params) {
         if (player == null) return "";
-        User user = plugin.getSM().getUserManager().getUser(player);
+        final User user = plugin.getSM().getUserManager().getUser(player);
         if (user == null) return "";
         switch (params) {
             case "name":

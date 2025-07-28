@@ -26,12 +26,13 @@ public class BlockCommand extends ICommand {
             sender.sendMessage(CC.t("&cOnly players!"));
             return;
         }
-        User user = plugin.getSM().getUserManager().getUser((Player) sender);
+        User user;
         if (args.length == 0) {
+            user = plugin.getSM().getUserManager().getUser((Player) sender);
             sender.sendMessage(CC.t("&6You are currently blocking:"));
-            StringBuilder sb = new StringBuilder();
+            final StringBuilder sb = new StringBuilder();
             for (UUID blocked : user.getBlocking()) {
-                OfflinePlayer offlinePlayer = plugin.getServer().getOfflinePlayer(blocked);
+                final OfflinePlayer offlinePlayer = plugin.getServer().getOfflinePlayer(blocked);
                 sb.append("&c" + offlinePlayer.getName()).append("&f, ");
             }
             if (sb.length() > 0) {
@@ -41,11 +42,12 @@ public class BlockCommand extends ICommand {
                 sender.sendMessage(CC.t("&cNo one!"));
             }
         } else {
-            Player player = plugin.getServer().getPlayer(args[0]);
-            if(player == null){
+            final Player player = plugin.getServer().getPlayer(args[0]);
+            if (player == null) {
                 sender.sendMessage(CC.t("&cPlayer not online!"));
                 return;
             }
+            user = plugin.getSM().getUserManager().getUser((Player) sender);
             if (user.getBlocking().contains(player.getUniqueId())) {
                 user.getBlocking().remove(player.getUniqueId());
                 sender.sendMessage(CC.t("&aYou have unblocked &f" + player.getName()));
@@ -58,7 +60,7 @@ public class BlockCommand extends ICommand {
 
     @Override
     public List<String> tabHandler(CommandSender sender, Command command, String label, String[] args) {
-        if(args.length != 1) return Collections.emptyList();
+        if (args.length != 1) return Collections.emptyList();
         List<String> list = new ArrayList<>();
         User user = plugin.getSM().getUserManager().getUser((Player) sender);
         list.addAll(user.getBlocking()

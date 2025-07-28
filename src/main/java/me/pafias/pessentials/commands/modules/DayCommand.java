@@ -22,12 +22,12 @@ public class DayCommand extends ICommand {
             sender.sendMessage(CC.t("&cOnly players!"));
             return;
         }
-        if (sender.hasPermission("essentials.day") && !Arrays.stream(args).anyMatch(arg -> arg.toLowerCase().contains("-p"))) {
-            Player player = (Player) sender;
+        if (sender.hasPermission("essentials.day") && Arrays.stream(args).noneMatch(arg -> arg.toLowerCase().contains("-p"))) {
+            final Player player = (Player) sender;
             player.getWorld().setTime(0);
             player.sendMessage(CC.t("&6Time set to day (0 ticks)"));
         } else {
-            Player player = (Player) sender;
+            final Player player = (Player) sender;
             if (!player.isPlayerTimeRelative()) {
                 player.resetPlayerTime();
                 player.sendMessage(CC.t("&6Personal time reset."));

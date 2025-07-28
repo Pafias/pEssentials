@@ -20,33 +20,35 @@ public class UnfreezeCommand extends ICommand {
 
     @Override
     public void commandHandler(@NotNull CommandSender sender, @NotNull Command command, @NotNull String label, @NotNull String[] args) {
-        if (sender.hasPermission("essentials.unfreeze")) {
-            if (args.length < 1) {
-                sender.sendMessage(CC.tf("&c/%s <player>", label));
-                return;
-            }
-            User target = plugin.getSM().getUserManager().getUser(args[0]);
-            if (target == null) {
-                sender.sendMessage(CC.t("&cPlayer not found!"));
-                return;
-            }
-            if (!target.isFrozen()) {
-                sender.sendMessage(CC.t("&cPlayer not frozen!"));
-                return;
-            }
-            target.setFrozen(false);
-            target.getPlayer().sendMessage("");
-            target.getPlayer().sendMessage(CC.t("&aYou are now unfrozen"));
-            target.getPlayer().sendMessage("");
-            sender.sendMessage(CC.tf("&aYou unfroze &c%s", target.getRealName()));
+        if (args.length < 1) {
+            sender.sendMessage(CC.tf("&c/%s <player>", label));
+            return;
         }
-        return;
+        final User target = plugin.getSM().getUserManager().getUser(args[0]);
+        if (target == null) {
+            sender.sendMessage(CC.t("&cPlayer not found!"));
+            return;
+        }
+        if (!target.isFrozen()) {
+            sender.sendMessage(CC.t("&cPlayer not frozen!"));
+            return;
+        }
+        target.setFrozen(false);
+        target.getPlayer().sendMessage("");
+        target.getPlayer().sendMessage(CC.t("&aYou are now unfrozen"));
+        target.getPlayer().sendMessage("");
+        sender.sendMessage(CC.tf("&aYou unfroze &c%s", target.getRealName()));
     }
 
     @Override
     public List<String> tabHandler(CommandSender sender, Command command, String label, String[] args) {
         if (args.length == 1)
-            return plugin.getServer().getOnlinePlayers().stream().map(Player::getName).filter(p -> p.toLowerCase().startsWith(args[0].toLowerCase())).collect(Collectors.toList());
+            return plugin.getServer().getOnlinePlayers()
+                    .stream()
+                    .filter(p -> ((Player) sender).canSee(p))
+                    .map(Player::getName)
+                    .filter(p -> p.toLowerCase().startsWith(args[0].toLowerCase()))
+                    .collect(Collectors.toList());
         else return Collections.emptyList();
     }
 

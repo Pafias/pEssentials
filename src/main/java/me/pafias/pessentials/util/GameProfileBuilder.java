@@ -54,29 +54,29 @@ public class GameProfileBuilder {
      * @throws IOException If something wents wrong while fetching
      * @see GameProfile
      */
-    public static GameProfile fetch(UUID uuid, boolean forceNew) throws IOException {
+    public static GameProfile fetch(final UUID uuid, final boolean forceNew) throws IOException {
         if (!forceNew && cache.containsKey(uuid) && cache.get(uuid).isValid()) {
             return cache.get(uuid).profile;
         } else {
-            HttpURLConnection connection = (HttpURLConnection) new URL(String.format(SERVICE_URL, uuid.toString())).openConnection();
+            final HttpURLConnection connection = (HttpURLConnection) new URL(String.format(SERVICE_URL, uuid.toString())).openConnection();
             connection.setReadTimeout(5000);
 
             if (connection.getResponseCode() == HttpURLConnection.HTTP_OK) {
-                BufferedReader rd = new BufferedReader(new InputStreamReader(connection.getInputStream(), StandardCharsets.UTF_8));
-                StringBuilder sb = new StringBuilder();
+                final BufferedReader rd = new BufferedReader(new InputStreamReader(connection.getInputStream(), StandardCharsets.UTF_8));
+                final StringBuilder sb = new StringBuilder();
                 int cp;
                 while ((cp = rd.read()) != -1)
                     sb.append((char) cp);
-                String json = sb.toString();
+                final String json = sb.toString();
 
-                GameProfile result = gson.fromJson(json, GameProfile.class);
+                final GameProfile result = gson.fromJson(json, GameProfile.class);
                 cache.put(uuid, new CachedProfile(result));
                 return result;
             } else {
                 if (!forceNew && cache.containsKey(uuid)) {
                     return cache.get(uuid).profile;
                 }
-                JsonObject error = (JsonObject) new JsonParser().parse(new BufferedReader(new InputStreamReader(connection.getErrorStream())).readLine());
+                final JsonObject error = (JsonObject) new JsonParser().parse(new BufferedReader(new InputStreamReader(connection.getErrorStream())).readLine());
                 throw new IOException(error.get("error").getAsString() + ": " + error.get("errorMessage").getAsString());
             }
         }
@@ -91,7 +91,7 @@ public class GameProfileBuilder {
      * @return A GameProfile built from the arguments
      * @see GameProfile
      */
-    public static GameProfile getProfile(UUID uuid, String name, String skinUrl) {
+    public static GameProfile getProfile(final UUID uuid, final String name, final String skinUrl) {
         return getProfile(uuid, name, skinUrl, null);
     }
 
@@ -105,11 +105,11 @@ public class GameProfileBuilder {
      * @return A GameProfile built from the arguments
      * @see GameProfile
      */
-    public static GameProfile getProfile(UUID uuid, String name, String skinUrl, String capeUrl) {
-        GameProfile profile = new GameProfile(uuid, name);
-        boolean cape = capeUrl != null && !capeUrl.isEmpty();
+    public static GameProfile getProfile(final UUID uuid, final String name, final String skinUrl, final String capeUrl) {
+        final GameProfile profile = new GameProfile(uuid, name);
+        final boolean cape = capeUrl != null && !capeUrl.isEmpty();
 
-        List<Object> args = new ArrayList<>();
+        final List<Object> args = new ArrayList<>();
         args.add(System.currentTimeMillis());
         args.add(uuid.toString());
         args.add(name);
@@ -125,7 +125,7 @@ public class GameProfileBuilder {
      *
      * @param time cache time (default = -1)
      */
-    public static void setCacheTime(long time) {
+    public static void setCacheTime(final long time) {
         cacheTime = time;
     }
 
