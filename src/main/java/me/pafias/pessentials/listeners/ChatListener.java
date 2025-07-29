@@ -19,7 +19,7 @@ public class ChatListener implements Listener {
         this.plugin = plugin;
     }
 
-    @EventHandler(priority = EventPriority.MONITOR)
+    @EventHandler(priority = EventPriority.HIGHEST)
     public void onStaffChat(AsyncPlayerChatEvent event) {
         final User user = plugin.getSM().getUserManager().getUser(event.getPlayer());
         if (user == null) return;
@@ -33,6 +33,12 @@ public class ChatListener implements Listener {
             event.setFormat(CC.formatStaffchat(user.getPlayer().getName(), event.getMessage()));
             event.getRecipients().clear();
             event.getRecipients().addAll(RandomUtils.getStaffOnline("essentials.staffchat"));
+
+            // Because of DiscordSRV (and maybe other plugins), we gotta use this workaround
+            event.setCancelled(true);
+            String msg = String.format(event.getFormat(), event.getPlayer().getName(), event.getMessage());
+            event.getRecipients().forEach(recipient -> recipient.sendMessage(msg));
+            plugin.getServer().getConsoleSender().sendMessage(msg);
         }
     }
 
