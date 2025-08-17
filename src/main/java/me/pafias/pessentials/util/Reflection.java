@@ -1,8 +1,10 @@
 package me.pafias.pessentials.util;
 
-import com.comphenix.protocol.PacketType;
-import com.comphenix.protocol.ProtocolLibrary;
-import com.comphenix.protocol.events.PacketContainer;
+import com.github.retrooper.packetevents.PacketEvents;
+import com.github.retrooper.packetevents.protocol.sound.SoundCategory;
+import com.github.retrooper.packetevents.protocol.sound.Sounds;
+import com.github.retrooper.packetevents.util.Vector3i;
+import com.github.retrooper.packetevents.wrapper.play.server.WrapperPlayServerSoundEffect;
 import com.mojang.authlib.GameProfile;
 import me.pafias.pessentials.pEssentials;
 import net.md_5.bungee.api.ChatMessageType;
@@ -115,15 +117,14 @@ public class Reflection {
     }
 
     public static void playSound(final Player player, final Sound sound, final double x, final double y, final double z, final float volume, final float pitch) {
-        final PacketContainer packet = new PacketContainer(PacketType.Play.Server.NAMED_SOUND_EFFECT);
-        packet.getModifier().write(0, sound.ordinal());
-        packet.getModifier().write(1, 0);
-        packet.getIntegers().write(2, (int) x);
-        packet.getIntegers().write(3, (int) y);
-        packet.getIntegers().write(4, (int) z);
-        packet.getFloat().write(0, volume);
-        packet.getFloat().write(1, pitch);
-        ProtocolLibrary.getProtocolManager().sendServerPacket(player, packet);
+        final WrapperPlayServerSoundEffect packet = new WrapperPlayServerSoundEffect(
+                Sounds.getByName(sound.name()),
+                SoundCategory.MASTER,
+                new Vector3i((int) x, (int) y, (int) z),
+                volume,
+                pitch
+        );
+        PacketEvents.getAPI().getPlayerManager().sendPacket(player, packet);
     }
 
     private static String getVersion() {
