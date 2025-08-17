@@ -1,18 +1,19 @@
 package me.pafias.pessentials.listeners;
 
-import com.comphenix.protocol.PacketType;
-import com.comphenix.protocol.ProtocolLibrary;
-import com.comphenix.protocol.events.ListenerPriority;
-import com.comphenix.protocol.events.PacketAdapter;
-import com.comphenix.protocol.events.PacketContainer;
-import com.comphenix.protocol.events.PacketEvent;
-import com.comphenix.protocol.wrappers.WrappedGameProfile;
-import com.comphenix.protocol.wrappers.WrappedServerPing;
-import com.google.common.collect.ImmutableList;
+import com.github.retrooper.packetevents.PacketEvents;
+import com.github.retrooper.packetevents.event.SimplePacketListenerAbstract;
+import com.github.retrooper.packetevents.event.simple.PacketStatusSendEvent;
+import com.github.retrooper.packetevents.protocol.packettype.PacketType;
+import com.github.retrooper.packetevents.wrapper.status.server.WrapperStatusServerResponse;
+import com.google.gson.JsonArray;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
 import me.pafias.pessentials.pEssentials;
 import org.bukkit.event.Listener;
+import org.jetbrains.annotations.NotNull;
 
-import java.util.stream.Collectors;
+import java.util.Iterator;
+import java.util.UUID;
 
 public class VanishListener implements Listener {
 
@@ -20,19 +21,32 @@ public class VanishListener implements Listener {
 
     public VanishListener(pEssentials plugin) {
         this.pe = plugin;
-        ProtocolLibrary.getProtocolManager().addPacketListener(new PacketAdapter(pe, ListenerPriority.HIGH, PacketType.Status.Server.SERVER_INFO) {
+        PacketEvents.getAPI().getEventManager().registerListener(new SimplePacketListenerAbstract() {
             @Override
-            public void onPacketSending(PacketEvent event) {
-                final PacketContainer packet = event.getPacket();
-                final WrappedServerPing ping = packet.getServerPings().read(0);
-                final ImmutableList<WrappedGameProfile> players = ping.getPlayers();
-                ping.setPlayers(players
-                        .stream()
-                        .filter(p -> !pe.getSM().getVanishManager().getVanishedPlayers().contains(p.getUUID()))
-                        .collect(Collectors.toSet())
-                );
-                packet.getServerPings().write(0, ping);
-                event.setPacket(packet);
+            public void onPacketStatusSend(@NotNull PacketStatusSendEvent event) {
+                if (!event.getPacketType().equals(PacketType.Status.Server.RESPONSE)) return;
+                try {
+                    final WrapperStatusServerResponse packet = new WrapperStatusServerResponse(event);
+                    final JsonObject json = packet.getComponent();
+                    JsonObject playersJson = json.getAsJsonObject("players");
+                    if (playersJson == null) return;
+                    JsonArray sampleJson = playersJson.getAsJsonArray("sample");
+                    if (sampleJson == null) return;
+                    Iterator<JsonElement> iterator = sampleJson.iterator();
+                    while (iterator.hasNext()) {
+                        JsonElement element = iterator.next();
+                        if (element.isJsonObject()) {
+                            JsonObject playerJson = element.getAsJsonObject();
+                            UUID uuid = UUID.fromString(playerJson.get("id").getAsString());
+                            if (pe.getSM().getVanishManager().getVanishedPlayers().contains(uuid))
+                                iterator.remove();
+                        }
+                    }
+                    packet.setComponent(json);
+                    packet.write();
+                } catch (Exception ex) {
+                    ex.printStackTrace();
+                }
             }
         });
     }

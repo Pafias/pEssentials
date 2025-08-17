@@ -44,8 +44,8 @@ public class EntityCommand extends ICommand {
             return;
         }
         if (args[0].equalsIgnoreCase("fly") && sender.hasPermission("essentials.entity.fly")) {
-            if (!plugin.getServer().getPluginManager().isPluginEnabled("ProtocolLib")) {
-                sender.sendMessage(CC.t("&cProtocolLib not found! This feature only works with ProtocolLib!"));
+            if (!plugin.getServer().getPluginManager().isPluginEnabled("packetevents")) {
+                sender.sendMessage(CC.t("&cPacketEvents not found! This feature only works with PacketEvents!"));
                 return;
             }
             final Entity entity = player.getVehicle();
@@ -58,8 +58,8 @@ public class EntityCommand extends ICommand {
             entity.setInvulnerable(!entity.isInvulnerable());
             Reflection.sendActionbar(user.getPlayer(), CC.t("&6Entity fly: " + (user.flyingEntity ? "&aON" : "&cOFF")));
         } else if (args[0].equalsIgnoreCase("move") && sender.hasPermission("essentials.entity.move")) {
-            if (!plugin.getServer().getPluginManager().isPluginEnabled("ProtocolLib")) {
-                sender.sendMessage(CC.t("&cProtocolLib not found! This feature only works with ProtocolLib!"));
+            if (!plugin.getServer().getPluginManager().isPluginEnabled("packetevents")) {
+                sender.sendMessage(CC.t("&cPacketEvents not found! This feature only works with PacketEvents!"));
                 return;
             }
             final Entity entity = player.getVehicle();
@@ -267,7 +267,7 @@ public class EntityCommand extends ICommand {
         else if (args.length == 2 && (args[0].equalsIgnoreCase("spawn") || args[0].equalsIgnoreCase("s") || args[0].equalsIgnoreCase("sv")))
             return Arrays.stream(EntityType.values())
                     .map(EntityType::getName)
-                    .filter(e -> e.toLowerCase().startsWith(args[1].toLowerCase()))
+                    .filter(e -> e != null && e.toLowerCase().startsWith(args[1].toLowerCase()))
                     .collect(Collectors.toList());
         else if (args.length == 2 && args[0].equalsIgnoreCase("ride"))
             return Collections.singletonList("-d");

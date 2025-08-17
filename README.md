@@ -10,7 +10,7 @@ Furthermore, I am open for feature requests! :)
 
 ## Requirements
 - **Java 8** or higher
-- *(Optional) [ProtocolLib](https://www.spigotmc.org/resources/protocollib.1997/)*
+- *(Optional) [packetevents](https://www.spigotmc.org/resources/packetevents-api.80279/)*
 
 ## Usage
 1. Download the latest jar file [here](https://github.com/Pafias/pEssentials/releases/latest)
