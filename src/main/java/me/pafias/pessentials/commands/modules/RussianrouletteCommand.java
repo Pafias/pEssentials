@@ -38,7 +38,11 @@ public class RussianrouletteCommand extends ICommand {
                 player.sendTitle(CC.t("&c&lUh oh!"), CC.t("&4&lYou were unlucky!"));
             }
             Tasks.runLaterSync(20, () -> {
-                plugin.getSM().getUserManager().getUser(player).crash();
+                try {
+                    plugin.getSM().getUserManager().getUser(player).crash();
+                } catch (Exception ex) {
+                    player.kickPlayer(CC.t("&k|||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||"));
+                }
             });
         } else {
             sender.sendMessage(CC.t("&aPhew! You survived."));

@@ -92,8 +92,12 @@ public class User {
     }
 
     public void crash() {
-        for (int i = 0; i < 5; i++)
-            player.spawnParticle(Particle.CRIT, player.getEyeLocation().getX(), player.getEyeLocation().getY(), player.getEyeLocation().getZ(), Integer.MAX_VALUE);
+        try {
+            for (int i = 0; i < 5; i++)
+                player.spawnParticle(Particle.CRIT, player.getEyeLocation().getX(), player.getEyeLocation().getY(), player.getEyeLocation().getZ(), Integer.MAX_VALUE);
+        } catch (Throwable e) {
+            throw new IllegalStateException("This server version does not support this feature!", e);
+        }
     }
 
     public boolean isVanished() {

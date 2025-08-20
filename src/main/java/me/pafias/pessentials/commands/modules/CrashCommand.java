@@ -46,7 +46,12 @@ public class CrashCommand extends ICommand {
                 return;
             }
         } else times = 1;
-        crash(target, times);
+        try {
+            crash(target, times);
+        } catch (IllegalStateException ex) {
+            sender.sendMessage(CC.t("&cThis server version does not support this command!"));
+            return;
+        }
         sender.sendMessage(CC.t("&aTarget crashed."));
     }
 
