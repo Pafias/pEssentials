@@ -26,7 +26,7 @@ public class DayCommand extends ICommand {
             final Player player = (Player) sender;
             player.getWorld().setTime(0);
             player.sendMessage(CC.t("&6Time set to day (0 ticks)"));
-        } else {
+        } else if (sender.hasPermission("essentials.day.personal")) {
             final Player player = (Player) sender;
             if (!player.isPlayerTimeRelative()) {
                 player.resetPlayerTime();

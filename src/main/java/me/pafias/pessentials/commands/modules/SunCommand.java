@@ -31,7 +31,7 @@ public class SunCommand extends ICommand {
             }
             player.getWorld().setThundering(false);
             player.sendMessage(CC.t("&6Weather cleared."));
-        } else {
+        } else if (sender.hasPermission("essentials.sun.personal")) {
             final Player player = (Player) sender;
             if (player.getPlayerWeather() != null && player.getPlayerWeather().equals(WeatherType.CLEAR)) {
                 player.resetPlayerWeather();
