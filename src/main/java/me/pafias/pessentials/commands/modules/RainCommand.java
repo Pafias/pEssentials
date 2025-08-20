@@ -27,7 +27,7 @@ public class RainCommand extends ICommand {
             final Player player = (Player) sender;
             player.getWorld().setStorm(true);
             player.sendMessage(CC.t("&6Weather set to storming (rain)."));
-        } else {
+        } else if (sender.hasPermission("essentials.rain.personal")) {
             final Player player = (Player) sender;
             if (player.getPlayerWeather() != null && player.getPlayerWeather().equals(WeatherType.DOWNFALL)) {
                 player.resetPlayerWeather();

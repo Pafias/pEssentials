@@ -122,3 +122,11 @@ permissions:
     default: op
     children:
       essentials.unfreeze: true
+  essentials.day.personal:
+    default: true
+  essentials.night.personal:
+    default: true
+  essentials.sun.personal:
+    default: true
+  essentials.rain.personal:
+    default: true
