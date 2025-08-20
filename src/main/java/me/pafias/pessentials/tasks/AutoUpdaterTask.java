@@ -15,6 +15,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.net.URI;
 import java.nio.file.Files;
+import java.nio.file.StandardCopyOption;
 
 public class AutoUpdaterTask extends BukkitRunnable {
 
@@ -49,18 +50,14 @@ public class AutoUpdaterTask extends BukkitRunnable {
                     plugin.getLogger().info("Downloaded update successfully.");
 
                     plugin.getServer().getScheduler().runTaskLater(plugin, () -> {
-                        plugin.getLogger().info("Server restarting to apply update...");
-                        Bukkit.getPluginManager().disablePlugins();
-
                         try {
-                            Files.move(tempJarFile.toPath(), jarFileOnPluginFolder.toPath(), java.nio.file.StandardCopyOption.REPLACE_EXISTING);
+                            Files.move(tempJarFile.toPath(), jarFileOnPluginFolder.toPath(), StandardCopyOption.REPLACE_EXISTING);
                             plugin.getLogger().info("Updated to the latest version successfully. Restarting server...");
+                            Bukkit.shutdown();
                         } catch (IOException e) {
                             plugin.getLogger().severe("Failed to replace the old JAR file with the new one.");
                             e.printStackTrace();
                         }
-
-                        Bukkit.shutdown();
                     }, 40);
                 }
             }

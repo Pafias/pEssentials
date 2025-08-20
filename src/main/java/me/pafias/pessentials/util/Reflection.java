@@ -1,17 +1,11 @@
 package me.pafias.pessentials.util;
 
-import com.github.retrooper.packetevents.PacketEvents;
-import com.github.retrooper.packetevents.protocol.sound.SoundCategory;
-import com.github.retrooper.packetevents.protocol.sound.Sounds;
-import com.github.retrooper.packetevents.util.Vector3i;
-import com.github.retrooper.packetevents.wrapper.play.server.WrapperPlayServerSoundEffect;
 import com.mojang.authlib.GameProfile;
 import me.pafias.pessentials.pEssentials;
 import net.md_5.bungee.api.ChatMessageType;
 import net.md_5.bungee.api.chat.TextComponent;
 import org.bukkit.Material;
 import org.bukkit.SkullType;
-import org.bukkit.Sound;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 
@@ -114,17 +108,6 @@ public class Reflection {
         } else {
             return new ItemStack(Material.getMaterial("PLAYER_HEAD"));
         }
-    }
-
-    public static void playSound(final Player player, final Sound sound, final double x, final double y, final double z, final float volume, final float pitch) {
-        final WrapperPlayServerSoundEffect packet = new WrapperPlayServerSoundEffect(
-                Sounds.getByName(sound.name()),
-                SoundCategory.MASTER,
-                new Vector3i((int) x, (int) y, (int) z),
-                volume,
-                pitch
-        );
-        PacketEvents.getAPI().getPlayerManager().sendPacket(player, packet);
     }
 
     private static String getVersion() {
