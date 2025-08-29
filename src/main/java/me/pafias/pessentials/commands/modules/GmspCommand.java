@@ -32,7 +32,7 @@ public class GmspCommand extends ICommand {
             player.setGameMode(GameMode.SPECTATOR);
             player.sendMessage(CC.t("&6Gamemode: &aspectator"));
         } else {
-            if (!sender.hasPermission("essentials.gamemode.others")) {
+            if (!sender.hasPermission(getPermission() + ".others")) {
                 sender.sendMessage(CC.t("&cYou do not have permission to change other players' gamemodes!"));
                 return;
             }

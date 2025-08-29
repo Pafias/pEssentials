@@ -27,7 +27,7 @@ public class PingCommand extends ICommand {
         Player target;
         if (args.length == 0 && sender instanceof Player) {
             target = (Player) sender;
-        } else if (sender.hasPermission("essentials.ping.others"))
+        } else if (sender.hasPermission(getPermission() + ".others"))
             target = plugin.getServer().getPlayer(args[0]);
         else {
             sender.sendMessage(CC.t("&cYou don't have permission to check other players' ping ;("));

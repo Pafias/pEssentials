@@ -56,25 +56,11 @@ public class GamemodeCommand extends ICommand {
             ((Player) sender).setGameMode(gamemode);
             sender.sendMessage(CC.tf("&6Gamemode: &a%s", gamemode.name().toLowerCase()));
         } else {
-            if (!sender.hasPermission("essentials.gamemode.others")) {
+            if (!sender.hasPermission(getPermission() + ".others")) {
                 sender.sendMessage(CC.t("&cYou do not have permission to change other players' gamemodes!"));
                 return;
             }
-            GameMode gamemode = null;
-            try {
-                gamemode = GameMode.getByValue(Integer.parseInt(args[0]));
-            } catch (NumberFormatException ex) {
-                try {
-                    for (GameMode gm : GameMode.values())
-                        if (gm.name().toLowerCase().startsWith(args[0].toLowerCase())) {
-                            gamemode = gm;
-                            break;
-                        }
-                } catch (IllegalArgumentException exx) {
-                    sender.sendMessage(CC.t("&cInvalid gamemode!"));
-                    return;
-                }
-            }
+            GameMode gamemode = parseGamemode(args[0]);
             if (gamemode == null) {
                 sender.sendMessage(CC.t("&cInvalid gamemode!"));
                 return;
@@ -127,7 +113,7 @@ public class GamemodeCommand extends ICommand {
                     .map(gamemode -> gamemode.name().toLowerCase())
                     .filter(s -> s.toLowerCase().startsWith(args[0].toLowerCase()))
                     .collect(Collectors.toList());
-        else if (args.length == 2 && sender.hasPermission("essentials.gamemode.others"))
+        else if (args.length == 2 && sender.hasPermission(getPermission() + ".others"))
             return plugin.getServer().getOnlinePlayers()
                     .stream()
                     .filter(p -> ((Player) sender).canSee(p))

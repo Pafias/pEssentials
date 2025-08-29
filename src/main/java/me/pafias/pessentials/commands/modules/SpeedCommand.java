@@ -46,7 +46,7 @@ public class SpeedCommand extends ICommand {
                 player.sendMessage(CC.t("&6Your walk speed multiplier is now &7" + speed));
             }
         } else {
-            if (sender.hasPermission("essentials.speed.others")) {
+            if (sender.hasPermission(getPermission() + ".others")) {
                 final Player target = plugin.getServer().getPlayer(args[1]);
                 if (target == null) {
                     sender.sendMessage(CC.t("&cPlayer not found!"));

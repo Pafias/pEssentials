@@ -28,7 +28,7 @@ public class FeedCommand extends ICommand {
             player.setFoodLevel(20);
             sender.sendMessage(CC.t("&6Fed!"));
         } else {
-            if (sender.hasPermission("essentials.feed.others")) {
+            if (sender.hasPermission(getPermission() + ".others")) {
                 final boolean silent = Arrays.asList(args).contains("-s");
                 if (args[0].equalsIgnoreCase("@a") || args[0].equalsIgnoreCase("*")) {
                     plugin.getServer().getOnlinePlayers().forEach(p -> {

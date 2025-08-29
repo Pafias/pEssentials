@@ -25,8 +25,8 @@ public class StaffchatCommand extends ICommand {
                 return;
             }
             final User player = plugin.getSM().getUserManager().getUser((Player) sender);
-            player.setInStaffchat(!player.isInStaffChat());
-            player.getPlayer().sendMessage(CC.t("&6Staffchat: " + (player.isInStaffChat() ? "&aON" : "&cOFF")));
+            player.setInStaffchat(!player.isInStaffchat());
+            player.getPlayer().sendMessage(CC.t("&6Staffchat: " + (player.isInStaffchat() ? "&aON" : "&cOFF")));
         } else {
             final String message = String.join(" ", args);
             try {
