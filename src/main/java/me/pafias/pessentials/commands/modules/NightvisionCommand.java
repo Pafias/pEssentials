@@ -31,7 +31,7 @@ public class NightvisionCommand extends ICommand {
             return;
         if (args.length == 0)
             toggleNightvision((Player) sender);
-        else {
+        else if (sender.hasPermission(getPermission() + ".others")) {
             final Player target = plugin.getServer().getPlayer(args[0]);
             if (target == null) {
                 sender.sendMessage(CC.t("&cPlayer not found."));

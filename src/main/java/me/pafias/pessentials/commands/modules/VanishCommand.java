@@ -46,7 +46,7 @@ public class VanishCommand extends ICommand {
                 });
                 return;
             }
-            if (sender.hasPermission("essentials.vanish.others")) {
+            if (sender.hasPermission(getPermission() + ".others")) {
                 player = plugin.getServer().getPlayer(args[0]);
             } else return;
         }

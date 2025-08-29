@@ -31,7 +31,7 @@ public class HealCommand extends ICommand {
             plugin.getServer().getPluginManager().callEvent(new PlayerHealedEvent(player, player, oldHealth));
             sender.sendMessage(CC.t("&6Healed!"));
         } else {
-            if (sender.hasPermission("essentials.heal.others")) {
+            if (sender.hasPermission(getPermission() + ".others")) {
                 final boolean silent = Arrays.asList(args).contains("-s");
                 if (args[0].equalsIgnoreCase("@a") || args[0].equalsIgnoreCase("*")) {
                     plugin.getServer().getOnlinePlayers().forEach(p -> {

@@ -25,7 +25,7 @@ public class DiscordCommand extends ICommand {
             return;
         }
         CommandSender target;
-        if (args.length >= 1 && sender.hasPermission("essentials.discord.others"))
+        if (args.length >= 1 && sender.hasPermission(getPermission() + ".others"))
             target = plugin.getServer().getPlayer(args[0]);
         else target = sender;
         if (target == null) {

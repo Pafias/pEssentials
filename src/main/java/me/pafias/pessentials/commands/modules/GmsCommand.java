@@ -32,7 +32,7 @@ public class GmsCommand extends ICommand {
             player.setGameMode(GameMode.SURVIVAL);
             player.sendMessage(CC.t("&6Gamemode: &asurvival"));
         } else {
-            if (!sender.hasPermission("essentials.gamemode.others")) {
+            if (!sender.hasPermission(getPermission() + ".others")) {
                 sender.sendMessage(CC.t("&cYou do not have permission to change other players' gamemodes!"));
                 return;
             }

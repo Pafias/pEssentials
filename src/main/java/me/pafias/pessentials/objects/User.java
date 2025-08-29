@@ -1,6 +1,8 @@
 package me.pafias.pessentials.objects;
 
 import com.mojang.authlib.GameProfile;
+import lombok.Getter;
+import lombok.Setter;
 import me.pafias.pessentials.pEssentials;
 import me.pafias.pessentials.util.CC;
 import me.pafias.pessentials.util.Reflection;
@@ -14,28 +16,34 @@ import java.util.HashSet;
 import java.util.Set;
 import java.util.UUID;
 
-public class User {
+public class User implements Messageable {
 
     private final pEssentials plugin = pEssentials.get();
 
+    @Getter
     private final Player player;
 
     public boolean flyingEntity, movingEntity;
     public Location lastLocation;
+
+    @Getter
+    @Setter
     private boolean inStaffchat;
+
     private final GameProfile profile;
     private GameProfile newIdentity;
     private BukkitTask idTask;
+
+    @Setter
+    @Getter
     private boolean blockingPMs;
-    private Set<UUID> blocking = new HashSet<>();
+
+    @Getter
+    private final Set<UUID> blocking = new HashSet<>();
 
     public User(Player player) {
         this.player = player;
         profile = Reflection.getGameProfile(player);
-    }
-
-    public Player getPlayer() {
-        return this.player;
     }
 
     public UUID getUUID() {
@@ -47,16 +55,26 @@ public class User {
         return profile.getName();
     }
 
+    @Override
+    public void message(boolean colorize, String content) {
+        if (colorize)
+            try {
+                player.sendMessage(CC.a(content));
+            } catch (Throwable ex) {
+                player.sendMessage(CC.t(content));
+            }
+        else
+            player.sendMessage(content);
+    }
+
+    @Override
+    public boolean isBlockingPMsFrom(Messageable sender) {
+        if (sender instanceof ConsoleUser) return false;
+        return blocking.contains(((User) sender).getUUID());
+    }
+
     public String getRealName() {
         return profile.getName();
-    }
-
-    public boolean isInStaffChat() {
-        return inStaffchat;
-    }
-
-    public void setInStaffchat(boolean inStaffChat) {
-        this.inStaffchat = inStaffChat;
     }
 
     public GameProfile getOriginalGameProfile() {
@@ -115,16 +133,14 @@ public class User {
             plugin.getSM().getFreezeManager().getFrozenUsers().remove(player.getUniqueId());
     }
 
-    public boolean isBlockingPMs() {
-        return blockingPMs;
+    @Override
+    public boolean canBypassBlock() {
+        return player.hasPermission("essentials.block.bypass");
     }
 
-    public void setBlockingPMs(boolean blockingPMs) {
-        this.blockingPMs = blockingPMs;
-    }
-
-    public Set<UUID> getBlocking() {
-        return blocking;
+    @Override
+    public boolean canBypassMsgtoggle() {
+        return player.hasPermission("essentials.msgtoggle.bypass");
     }
 
 }

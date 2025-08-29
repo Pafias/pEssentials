@@ -40,7 +40,7 @@ public class PAPIExpansion extends PlaceholderExpansion {
             case "nickname":
                 return user.getName();
             case "staffchat":
-                return String.valueOf(user.isInStaffChat());
+                return String.valueOf(user.isInStaffchat());
             case "vanished":
                 return String.valueOf(user.isVanished());
             case "frozen":

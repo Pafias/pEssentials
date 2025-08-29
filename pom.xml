@@ -6,7 +6,7 @@
 
     <groupId>me.pafias</groupId>
     <artifactId>pEssentials</artifactId>
-    <version>1.7.1-SNAPSHOT</version>
+    <version>1.8-SNAPSHOT</version>
     <packaging>jar</packaging>
 
     <name>pEssentials</name>
@@ -51,6 +51,10 @@
                         </jdk>
                         <jdk>
                             <version>17</version>
+                            <vendor>Java</vendor>
+                        </jdk>
+                        <jdk>
+                            <version>21</version>
                             <vendor>Java</vendor>
                         </jdk>
                     </toolchains>
