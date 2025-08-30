@@ -50,7 +50,10 @@ public class ReplyCommand extends ICommand {
 
     @Override
     public List<String> tabHandler(CommandSender sender, Command command, String label, String[] args) {
-        return Collections.singletonList(CC.t(String.join(" ", args)));
+        final String message = String.join(" ", args).trim();
+        if (message.isEmpty())
+            return Collections.emptyList();
+        return Collections.singletonList(CC.t("&7Preview: &f" + message));
     }
 
 }

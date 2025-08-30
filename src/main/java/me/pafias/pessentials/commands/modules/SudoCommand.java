@@ -50,10 +50,14 @@ public class SudoCommand extends ICommand {
                     attachment.setPermission(cmd.getPermission(), true);
                     removePerm = true;
                 } else removePerm = false;
-                cmd.execute(target, args[1], argsParsed);
-                if (removePerm)
-                    attachment.unsetPermission(cmd.getPermission());
-                target.removeAttachment(attachment);
+                try {
+                    cmd.execute(target, args[1], argsParsed);
+                } catch (Throwable ignored) {
+                } finally {
+                    if (removePerm)
+                        attachment.unsetPermission(cmd.getPermission());
+                    target.removeAttachment(attachment);
+                }
             }
             sender.sendMessage(CC.t("&aSudo executed."));
         }

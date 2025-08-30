@@ -79,8 +79,10 @@ public class TellCommand extends ICommand {
             final StringBuilder sb = new StringBuilder();
             for (int i = 1; i < args.length; i++)
                 sb.append(args[i]).append(" ");
-            final String message = sb.toString();
-            return Collections.singletonList(CC.t(message));
+            final String message = sb.toString().trim();
+            if (message.isEmpty())
+                return Collections.emptyList();
+            return Collections.singletonList(CC.t("&7Preview: &f" + message));
         }
     }
 
