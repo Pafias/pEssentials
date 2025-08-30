@@ -45,6 +45,10 @@ public class TeleportCommand extends ICommand {
             player1.getPlayer().teleport(player2.getPlayer());
             sender.sendMessage(CC.t("&6Teleported &d" + player1.getName() + " &6to &d" + player2.getName()));
         } else if (args.length == 3) {
+            if (!(sender instanceof Player)) {
+                sender.sendMessage(CC.t("&cOnly players!"));
+                return;
+            }
             double x, y, z;
             try {
                 x = Double.parseDouble(args[0]);

@@ -29,7 +29,11 @@ public final class pEssentials extends JavaPlugin {
         plugin.saveConfig();
         plugin.reloadConfig();
 
-        new AutoUpdaterTask(plugin).run();
+        try {
+            new AutoUpdaterTask(plugin).run();
+        } catch (Throwable ex) {
+            ex.printStackTrace();
+        }
 
         getServer().getMessenger().registerOutgoingPluginChannel(plugin, "BungeeCord");
 
