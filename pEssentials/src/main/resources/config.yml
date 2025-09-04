@@ -1,0 +1,23 @@
+hub_server: 'hub'
+staffchat_format: '&e&l[STAFF] &r&9{player}&r: {message}'
+join_message_enabled: false
+quit_message_enabled: false
+kick_on_high_ping: false
+ping_kick_threshold: 150
+discord_link: ''
+disabled_commands: []
+bad_people_filter:
+  movement_verification: false
+  username_check: false
+  username_regex: '^[a-zA-Z0-9_]{3,16}$'
+  anti_advertising:
+    enabled: false
+    shadow_disallow: true
+    regex1: '.*\b\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}\b.*'
+    regex2: '.*\b\w+\.(?:gg|mc|craft|play|mine|server|network|pvp|net|com)\b.*'
+  anti_spam:
+    enabled: true
+    max_messages: 12
+    time_period_millis: 5000
+    auto_mute: true
+    mute_duration_millis: 10000

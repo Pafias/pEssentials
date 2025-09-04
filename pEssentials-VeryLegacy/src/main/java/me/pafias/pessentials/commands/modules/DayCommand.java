@@ -1,0 +1,47 @@
+package me.pafias.pessentials.commands.modules;
+
+import me.pafias.pessentials.commands.ICommand;
+import me.pafias.pessentials.util.CC;
+import me.pafias.pessentials.util.RandomUtils;
+import org.bukkit.command.Command;
+import org.bukkit.command.CommandSender;
+import org.bukkit.entity.Player;
+
+import java.util.Collections;
+import java.util.List;
+
+public class DayCommand extends ICommand {
+
+    public DayCommand() {
+        super("day", null, "Make it day", "/day", "daytime");
+    }
+
+    @Override
+    public void commandHandler(CommandSender sender, Command command, String label, String[] args) {
+        if (!(sender instanceof Player)) {
+            sender.sendMessage(CC.t("&cOnly players!"));
+            return;
+        }
+        if (sender.hasPermission("essentials.day") && !RandomUtils.containsIgnoreCase(args, "-p")) {
+            final Player player = (Player) sender;
+            player.getWorld().setTime(0);
+            player.sendMessage(CC.t("&6Time set to day (0 ticks)"));
+        } else if (sender.hasPermission("essentials.day.personal")) {
+            final Player player = (Player) sender;
+            if (!player.isPlayerTimeRelative()) {
+                player.resetPlayerTime();
+                player.sendMessage(CC.t("&6Personal time reset."));
+            } else {
+                player.setPlayerTime(0, false);
+                player.sendMessage(CC.t("&6Personal time set to day (0 ticks)"));
+            }
+        }
+        return;
+    }
+
+    @Override
+    public List<String> tabHandler(CommandSender sender, Command command, String label, String[] args) {
+        return Collections.emptyList();
+    }
+
+}
