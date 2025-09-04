@@ -1,0 +1,125 @@
+name: pEssentials-VeryLegacy
+version: ${project.version}
+main: me.pafias.pessentials.pEssentials
+softdepend: [ ProtocolLib, PlaceholderAPI, EssentialsX ]
+author: Pafias
+description: Various useful features
+commands:
+  entity:
+    aliases: [ e ]
+  sound:
+  nightvision:
+    aliases: [ nv ]
+  ping:
+    aliases: [ latency ]
+  gamemode:
+    aliases: [ gm ]
+  gmc:
+    aliases: [ gm1 ]
+  gms:
+    aliases: [ gm0 ]
+  gma:
+    aliases: [ gm2 ]
+  hub:
+  heal:
+  speed:
+  tell:
+    aliases: [ t, whisper, w, message, msg ]
+  reply:
+    aliases: [ r ]
+  teleport:
+    aliases: [ tp ]
+  teleporthere:
+    aliases: [ tphere ]
+  skull:
+    aliases: [ playerhead ]
+  back:
+  top:
+  day:
+  night:
+  lag:
+    aliases: [ performance, gc, mem, memory ]
+  item:
+    aliases: [ i ]
+  staffchat:
+    aliases: [ sc ]
+  vanish:
+    aliases: [ v ]
+  copyinventory:
+    aliases: [ copyinv, ci ]
+  crash:
+  christmastree:
+    aliases: [ xmastree ]
+  itemstack:
+    aliases: [ is ]
+  whois:
+  sun:
+  rain:
+  feed:
+  sudo:
+  russianroulette:
+  launch:
+  freeze:
+  unfreeze:
+  sit:
+  msgtoggle:
+    aliases: [ togglemsg ]
+  invsee:
+    aliases: [ seeinv ]
+  discord:
+    aliases: [ dc ]
+  broadcast:
+    aliases: [ bc ]
+  lightning:
+    aliases: [ strike ]
+  block:
+    aliases: [ ignore ]
+permissions:
+  essentials.ping.others:
+    default: true
+    children:
+      essentials.ping: true
+  essentials.ping:
+    default: true
+  essentials.tell:
+    default: true
+    children:
+      essentials.reply: true
+  essentials.reply:
+    default: true
+  essentials.block:
+    default: true
+  essentials.gamemode.others:
+    default: op
+    children:
+      essentials.gamemode: true
+  essentials.gamemode:
+    default: op
+  essentials.gamemode.survival:
+    default: op
+    children:
+      essentials.gamemode: true
+  essentials.gamemode.creative:
+    default: op
+    children:
+      essentials.gamemode: true
+  essentials.gamemode.adventure:
+    default: op
+    children:
+      essentials.gamemode: true
+  essentials.gamemode.spectator:
+    default: op
+    children:
+      essentials.gamemode: true
+  essentials.freeze:
+    default: op
+    children:
+      essentials.unfreeze: true
+  essentials.day.personal:
+    default: true
+  essentials.night.personal:
+    default: true
+  essentials.sun.personal:
+    default: true
+  essentials.rain.personal:
+    default: true
