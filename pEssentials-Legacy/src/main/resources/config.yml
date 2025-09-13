@@ -17,7 +17,7 @@ bad_people_filter:
     regex2: '.*\b\w+\.(?:gg|mc|craft|play|mine|server|network|pvp|net|com)\b.*'
   anti_spam:
     enabled: true
-    max_messages: 12
+    max_messages: 5
     time_period_millis: 5000
     auto_mute: true
     mute_duration_millis: 10000
