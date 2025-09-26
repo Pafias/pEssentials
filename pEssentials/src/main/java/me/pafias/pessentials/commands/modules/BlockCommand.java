@@ -45,10 +45,10 @@ public class BlockCommand extends ICommand {
             }
             user = plugin.getSM().getUserManager().getUser(senderPlayer);
             if (user.getBlocking().contains(player.getUniqueId())) {
-                user.getBlocking().remove(player.getUniqueId());
+                user.removeBlocking(player.getUniqueId());
                 sender.sendMessage(CC.t("&aYou have unblocked &f" + player.getName()));
             } else {
-                user.getBlocking().add(player.getUniqueId());
+                user.addBlocking(player.getUniqueId());
                 sender.sendMessage(CC.t("&aYou have blocked &f" + player.getName()));
             }
         }

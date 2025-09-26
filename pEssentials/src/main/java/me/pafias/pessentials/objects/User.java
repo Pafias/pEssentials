@@ -7,10 +7,15 @@ import me.pafias.pessentials.pEssentials;
 import me.pafias.pessentials.util.CC;
 import me.pafias.putils.Tasks;
 import org.bukkit.Location;
+import org.bukkit.NamespacedKey;
 import org.bukkit.Particle;
 import org.bukkit.entity.Player;
+import org.bukkit.persistence.PersistentDataContainer;
+import org.bukkit.persistence.PersistentDataType;
 import org.bukkit.scheduler.BukkitTask;
+import org.jetbrains.annotations.Unmodifiable;
 
+import java.util.Collections;
 import java.util.HashSet;
 import java.util.Set;
 import java.util.UUID;
@@ -21,6 +26,9 @@ public class User implements Messageable {
 
     @Getter
     private final Player player;
+
+    @Getter
+    private final PersistentDataContainer dataContainer;
 
     public boolean flyingEntity, movingEntity;
     public Location lastLocation;
@@ -37,11 +45,19 @@ public class User implements Messageable {
     @Getter
     private boolean blockingPMs;
 
-    @Getter
     private final Set<UUID> blocking = new HashSet<>();
 
     public User(Player player) {
         this.player = player;
+
+        dataContainer = player.getPersistentDataContainer();
+
+        String blockingData = dataContainer.getOrDefault(new NamespacedKey(plugin, "blocking"), PersistentDataType.STRING, "");
+        if (!blockingData.isBlank()) {
+            for (String blocked : blockingData.split(","))
+                blocking.add(UUID.fromString(blocked));
+        }
+
         profile = player.getPlayerProfile();
     }
 
@@ -130,6 +146,29 @@ public class User implements Messageable {
     @Override
     public boolean canBypassMsgtoggle() {
         return player.hasPermission("essentials.msgtoggle.bypass");
+    }
+
+    @Unmodifiable
+    public Set<UUID> getBlocking() {
+        return Collections.unmodifiableSet(blocking);
+    }
+
+    public void addBlocking(UUID uuid) {
+        blocking.add(uuid);
+
+        String blockingData = String.join(",", blocking.stream().map(UUID::toString).toList());
+        dataContainer.set(new NamespacedKey(plugin, "blocking"), PersistentDataType.STRING, blockingData);
+    }
+
+    public void removeBlocking(UUID uuid) {
+        blocking.remove(uuid);
+
+        if (!blocking.isEmpty()) {
+            String blockingData = String.join(",", blocking.stream().map(UUID::toString).toList());
+            dataContainer.set(new NamespacedKey(plugin, "blocking"), PersistentDataType.STRING, blockingData);
+        } else {
+            dataContainer.remove(new NamespacedKey(plugin, "blocking"));
+        }
     }
 
 }
