@@ -4,6 +4,7 @@ import com.destroystokyo.paper.profile.PlayerProfile;
 import me.pafias.pessentials.commands.ICommand;
 import me.pafias.pessentials.objects.User;
 import me.pafias.pessentials.util.CC;
+import me.pafias.pessentials.util.RandomUtils;
 import me.pafias.putils.Tasks;
 import me.pafias.putils.builders.PlayerProfileBuilder;
 import org.bukkit.command.Command;
@@ -11,16 +12,17 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
+import java.util.*;
 import java.util.concurrent.CompletableFuture;
 
 public class IdentityCommand extends ICommand {
 
     public IdentityCommand() {
         super("identity", "essentials.identity", "Change your identity (disguise)", "/id <reset/<player>> [skin]", "id");
+        nameBlacklist = new HashSet<>(getPlugin().getConfig().getStringList("identity.name_blacklist"));
     }
+
+    private final Set<String> nameBlacklist;
 
     @Override
     public void commandHandler(@NotNull CommandSender sender, @NotNull Command command, @NotNull String label, @NotNull String[] args) {
@@ -46,6 +48,10 @@ public class IdentityCommand extends ICommand {
             final String name = args[0];
             if (name.length() > 16) {
                 sender.sendMessage(CC.t("&cName cannot be longer than 16 characters."));
+                return;
+            }
+            if (RandomUtils.containsIgnoreCase(nameBlacklist, name)) {
+                sender.sendMessage(CC.t("&cYou cannot use that name."));
                 return;
             }
             String skin = name;

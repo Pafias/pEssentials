@@ -14,4 +14,10 @@ public class RandomUtils {
         return plugin.getServer().getOnlinePlayers().stream().filter(p -> p.hasPermission(perm)).collect(Collectors.toSet());
     }
 
+    public static boolean containsIgnoreCase(Set<String> nameBlacklist, String name) {
+        for (String s : nameBlacklist)
+            if (s.equalsIgnoreCase(name)) return true;
+        return false;
+    }
+
 }
