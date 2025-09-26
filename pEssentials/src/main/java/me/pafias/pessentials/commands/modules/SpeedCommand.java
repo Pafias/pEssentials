@@ -8,7 +8,6 @@ import org.bukkit.entity.Player;
 
 import java.util.Collections;
 import java.util.List;
-import java.util.stream.Collectors;
 
 public class SpeedCommand extends ICommand {
 
@@ -46,7 +45,7 @@ public class SpeedCommand extends ICommand {
         } else {
             if (sender.hasPermission(getPermission() + ".others")) {
                 final Player target = plugin.getServer().getPlayer(args[1]);
-                if (target == null) {
+                if (target == null || (sender instanceof Player senderPlayer && !senderPlayer.canSee(target))) {
                     sender.sendMessage(CC.t("&cPlayer not found!"));
                     return;
                 }

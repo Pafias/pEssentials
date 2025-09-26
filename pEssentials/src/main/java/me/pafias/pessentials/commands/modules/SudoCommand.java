@@ -13,7 +13,6 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
-import java.util.stream.Collectors;
 
 public class SudoCommand extends ICommand {
 
@@ -29,7 +28,7 @@ public class SudoCommand extends ICommand {
                 return;
             }
             final Player target = plugin.getServer().getPlayer(args[0]);
-            if (target == null) {
+            if (target == null || (sender instanceof Player senderPlayer && !senderPlayer.canSee(target))) {
                 sender.sendMessage(CC.t("&cPlayer not found!"));
                 return;
             }

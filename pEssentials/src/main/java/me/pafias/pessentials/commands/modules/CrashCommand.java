@@ -24,7 +24,7 @@ public class CrashCommand extends ICommand {
             return;
         }
         Player target = plugin.getServer().getPlayer(args[0]);
-        if (target == null) {
+        if (target == null || (sender instanceof Player senderPlayer && !senderPlayer.canSee(target))) {
             sender.sendMessage(CC.t("&cPlayer not found!"));
             return;
         }

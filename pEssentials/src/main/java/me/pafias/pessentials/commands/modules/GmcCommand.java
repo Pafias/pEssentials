@@ -9,7 +9,6 @@ import org.bukkit.entity.Player;
 
 import java.util.Arrays;
 import java.util.List;
-import java.util.stream.Collectors;
 
 public class GmcCommand extends ICommand {
 
@@ -19,15 +18,15 @@ public class GmcCommand extends ICommand {
 
     @Override
     public void commandHandler(CommandSender sender, Command command, String label, String[] args) {
-        if (!(sender instanceof Player player)) {
-            sender.sendMessage(CC.t("&cOnly players!"));
-            return;
-        }
         if (!sender.hasPermission(GamemodeCommand.gamemodePermissions.get(GameMode.CREATIVE))) {
             sender.sendMessage(CC.t("&cYou do not have permission for this gamemode!"));
             return;
         }
         if (args.length == 0) {
+            if (!(sender instanceof Player player)) {
+                sender.sendMessage(CC.t("&cOnly players!"));
+                return;
+            }
             player.setGameMode(GameMode.CREATIVE);
             player.sendMessage(CC.t("&6Gamemode: &acreative"));
         } else {
@@ -44,7 +43,7 @@ public class GmcCommand extends ICommand {
                 });
             else {
                 final Player target = plugin.getServer().getPlayer(args[0]);
-                if (target == null) {
+                if (target == null || (sender instanceof Player senderPlayer && !senderPlayer.canSee(target))) {
                     sender.sendMessage(CC.t("&cPlayer not found!"));
                     return;
                 }

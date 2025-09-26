@@ -10,7 +10,6 @@ import org.bukkit.entity.Player;
 
 import java.util.Collections;
 import java.util.List;
-import java.util.stream.Collectors;
 
 public class TeleportCommand extends ICommand {
 
@@ -29,7 +28,7 @@ public class TeleportCommand extends ICommand {
             }
             final User player = plugin.getSM().getUserManager().getUser((Player) sender);
             final User target = plugin.getSM().getUserManager().getUser(args[0]);
-            if (target == null) {
+            if (target == null || !player.getPlayer().canSee(target.getPlayer())) {
                 sender.sendMessage(CC.t("&cPlayer not found!"));
                 return;
             }
@@ -38,7 +37,7 @@ public class TeleportCommand extends ICommand {
         } else if (args.length == 2) {
             final User player1 = plugin.getSM().getUserManager().getUser(args[0]);
             final User player2 = plugin.getSM().getUserManager().getUser(args[1]);
-            if (player1 == null || player2 == null) {
+            if (player1 == null || player2 == null || (sender instanceof Player senderPlayer && (!senderPlayer.canSee(player1.getPlayer()) || !senderPlayer.canSee(player2.getPlayer())))) {
                 sender.sendMessage(CC.t("&cPlayer not found!"));
                 return;
             }

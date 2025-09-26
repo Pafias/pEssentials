@@ -11,7 +11,6 @@ import org.bukkit.entity.Player;
 
 import java.util.Collections;
 import java.util.List;
-import java.util.stream.Collectors;
 
 public class LightningCommand extends ICommand {
 
@@ -42,7 +41,7 @@ public class LightningCommand extends ICommand {
             location.getWorld().strikeLightning(location);
         } else {
             final Player target = plugin.getServer().getPlayer(args[0]);
-            if (target == null) {
+            if (target == null || (sender instanceof Player senderPlayer && !senderPlayer.canSee(target))) {
                 sender.sendMessage(CC.t("&cInvalid player"));
                 return;
             }

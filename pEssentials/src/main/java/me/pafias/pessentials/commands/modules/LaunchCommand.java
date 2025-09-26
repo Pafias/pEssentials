@@ -11,7 +11,6 @@ import org.jetbrains.annotations.NotNull;
 
 import java.util.Collections;
 import java.util.List;
-import java.util.stream.Collectors;
 
 public class LaunchCommand extends ICommand {
 
@@ -26,7 +25,7 @@ public class LaunchCommand extends ICommand {
             return;
         }
         final Player target = plugin.getServer().getPlayer(args[0]);
-        if (target == null) {
+        if (target == null || (sender instanceof Player senderPlayer && !senderPlayer.canSee(target))) {
             sender.sendMessage(CC.t("&cPlayer not found!"));
             return;
         }

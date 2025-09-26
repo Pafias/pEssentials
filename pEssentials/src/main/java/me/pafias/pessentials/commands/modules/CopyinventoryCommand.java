@@ -21,7 +21,7 @@ public class CopyinventoryCommand extends ICommand {
             sender.sendMessage(CC.t("&c/" + label + " <player from> [player to]"));
         else if (args.length == 1) {
             final Player from = plugin.getServer().getPlayer(args[0]);
-            if (from == null) {
+            if (from == null || (sender instanceof Player senderPlayer && !senderPlayer.canSee(from))) {
                 sender.sendMessage(CC.t("&cPlayer not found!"));
                 return;
             }
@@ -33,7 +33,7 @@ public class CopyinventoryCommand extends ICommand {
             sender.sendMessage(CC.t("&aInventory copied!"));
         } else {
             final Player from = plugin.getServer().getPlayer(args[0]);
-            if (from == null) {
+            if (from == null || (sender instanceof Player senderPlayer && !senderPlayer.canSee(from))) {
                 sender.sendMessage(CC.t("&cPlayer " + args[0] + " not found!"));
                 return;
             }
@@ -41,7 +41,7 @@ public class CopyinventoryCommand extends ICommand {
                 plugin.getServer().getOnlinePlayers().forEach(p -> copy(from, p));
             else {
                 final Player to = plugin.getServer().getPlayer(args[1]);
-                if (to == null) {
+                if (to == null || (sender instanceof Player senderPlayer && !senderPlayer.canSee(to))) {
                     sender.sendMessage(CC.t("&cPlayer " + args[1] + " not found!"));
                     return;
                 }

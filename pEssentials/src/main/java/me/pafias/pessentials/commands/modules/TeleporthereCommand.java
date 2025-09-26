@@ -9,7 +9,6 @@ import org.bukkit.entity.Player;
 
 import java.util.Collections;
 import java.util.List;
-import java.util.stream.Collectors;
 
 public class TeleporthereCommand extends ICommand {
 
@@ -33,7 +32,7 @@ public class TeleporthereCommand extends ICommand {
             sender.sendMessage(CC.t("&6Teleported everyone to you"));
         } else {
             final User player2 = plugin.getSM().getUserManager().getUser(args[0]);
-            if (player2 == null) {
+            if (player2 == null || !player1.getPlayer().canSee(player2.getPlayer())) {
                 sender.sendMessage(CC.t("&cPlayer not found!"));
                 return;
             }
