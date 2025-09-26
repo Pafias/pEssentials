@@ -21,3 +21,7 @@ bad_people_filter:
     time_period_millis: 5000
     auto_mute: true
     mute_duration_millis: 10000
+identity:
+  name_blacklist:
+    - 'notch'
+    - 'hitler'
