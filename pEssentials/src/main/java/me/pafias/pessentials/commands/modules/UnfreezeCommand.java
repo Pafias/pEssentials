@@ -10,7 +10,6 @@ import org.jetbrains.annotations.NotNull;
 
 import java.util.Collections;
 import java.util.List;
-import java.util.stream.Collectors;
 
 public class UnfreezeCommand extends ICommand {
 
@@ -25,7 +24,7 @@ public class UnfreezeCommand extends ICommand {
             return;
         }
         final User target = plugin.getSM().getUserManager().getUser(args[0]);
-        if (target == null) {
+        if (target == null || (sender instanceof Player senderPlayer && !senderPlayer.canSee(target.getPlayer()))) {
             sender.sendMessage(CC.t("&cPlayer not found!"));
             return;
         }

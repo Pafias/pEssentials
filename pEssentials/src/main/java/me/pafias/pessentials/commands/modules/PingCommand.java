@@ -9,7 +9,6 @@ import org.bukkit.entity.Player;
 
 import java.util.Collections;
 import java.util.List;
-import java.util.stream.Collectors;
 
 public class PingCommand extends ICommand {
 
@@ -28,7 +27,7 @@ public class PingCommand extends ICommand {
             sender.sendMessage(CC.t("&cYou don't have permission to check other players' ping ;("));
             return;
         }
-        if (target == null) {
+        if (target == null || (sender instanceof Player senderPlayer && !senderPlayer.canSee(target))) {
             sender.sendMessage(CC.t("&cPlayer not found."));
             return;
         }

@@ -18,13 +18,13 @@ public class BlockCommand extends ICommand {
 
     @Override
     public void commandHandler(CommandSender sender, Command command, String label, String[] args) {
-        if (!(sender instanceof Player)) {
+        if (!(sender instanceof Player senderPlayer)) {
             sender.sendMessage(CC.t("&cOnly players!"));
             return;
         }
         User user;
         if (args.length == 0) {
-            user = plugin.getSM().getUserManager().getUser((Player) sender);
+            user = plugin.getSM().getUserManager().getUser(senderPlayer);
             sender.sendMessage(CC.t("&6You are currently blocking:"));
             final StringBuilder sb = new StringBuilder();
             for (UUID blocked : user.getBlocking()) {
@@ -39,11 +39,11 @@ public class BlockCommand extends ICommand {
             }
         } else {
             final Player player = plugin.getServer().getPlayer(args[0]);
-            if (player == null) {
+            if (player == null || !senderPlayer.canSee(player)) {
                 sender.sendMessage(CC.t("&cPlayer not online!"));
                 return;
             }
-            user = plugin.getSM().getUserManager().getUser((Player) sender);
+            user = plugin.getSM().getUserManager().getUser(senderPlayer);
             if (user.getBlocking().contains(player.getUniqueId())) {
                 user.getBlocking().remove(player.getUniqueId());
                 sender.sendMessage(CC.t("&aYou have unblocked &f" + player.getName()));

@@ -37,7 +37,7 @@ public class FeedCommand extends ICommand {
                     sender.sendMessage(CC.t("&6Players fed."));
                 } else {
                     final Player target = plugin.getServer().getPlayer(args[0]);
-                    if (target == null) {
+                    if (target == null || (sender instanceof Player senderPlayer && !senderPlayer.canSee(target))) {
                         sender.sendMessage(CC.t("&cPlayer not found!"));
                         return;
                     }

@@ -10,7 +10,6 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Set;
 import java.util.UUID;
-import java.util.stream.Collectors;
 
 public class VanishCommand extends ICommand {
 
@@ -47,7 +46,7 @@ public class VanishCommand extends ICommand {
                 player = plugin.getServer().getPlayer(args[0]);
             } else return;
         }
-        if (player == null) {
+        if (player == null || (sender instanceof Player senderPlayer && !senderPlayer.canSee(player))) {
             sender.sendMessage(CC.t("&cInvalid player!"));
             return;
         }

@@ -8,7 +8,6 @@ import org.bukkit.entity.Player;
 
 import java.util.Collections;
 import java.util.List;
-import java.util.stream.Collectors;
 
 public class InvseeCommand extends ICommand {
 
@@ -27,7 +26,7 @@ public class InvseeCommand extends ICommand {
             return;
         }
         final Player target = plugin.getServer().getPlayer(args[0]);
-        if (target == null) {
+        if (target == null || !player.canSee(target)) {
             sender.sendMessage(CC.t("&cPlayer not found!"));
             return;
         }

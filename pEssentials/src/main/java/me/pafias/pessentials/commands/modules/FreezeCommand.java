@@ -25,7 +25,7 @@ public class FreezeCommand extends ICommand {
             return;
         }
         final User target = plugin.getSM().getUserManager().getUser(args[0]);
-        if (target == null) {
+        if (target == null || (sender instanceof Player senderPlayer && !senderPlayer.canSee(target.getPlayer()))) {
             sender.sendMessage(CC.t("&cPlayer not found!"));
             return;
         }
