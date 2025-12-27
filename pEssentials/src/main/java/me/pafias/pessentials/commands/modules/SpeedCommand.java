@@ -6,6 +6,7 @@ import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
@@ -57,11 +58,13 @@ public class SpeedCommand extends ICommand {
                     speed = getMoveSpeed(args[0]);
                 if (flying) {
                     target.setFlySpeed(getRealMoveSpeed(speed, flying));
-                    target.sendMessage(CC.t("&6Your fly speed multiplier is now &7" + speed));
+                    if(!Arrays.asList(args).contains("-s"))
+                        target.sendMessage(CC.t("&6Your fly speed multiplier is now &7" + speed));
                     sender.sendMessage(CC.t("&6Changed players' fly speed multiplier to &7" + speed));
                 } else {
                     target.setWalkSpeed(getRealMoveSpeed(speed, flying));
-                    target.sendMessage(CC.t("&6Your walk speed multiplier is now &7" + speed));
+                    if(!Arrays.asList(args).contains("-s"))
+                        target.sendMessage(CC.t("&6Your walk speed multiplier is now &7" + speed));
                     sender.sendMessage(CC.t("&6Changed players' walk speed multiplier to &7" + speed));
                 }
             }

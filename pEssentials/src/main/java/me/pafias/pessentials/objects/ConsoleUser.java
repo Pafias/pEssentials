@@ -6,6 +6,11 @@ import org.bukkit.Bukkit;
 public class ConsoleUser implements Messageable {
 
     @Override
+    public boolean isOnline() {
+        return true;
+    }
+
+    @Override
     public String getName() {
         return "@Console";
     }
