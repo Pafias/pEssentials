@@ -32,7 +32,7 @@ public class ReplyCommand extends ICommand {
                 return;
             }
             final Messageable target = TellCommand.msg.get(sender);
-            if (target == null) {
+            if (target == null || !target.isOnline()) {
                 commandSender.sendMessage(CC.t("&cThe person you were chatting with is no longer online!"));
                 return;
             }

@@ -19,6 +19,7 @@ import java.util.Collections;
 import java.util.HashSet;
 import java.util.Set;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 public class User implements Messageable {
 
@@ -63,6 +64,11 @@ public class User implements Messageable {
 
     public UUID getUUID() {
         return this.player.getUniqueId();
+    }
+
+    @Override
+    public boolean isOnline() {
+        return player != null && player.isOnline();
     }
 
     public String getName() {
@@ -156,7 +162,7 @@ public class User implements Messageable {
     public void addBlocking(UUID uuid) {
         blocking.add(uuid);
 
-        String blockingData = String.join(",", blocking.stream().map(UUID::toString).toList());
+        String blockingData = blocking.stream().map(UUID::toString).collect(Collectors.joining(","));
         dataContainer.set(new NamespacedKey(plugin, "blocking"), PersistentDataType.STRING, blockingData);
     }
 
@@ -164,7 +170,7 @@ public class User implements Messageable {
         blocking.remove(uuid);
 
         if (!blocking.isEmpty()) {
-            String blockingData = String.join(",", blocking.stream().map(UUID::toString).toList());
+            String blockingData = blocking.stream().map(UUID::toString).collect(Collectors.joining(","));
             dataContainer.set(new NamespacedKey(plugin, "blocking"), PersistentDataType.STRING, blockingData);
         } else {
             dataContainer.remove(new NamespacedKey(plugin, "blocking"));
