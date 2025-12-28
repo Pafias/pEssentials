@@ -6,6 +6,8 @@ author: Pafias
 description: Various useful features
 api-version: 1.18
 commands:
+  fly:
+    aliases: [ flight ]
   entity:
     aliases: [ e ]
   sound:
@@ -82,6 +84,14 @@ commands:
   block:
     aliases: [ ignore ]
 permissions:
+  essentials.fly:
+    default: op
+    description: Toggle flight for yourself.
+  essentials.fly.others:
+    default: op
+    description: Enable flight for someone else.
+    children:
+      essentials.fly: true
   essentials.ping.others:
     default: true
     children:
