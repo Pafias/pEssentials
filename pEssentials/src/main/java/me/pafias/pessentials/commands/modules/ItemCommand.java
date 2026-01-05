@@ -10,7 +10,6 @@ import org.bukkit.entity.Player;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
-import java.util.stream.Collectors;
 
 public class ItemCommand extends ICommand {
 
@@ -35,7 +34,11 @@ public class ItemCommand extends ICommand {
         if (args.length == 1)
             return Arrays.stream(Material.values())
                     .map(m -> {
-                        return m.key().asMinimalString();
+                        try {
+                            return m.key().asMinimalString();
+                        } catch (Throwable t) {
+                            return m.key().value();
+                        }
                     })
                     .filter(m -> {
                         if (m.toLowerCase().startsWith(args[0].toLowerCase())) return true;
