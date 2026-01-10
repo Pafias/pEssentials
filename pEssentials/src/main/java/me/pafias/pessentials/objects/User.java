@@ -138,10 +138,12 @@ public class User implements Messageable {
     }
 
     public void setFrozen(boolean frozen) {
-        if (frozen)
-            plugin.getSM().getFreezeManager().getFrozenUsers().add(player.getUniqueId());
-        else
-            plugin.getSM().getFreezeManager().getFrozenUsers().remove(player.getUniqueId());
+        if (frozen) {
+            plugin.getSM().getFreezeManager().applyFrozenExtras(player);
+            return;
+        }
+
+        plugin.getSM().getFreezeManager().removeFrozenExtras(player);
     }
 
     @Override
