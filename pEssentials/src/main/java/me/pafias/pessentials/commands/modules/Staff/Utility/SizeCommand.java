@@ -64,7 +64,7 @@ public class SizeCommand extends ICommand {
             }
 
             if (!apply(target, args[1])) {
-                sender.sendMessage(CC.t("&cInvalid reach value!"));
+                sender.sendMessage(CC.t("&cInvalid input value!"));
                 return;
             }
 
