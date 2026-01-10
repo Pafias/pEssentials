@@ -53,7 +53,7 @@ public class SizeCommand extends ICommand {
         // /size <player> <value>
         if (args.length == 2) {
             if (!sender.hasPermission(getPermission() + ".others")) {
-                sender.sendMessage(CC.t("&cYou do not have permission to change other players' reach!"));
+                sender.sendMessage(CC.t("&cYou do not have permission to do this!"));
                 return;
             }
 
