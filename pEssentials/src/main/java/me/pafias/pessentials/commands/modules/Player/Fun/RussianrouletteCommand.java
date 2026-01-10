@@ -1,0 +1,60 @@
+package me.pafias.pessentials.commands.modules.Player.Fun;
+
+import me.pafias.pessentials.commands.ICommand;
+import me.pafias.pessentials.util.CC;
+import me.pafias.putils.Tasks;
+import org.bukkit.command.Command;
+import org.bukkit.command.CommandSender;
+import org.bukkit.entity.Player;
+import org.jetbrains.annotations.NotNull;
+
+import java.util.*;
+
+public class RussianrouletteCommand extends ICommand {
+
+    public RussianrouletteCommand() {
+        super("russianroulette", "essentials.russianroulette", "Russian roulette!", "/russianroulette [chance]");
+    }
+
+    private final Set<UUID> cooldown = new HashSet<>();
+
+    @Override
+    public void commandHandler(@NotNull CommandSender sender, @NotNull Command command, @NotNull String label, @NotNull String[] args) {
+        if (!(sender instanceof Player player)) {
+            sender.sendMessage(CC.t("&cOnly players!"));
+            return;
+        }
+        if (cooldown.contains(player.getUniqueId())) {
+            sender.sendMessage(CC.t("&cYou are on cooldown."));
+            return;
+        }
+        final int num1 = new Random().nextInt(6);
+        final int num2 = new Random().nextInt(6);
+        if (num1 == num2) {
+            try {
+                player.sendTitle(CC.t("&c&lUh oh!"), CC.t("&4&lYou were unlucky!"), 2, 20, 20);
+            } catch (Throwable t) {
+                player.sendTitle(CC.t("&c&lUh oh!"), CC.t("&4&lYou were unlucky!"));
+            }
+            Tasks.runLaterSync(20, () -> {
+                try {
+                    plugin.getSM().getUserManager().getUser(player).crash();
+                } catch (Exception ex) {
+                    player.kickPlayer(CC.t("&k|||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||"));
+                }
+            });
+        } else {
+            sender.sendMessage(CC.t("&aPhew! You survived."));
+            cooldown.add(player.getUniqueId());
+            Tasks.runLaterAsync(600, () -> {
+                cooldown.remove(player.getUniqueId());
+            });
+        }
+    }
+
+    @Override
+    public List<String> tabHandler(CommandSender sender, Command command, String label, String[] args) {
+        return Collections.emptyList();
+    }
+
+}
