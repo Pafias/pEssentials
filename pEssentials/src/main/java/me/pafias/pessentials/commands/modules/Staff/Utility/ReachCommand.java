@@ -53,7 +53,7 @@ public class ReachCommand extends ICommand {
         // /reach <player> <value>
         if (args.length == 2) {
             if (!sender.hasPermission(getPermission() + ".others")) {
-                sender.sendMessage(CC.t("&cYou do not have permission to change other players' reach!"));
+                sender.sendMessage(CC.t("&cYou do not have permission to do this!"));
                 return;
             }
 
@@ -64,7 +64,7 @@ public class ReachCommand extends ICommand {
             }
 
             if (!apply(target, args[1])) {
-                sender.sendMessage(CC.t("&cInvalid reach value!"));
+                sender.sendMessage(CC.t("&cInvalid input value!"));
                 return;
             }
 
