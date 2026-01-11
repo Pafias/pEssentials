@@ -1,6 +1,6 @@
 package me.pafias.pessentials.listeners;
 
-import me.pafias.pessentials.commands.modules.Staff.Fun.SitCommand;
+import me.pafias.pessentials.commands.modules.staff.fun.SitCommand;
 import org.bukkit.entity.ArmorStand;
 import org.bukkit.entity.HumanEntity;
 import org.bukkit.event.EventHandler;

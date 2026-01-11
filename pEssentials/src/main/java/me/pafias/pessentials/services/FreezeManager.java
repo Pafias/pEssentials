@@ -1,5 +1,6 @@
 package me.pafias.pessentials.services;
 
+import me.pafias.pessentials.objects.User;
 import me.pafias.pessentials.pEssentials;
 import me.pafias.pessentials.util.CC;
 import org.bukkit.Material;
@@ -12,32 +13,24 @@ import org.bukkit.event.player.PlayerMoveEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
-import org.bukkit.scheduler.BukkitTask;
 
 import java.util.*;
 
 public class FreezeManager implements Listener {
 
     private final pEssentials plugin;
+    private final Set<UUID> frozen = new HashSet<>();
+
+    private final Map<UUID, ItemStack> helmetCache = new HashMap<>();
 
     public FreezeManager(pEssentials plugin) {
         this.plugin = plugin;
         plugin.getServer().getPluginManager().registerEvents(this, plugin);
     }
 
-    // Frozen Players
-    private final Set<UUID> frozen = new HashSet<>();
-
-
-    // Additional Enforcement Data
-    private final Map<UUID, BukkitTask> titleTasks = new HashMap<>();
-    private final Map<UUID, ItemStack> helmetCache = new HashMap<>();
-
-    private static final String HELMET_NAME = CC.t("&cFrozen");
-
-    public Set<UUID> getFrozenUsers() {
-        return frozen;
-    }
+    // ====================================================
+    // Listeners
+    // ====================================================
 
     @EventHandler
     public void onMove(PlayerMoveEvent event) {
@@ -51,53 +44,42 @@ public class FreezeManager implements Listener {
 
     @EventHandler(priority = EventPriority.HIGHEST)
     public void onQuit(PlayerQuitEvent event) {
-        if (frozen.contains(event.getPlayer().getUniqueId()))
-            plugin.getServer().broadcastMessage(CC.tf("\n&d&l%s &c&llogged out while frozen.", event.getPlayer().getName()) + "\n");
-    }
-
-
-    // ====================================================
-    // Additional Enforcement
-    // (NEW) Display extra Information to the frozen player.
-    // ====================================================
-    public void applyFrozenExtras(Player player) {
+        Player player = event.getPlayer();
         UUID uuid = player.getUniqueId();
-        if (frozen.contains(uuid)) return;
 
-        frozen.add(uuid);
-
-        if (!helmetCache.containsKey(uuid)) {
-            ItemStack current = player.getInventory().getHelmet();
-            helmetCache.put(uuid, current == null ? null : current.clone());
+        User user = plugin.getSM().getUserManager().getUser(player);
+        if (user != null) {
+            user.destroy();
         }
 
+        if (frozen.contains(uuid)) {
+            plugin.getServer().broadcastMessage(CC.tf("\n&d&l%s &c&llogged out while frozen.", player.getName()) + "\n");
+            helmetCache.remove(uuid);
+        }
+    }
+
+    // ====================================================
+    // Utility
+    // ====================================================
+
+    public void applyFrozen(Player player) {
+        frozen.add(player.getUniqueId());
         applyHelmet(player);
-        startTitleTask(player);
     }
 
-    public void removeFrozenExtras(Player player) {
-        UUID uuid = player.getUniqueId();
-        if (!frozen.contains(uuid)) return;
-
-        frozen.remove(uuid);
-
-        stopTitle(player);
-
-        ItemStack cachedHelmet = helmetCache.remove(uuid);
-        player.getInventory().setHelmet(cachedHelmet);
+    public void removeFrozen(Player player) {
+        frozen.remove(player.getUniqueId());
+        removeHelmet(player);
     }
 
-    // ====================================================
-    // Helmet
-    // Display an indicator that a player is being
-    // issued a screenshare.
-    // ====================================================
     private void applyHelmet(Player player) {
+        helmetCache.put(player.getUniqueId(), player.getInventory().getHelmet());
+
         ItemStack ice = new ItemStack(Material.ICE);
         ItemMeta meta = ice.getItemMeta();
         if (meta == null) return;
 
-        meta.setDisplayName(HELMET_NAME);
+        meta.setDisplayName(CC.t("&cFrozen"));
         meta.addEnchant(Enchantment.BINDING_CURSE, 1, true);
         meta.setUnbreakable(true);
         ice.setItemMeta(meta);
@@ -106,47 +88,15 @@ public class FreezeManager implements Listener {
     }
 
     private void removeHelmet(Player player) {
-        ItemStack helmet = player.getInventory().getHelmet();
-        if (helmet != null && helmet.hasItemMeta() &&
-                HELMET_NAME.equals(helmet.getItemMeta().getDisplayName())) {
-            player.getInventory().setHelmet(null);
+        ItemStack current = player.getInventory().getHelmet();
+
+        if (current != null && current.hasItemMeta() && CC.t("&cFrozen").equals(current.getItemMeta().getDisplayName())) {
+            ItemStack original = helmetCache.remove(player.getUniqueId());
+            player.getInventory().setHelmet(original);
         }
     }
 
-
-    // ====================================================
-    // Title Display
-    // Provide the frozen player Instructions to ensure they
-    // aren't clueless on how to proceed.
-    // ====================================================
-
-    private void startTitleTask(Player player) {
-        UUID uuid = player.getUniqueId();
-        if (titleTasks.containsKey(uuid)) return;
-
-        BukkitTask task = plugin.getServer().getScheduler().runTaskTimer(
-                plugin,
-                () -> {
-                    if (!player.isOnline() || !frozen.contains(uuid)) return;
-                    player.sendTitle(
-                            CC.t("&cFROZEN"),
-                            CC.t("&aYou have been frozen join &b/discord, &a5 minutes"),
-                            0, 40, 0
-                    );
-                },
-                0L,
-                60L
-        );
-
-        titleTasks.put(uuid, task);
+    public Set<UUID> getFrozenUsers() {
+        return frozen;
     }
-
-
-    private void stopTitle(Player player) {
-        UUID uuid = player.getUniqueId();
-        BukkitTask task = titleTasks.remove(uuid);
-        if (task != null) task.cancel();
-        player.resetTitle();
-    }
-
 }
