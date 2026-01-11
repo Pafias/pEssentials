@@ -42,6 +42,8 @@ public class User implements Messageable {
     private PlayerProfile newIdentity;
     private BukkitTask idTask;
 
+    private BukkitTask freezeTask;
+
     @Setter
     @Getter
     private boolean blockingPMs;
@@ -137,11 +139,32 @@ public class User implements Messageable {
         return plugin.getSM().getFreezeManager().getFrozenUsers().contains(player.getUniqueId());
     }
 
+    public void destroy() {
+        if (idTask != null) {
+            idTask.cancel();
+            idTask = null;
+        }
+        if (freezeTask != null) {
+            freezeTask.cancel();
+            freezeTask = null;
+        }
+    }
+
     public void setFrozen(boolean frozen) {
-        if (frozen)
-            plugin.getSM().getFreezeManager().getFrozenUsers().add(player.getUniqueId());
-        else
-            plugin.getSM().getFreezeManager().getFrozenUsers().remove(player.getUniqueId());
+        if (freezeTask != null) {
+            freezeTask.cancel();
+            freezeTask = null;
+        }
+
+        if (!frozen) {
+            plugin.getSM().getFreezeManager().removeFrozen(player);
+            return;
+        }
+
+        plugin.getSM().getFreezeManager().applyFrozen(player);
+        freezeTask = Tasks.runRepeatingSync(0, 40, () -> {
+            player.sendActionBar(CC.a("&c&lYou are frozen! Do not log out."));
+        });
     }
 
     @Override

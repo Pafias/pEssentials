@@ -83,6 +83,10 @@ commands:
     aliases: [ strike ]
   block:
     aliases: [ ignore ]
+  size:
+    aliases: [scale]
+  reach:
+    aliases: [range]
 permissions:
   essentials.fly:
     default: op
@@ -140,3 +144,19 @@ permissions:
     default: true
   essentials.rain.personal:
     default: true
+  essentials.size:
+    default: op
+    description: Change your scale attribute.
+  essentials.size.others:
+    default: op
+    description: Change the scale attribute of another player.
+    children:
+      essentials.size: true
+  essentials.reach:
+    default: op
+    description: Change your range attribute.
+  essentials.reach.others:
+    default: op
+    description: Change the range attribute of another player.
+    children:
+      essentials.reach: true
