@@ -11,7 +11,6 @@ import org.bukkit.inventory.meta.SkullMeta;
 import java.util.Collections;
 import java.util.List;
 import java.util.concurrent.CompletableFuture;
-import java.util.stream.Collectors;
 
 public class SkullCommand extends ICommand {
 
