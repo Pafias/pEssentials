@@ -77,7 +77,7 @@ public class SizeCommand extends ICommand implements Listener {
         try {
             attribute = Attribute.SCALE;
         } catch (NoSuchFieldError e) {
-            sender.sendMessage(CC.t("&cThe reach attribute is only available on &e1.20.6&c or above."));
+            sender.sendMessage(CC.t("&cThe scale attribute is only available on &e1.20.6&c or above."));
             return false;
         }
         final AttributeInstance attributeInstance = target.getAttribute(attribute);

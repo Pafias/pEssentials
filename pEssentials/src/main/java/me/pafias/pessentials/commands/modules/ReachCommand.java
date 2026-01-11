@@ -77,7 +77,7 @@ public class ReachCommand extends ICommand implements Listener {
         try {
             attribute = Attribute.ENTITY_INTERACTION_RANGE;
         } catch (NoSuchFieldError e) {
-            sender.sendMessage(CC.t("&cThe reach attribute is only available on &e1.20.6&c or above."));
+            sender.sendMessage(CC.t("&cThe range attribute is only available on &e1.20.6&c or above."));
             return false;
         }
         final AttributeInstance attributeInstance = target.getAttribute(attribute);
