@@ -3,6 +3,7 @@ package me.pafias.pessentials.services;
 import me.pafias.pessentials.objects.User;
 import me.pafias.pessentials.pEssentials;
 import me.pafias.pessentials.util.CC;
+import me.pafias.putils.builders.ItemBuilder;
 import org.bukkit.Material;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.Player;
@@ -12,7 +13,6 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerMoveEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.inventory.ItemStack;
-import org.bukkit.inventory.meta.ItemMeta;
 
 import java.util.*;
 
@@ -28,10 +28,6 @@ public class FreezeManager implements Listener {
         plugin.getServer().getPluginManager().registerEvents(this, plugin);
     }
 
-    // ====================================================
-    // Listeners
-    // ====================================================
-
     @EventHandler
     public void onMove(PlayerMoveEvent event) {
         if (!frozen.contains(event.getPlayer().getUniqueId())) return;
@@ -44,23 +40,15 @@ public class FreezeManager implements Listener {
 
     @EventHandler(priority = EventPriority.HIGHEST)
     public void onQuit(PlayerQuitEvent event) {
-        Player player = event.getPlayer();
-        UUID uuid = player.getUniqueId();
+        final User user = plugin.getSM().getUserManager().getUser(event.getPlayer());
+        if (user == null) return;
 
-        User user = plugin.getSM().getUserManager().getUser(player);
-        if (user != null) {
-            user.destroy();
-        }
-
-        if (frozen.contains(uuid)) {
-            plugin.getServer().broadcastMessage(CC.tf("\n&d&l%s &c&llogged out while frozen.", player.getName()) + "\n");
-            helmetCache.remove(uuid);
+        user.destroy();
+        if (frozen.contains(user.getUUID())) {
+            plugin.getServer().broadcastMessage(CC.tf("&d&l%s &c&llogged out while frozen.", user.getName()));
+            helmetCache.remove(user.getUUID());
         }
     }
-
-    // ====================================================
-    // Utility
-    // ====================================================
 
     public void applyFrozen(Player player) {
         frozen.add(player.getUniqueId());
@@ -72,27 +60,23 @@ public class FreezeManager implements Listener {
         removeHelmet(player);
     }
 
+    private static final ItemStack ICE = new ItemBuilder(Material.ICE)
+            .setName(CC.a("&cFrozen"))
+            .addEnchant(Enchantment.BINDING_CURSE, 1)
+            .build();
+
     private void applyHelmet(Player player) {
         helmetCache.put(player.getUniqueId(), player.getInventory().getHelmet());
-
-        ItemStack ice = new ItemStack(Material.ICE);
-        ItemMeta meta = ice.getItemMeta();
-        if (meta == null) return;
-
-        meta.setDisplayName(CC.t("&cFrozen"));
-        meta.addEnchant(Enchantment.BINDING_CURSE, 1, true);
-        meta.setUnbreakable(true);
-        ice.setItemMeta(meta);
-
-        player.getInventory().setHelmet(ice);
+        player.getInventory().setHelmet(ICE);
     }
 
     private void removeHelmet(Player player) {
-        ItemStack current = player.getInventory().getHelmet();
+        final ItemStack current = player.getInventory().getHelmet();
 
-        if (current != null && current.hasItemMeta() && CC.t("&cFrozen").equals(current.getItemMeta().getDisplayName())) {
-            ItemStack original = helmetCache.remove(player.getUniqueId());
-            player.getInventory().setHelmet(original);
+        if (current != null && current.equals(ICE)) {
+            final ItemStack cached = helmetCache.remove(player.getUniqueId());
+            if (cached != null)
+                player.getInventory().setHelmet(cached);
         }
     }
 
