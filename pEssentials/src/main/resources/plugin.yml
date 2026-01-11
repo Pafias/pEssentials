@@ -6,8 +6,6 @@ author: Pafias
 description: Various useful features
 api-version: 1.18
 commands:
-  size:
-  reach:
   fly:
     aliases: [ flight ]
   entity:
@@ -85,23 +83,11 @@ commands:
     aliases: [ strike ]
   block:
     aliases: [ ignore ]
+  size:
+    aliases: [scale]
+  reach:
+    aliases: [range]
 permissions:
-  essentials.size:
-    default: op
-    description: Increase your size.
-  essentials.size.others:
-    default: op
-    description: Increase a players size.
-    children:
-      essentials.size: true
-  essentials.reach:
-    default: op
-    description: Increase your reach.
-  essentials.reach.others:
-    default: op
-    description: Increase a players reach.
-    children:
-      essentials.reach: true
   essentials.fly:
     default: op
     description: Toggle flight for yourself.
@@ -158,3 +144,19 @@ permissions:
     default: true
   essentials.rain.personal:
     default: true
+  essentials.size:
+    default: op
+    description: Change your scale attribute.
+  essentials.size.others:
+    default: op
+    description: Change the scale attribute of another player.
+    children:
+      essentials.size: true
+  essentials.reach:
+    default: op
+    description: Change your range attribute.
+  essentials.reach.others:
+    default: op
+    description: Change the range attribute of another player.
+    children:
+      essentials.reach: true

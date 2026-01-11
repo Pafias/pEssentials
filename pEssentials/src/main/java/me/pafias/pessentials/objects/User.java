@@ -163,7 +163,7 @@ public class User implements Messageable {
 
         plugin.getSM().getFreezeManager().applyFrozen(player);
         freezeTask = Tasks.runRepeatingSync(0, 40, () -> {
-            player.sendActionBar(CC.a("&eJoin &b/discord &e5 minutes"));
+            player.sendActionBar(CC.a("&c&lYou are frozen! Do not log out."));
         });
     }
 
