@@ -14,7 +14,10 @@ public class ReplyCommand extends ICommand {
 
     public ReplyCommand() {
         super("reply", null, "Reply", "/r <message>", "r");
+        privateMessagingPreview = getPlugin().getConfig().getBoolean("private_messaging_preview", false);
     }
+
+    private final boolean privateMessagingPreview;
 
     @Override
     public void commandHandler(CommandSender commandSender, Command command, String label, String[] args) {
@@ -51,10 +54,13 @@ public class ReplyCommand extends ICommand {
 
     @Override
     public List<String> tabHandler(CommandSender sender, Command command, String label, String[] args) {
-        final String message = String.join(" ", args).trim();
-        if (message.isEmpty())
+        if (privateMessagingPreview) {
+            final String message = String.join(" ", args).trim();
+            if (message.isEmpty())
+                return Collections.emptyList();
+            return Collections.singletonList(CC.t("&7Preview: &f" + message));
+        } else
             return Collections.emptyList();
-        return Collections.singletonList(CC.t("&7Preview: &f" + message));
     }
 
 }

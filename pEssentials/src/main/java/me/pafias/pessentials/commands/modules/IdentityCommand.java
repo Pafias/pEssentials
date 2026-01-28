@@ -105,12 +105,7 @@ public class IdentityCommand extends ICommand {
             );
             return list;
         } else if (args.length == 2)
-            return plugin.getServer().getOnlinePlayers()
-                    .stream()
-                    .filter(p -> ((Player) sender).canSee(p))
-                    .map(Player::getName)
-                    .filter(n -> n.toLowerCase().startsWith(args[1].toLowerCase()))
-                    .toList();
+            return RandomUtils.tabCompletePlayers(sender, args[1]);
         else return Collections.emptyList();
     }
 

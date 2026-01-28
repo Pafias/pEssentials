@@ -8,7 +8,13 @@ import me.pafias.pessentials.util.PAPIExpansion;
 @Getter
 public class ServicesManager {
 
+    private final pEssentials plugin;
+
     public ServicesManager(pEssentials plugin) {
+        this.plugin = plugin;
+    }
+
+    public void onEnable() {
         commandManager = new CommandManager(plugin);
         userManager = new UserManager();
         vanishManager = new VanishManager(plugin);
@@ -17,10 +23,34 @@ public class ServicesManager {
             papiExpansion = new PAPIExpansion(plugin);
     }
 
+    public void onDisable() {
+        try {
+            if (papiExpansion != null)
+                papiExpansion.unregister();
+        } catch (Throwable t) {
+            t.printStackTrace();
+        }
+        try {
+            freezeManager.shutdown();
+        } catch (Throwable t) {
+            t.printStackTrace();
+        }
+        try {
+            vanishManager.shutdown();
+        } catch (Throwable t) {
+            t.printStackTrace();
+        }
+        try {
+            userManager.shutdown();
+        } catch (Throwable t) {
+            t.printStackTrace();
+        }
+    }
+
     private PAPIExpansion papiExpansion;
-    private final UserManager userManager;
-    private final VanishManager vanishManager;
-    private final FreezeManager freezeManager;
-    private final CommandManager commandManager;
+    private UserManager userManager;
+    private VanishManager vanishManager;
+    private FreezeManager freezeManager;
+    private CommandManager commandManager;
 
 }

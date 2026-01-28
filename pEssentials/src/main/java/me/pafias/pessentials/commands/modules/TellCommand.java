@@ -5,6 +5,7 @@ import me.pafias.pessentials.objects.Messageable;
 import me.pafias.pessentials.objects.User;
 import me.pafias.pessentials.services.UserManager;
 import me.pafias.pessentials.util.CC;
+import me.pafias.pessentials.util.RandomUtils;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
@@ -19,7 +20,10 @@ public class TellCommand extends ICommand {
 
     public TellCommand() {
         super("tell", null, "Private messaging", "/tell <player> <message>", "t", "whisper", "w", "message", "msg");
+        privateMessagingPreview = getPlugin().getConfig().getBoolean("private_messaging_preview", false);
     }
+
+    private final boolean privateMessagingPreview;
 
     public final static Map<Messageable, Messageable> msg = new WeakHashMap<>();
 
@@ -68,20 +72,19 @@ public class TellCommand extends ICommand {
 
     @Override
     public List<String> tabHandler(CommandSender sender, Command command, String label, String[] args) {
-        if (args.length == 1)
-            return plugin.getServer().getOnlinePlayers().stream()
-                    .filter(p -> ((Player) sender).canSee(p))
-                    .map(Player::getName)
-                    .filter(n -> n.toLowerCase().startsWith(args[0].toLowerCase()))
-                    .toList();
-        else {
-            final StringBuilder sb = new StringBuilder();
-            for (int i = 1; i < args.length; i++)
-                sb.append(args[i]).append(" ");
-            final String message = sb.toString().trim();
-            if (message.isEmpty())
+        if (args.length == 1) {
+            return RandomUtils.tabCompletePlayers(sender, args[0]);
+        } else {
+            if (privateMessagingPreview) {
+                final StringBuilder sb = new StringBuilder();
+                for (int i = 1; i < args.length; i++)
+                    sb.append(args[i]).append(" ");
+                final String message = sb.toString().trim();
+                if (message.isEmpty())
+                    return Collections.emptyList();
+                return Collections.singletonList(CC.t("&7Preview: &f" + message));
+            } else
                 return Collections.emptyList();
-            return Collections.singletonList(CC.t("&7Preview: &f" + message));
         }
     }
 

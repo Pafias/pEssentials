@@ -111,13 +111,7 @@ public class ItemstackCommand extends ICommand {
         else if (args.length == 2 && args[0].equalsIgnoreCase("enchant"))
             return Arrays
                     .stream(Enchantment.values())
-                    .map(enchantment -> {
-                        try {
-                            return enchantment.key().asMinimalString();
-                        } catch (Throwable t) {
-                            return enchantment.key().value();
-                        }
-                    })
+                    .map(enchantment -> enchantment.key().value())
                     .filter(e -> {
                         if (e.toLowerCase().startsWith(args[1].toLowerCase()))
                             return true;
