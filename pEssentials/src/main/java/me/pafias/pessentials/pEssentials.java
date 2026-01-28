@@ -1,7 +1,6 @@
 package me.pafias.pessentials;
 
 import me.pafias.pessentials.listeners.*;
-import me.pafias.pessentials.objects.User;
 import me.pafias.pessentials.services.ServicesManager;
 import me.pafias.pessentials.tasks.AutoUpdaterTask;
 import me.pafias.putils.pUtils;
@@ -23,10 +22,13 @@ public final class pEssentials extends JavaPlugin {
     }
 
     @Override
-    public void onEnable() {
+    public void onLoad() {
         plugin = this;
         pUtils.setPlugin(plugin);
+    }
 
+    @Override
+    public void onEnable() {
         plugin.saveDefaultConfig();
 
         try {
@@ -38,6 +40,7 @@ public final class pEssentials extends JavaPlugin {
         getServer().getMessenger().registerOutgoingPluginChannel(plugin, "BungeeCord");
 
         servicesManager = new ServicesManager(plugin);
+        servicesManager.onEnable();
 
         register();
 
@@ -66,12 +69,7 @@ public final class pEssentials extends JavaPlugin {
     @Override
     public void onDisable() {
         getServer().getScheduler().cancelTasks(plugin);
-        getServer().getOnlinePlayers().stream()
-                .filter(p -> servicesManager.getVanishManager().isVanished(p))
-                .forEach(p -> servicesManager.getVanishManager().unvanish(p));
-        servicesManager.getUserManager().getUsers().values().stream().filter(User::hasIdentity).forEach(user -> user.setIdentity(user.getOriginalGameProfile()));
-        if (getServer().getPluginManager().getPlugin("PlaceholderAPI") != null)
-            servicesManager.getPapiExpansion().unregister();
+        servicesManager.onDisable();
     }
 
 }

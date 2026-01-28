@@ -4,6 +4,7 @@ import com.destroystokyo.paper.ClientOption;
 import me.pafias.pessentials.commands.ICommand;
 import me.pafias.pessentials.objects.User;
 import me.pafias.pessentials.util.CC;
+import me.pafias.pessentials.util.RandomUtils;
 import me.pafias.putils.BukkitPlayerManager;
 import net.kyori.adventure.text.event.ClickEvent;
 import net.kyori.adventure.text.event.HoverEvent;
@@ -135,12 +136,7 @@ public class WhoisCommand extends ICommand {
     @Override
     public List<String> tabHandler(CommandSender sender, Command command, String label, String[] args) {
         if (args.length == 1) {
-            List<String> online = plugin.getServer().getOnlinePlayers()
-                    .stream()
-                    .filter(p -> ((Player) sender).canSee(p))
-                    .map(Player::getName)
-                    .filter(n -> n.toLowerCase().startsWith(args[0].toLowerCase()))
-                    .toList();
+            List<String> online = RandomUtils.tabCompletePlayers(sender, args[0]);
             if (!online.isEmpty())
                 return online;
             else {

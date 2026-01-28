@@ -150,22 +150,22 @@ public class ArmorstandCommand extends ICommand {
 
             switch (args[1].toLowerCase()) {
                 case "head":
-                    as.setHeadPose(new EulerAngle(Math.toDegrees(x), Math.toDegrees(y), Math.toDegrees(z)));
+                    as.setHeadPose(new EulerAngle(Math.toRadians(x), Math.toRadians(y), Math.toRadians(z)));
                     break;
                 case "body":
-                    as.setBodyPose(new EulerAngle(Math.toDegrees(x), Math.toDegrees(y), Math.toDegrees(z)));
+                    as.setBodyPose(new EulerAngle(Math.toRadians(x), Math.toRadians(y), Math.toRadians(z)));
                     break;
                 case "larm":
-                    as.setLeftArmPose(new EulerAngle(Math.toDegrees(x), Math.toDegrees(y), Math.toDegrees(z)));
+                    as.setLeftArmPose(new EulerAngle(Math.toRadians(x), Math.toRadians(y), Math.toRadians(z)));
                     break;
                 case "rarm":
-                    as.setRightArmPose(new EulerAngle(Math.toDegrees(x), Math.toDegrees(y), Math.toDegrees(z)));
+                    as.setRightArmPose(new EulerAngle(Math.toRadians(x), Math.toRadians(y), Math.toRadians(z)));
                     break;
                 case "lleg":
-                    as.setLeftLegPose(new EulerAngle(Math.toDegrees(x), Math.toDegrees(y), Math.toDegrees(z)));
+                    as.setLeftLegPose(new EulerAngle(Math.toRadians(x), Math.toRadians(y), Math.toRadians(z)));
                     break;
                 case "rleg":
-                    as.setRightLegPose(new EulerAngle(Math.toDegrees(x), Math.toDegrees(y), Math.toDegrees(z)));
+                    as.setRightLegPose(new EulerAngle(Math.toRadians(x), Math.toRadians(y), Math.toRadians(z)));
                     break;
             }
 

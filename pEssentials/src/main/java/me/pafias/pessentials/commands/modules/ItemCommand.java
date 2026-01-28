@@ -33,13 +33,7 @@ public class ItemCommand extends ICommand {
     public List<String> tabHandler(CommandSender sender, Command command, String label, String[] args) {
         if (args.length == 1)
             return Arrays.stream(Material.values())
-                    .map(m -> {
-                        try {
-                            return m.key().asMinimalString();
-                        } catch (Throwable t) {
-                            return m.key().value();
-                        }
-                    })
+                    .map(m -> m.key().value())
                     .filter(m -> {
                         if (m.toLowerCase().startsWith(args[0].toLowerCase())) return true;
                         String[] split = m.split(":");

@@ -2,6 +2,7 @@ package me.pafias.pessentials.commands.modules;
 
 import me.pafias.pessentials.commands.ICommand;
 import me.pafias.pessentials.util.CC;
+import me.pafias.pessentials.util.RandomUtils;
 import org.bukkit.attribute.Attribute;
 import org.bukkit.attribute.AttributeInstance;
 import org.bukkit.command.Command;
@@ -123,11 +124,7 @@ public class SizeCommand extends ICommand implements Listener {
                 return Collections.singletonList(value);
             }
         } else if (args.length == 2)
-            return plugin.getServer().getOnlinePlayers().stream()
-                    .filter(p -> ((Player) sender).canSee(p))
-                    .map(Player::getName)
-                    .filter(name -> name.toLowerCase().startsWith(args[1].toLowerCase()))
-                    .toList();
+            return RandomUtils.tabCompletePlayers(sender, args[1]);
         return Collections.emptyList();
     }
 }

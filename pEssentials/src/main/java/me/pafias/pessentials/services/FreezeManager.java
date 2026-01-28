@@ -3,7 +3,8 @@ package me.pafias.pessentials.services;
 import me.pafias.pessentials.objects.User;
 import me.pafias.pessentials.pEssentials;
 import me.pafias.pessentials.util.CC;
-import me.pafias.putils.builders.ItemBuilder;
+import me.pafias.putils.builders.ModernItemBuilder;
+import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.Player;
@@ -60,7 +61,7 @@ public class FreezeManager implements Listener {
         removeHelmet(player);
     }
 
-    private static final ItemStack ICE = new ItemBuilder(Material.ICE)
+    private static final ItemStack ICE = new ModernItemBuilder(Material.ICE)
             .setName(CC.a("&cFrozen"))
             .addEnchant(Enchantment.BINDING_CURSE, 1)
             .build();
@@ -82,5 +83,14 @@ public class FreezeManager implements Listener {
 
     public Set<UUID> getFrozenUsers() {
         return frozen;
+    }
+
+    public void shutdown() {
+        for (final UUID uuid : frozen) {
+            try {
+                removeFrozen(Bukkit.getPlayer(uuid));
+            } catch (Exception ignored) {
+            }
+        }
     }
 }

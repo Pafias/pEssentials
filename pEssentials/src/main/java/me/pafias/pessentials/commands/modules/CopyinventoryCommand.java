@@ -2,6 +2,7 @@ package me.pafias.pessentials.commands.modules;
 
 import me.pafias.pessentials.commands.ICommand;
 import me.pafias.pessentials.util.CC;
+import me.pafias.pessentials.util.RandomUtils;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
@@ -54,19 +55,9 @@ public class CopyinventoryCommand extends ICommand {
     @Override
     public List<String> tabHandler(CommandSender sender, Command command, String label, String[] args) {
         if (args.length == 1)
-            return plugin.getServer().getOnlinePlayers()
-                    .stream()
-                    .filter(p -> ((Player) sender).canSee(p))
-                    .map(Player::getName)
-                    .filter(n -> n.toLowerCase().startsWith(args[0].toLowerCase()))
-                    .toList();
+            return RandomUtils.tabCompletePlayers(sender, args[0]);
         else if (args.length == 2) {
-            return plugin.getServer().getOnlinePlayers()
-                    .stream()
-                    .filter(p -> ((Player) sender).canSee(p))
-                    .map(Player::getName)
-                    .filter(n -> n.toLowerCase().startsWith(args[1].toLowerCase()))
-                    .toList();
+            return RandomUtils.tabCompletePlayers(sender, args[1]);
         } else
             return Collections.emptyList();
     }

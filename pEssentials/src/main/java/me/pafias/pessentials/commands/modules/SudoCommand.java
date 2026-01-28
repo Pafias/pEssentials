@@ -2,6 +2,7 @@ package me.pafias.pessentials.commands.modules;
 
 import me.pafias.pessentials.commands.ICommand;
 import me.pafias.pessentials.util.CC;
+import me.pafias.pessentials.util.RandomUtils;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.command.PluginCommand;
@@ -65,12 +66,7 @@ public class SudoCommand extends ICommand {
     @Override
     public List<String> tabHandler(CommandSender sender, Command command, String label, String[] args) {
         if (args.length == 1)
-            return plugin.getServer().getOnlinePlayers()
-                    .stream()
-                    .filter(p -> ((Player) sender).canSee(p))
-                    .map(Player::getName)
-                    .filter(s -> s.toLowerCase().startsWith(args[0].toLowerCase()))
-                    .toList();
+            return RandomUtils.tabCompletePlayers(sender, args[0]);
         else if (args.length == 2)
             return plugin.getServer().getCommandAliases().keySet()
                     .stream()

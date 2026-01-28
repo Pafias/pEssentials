@@ -2,6 +2,7 @@ package me.pafias.pessentials.commands.modules;
 
 import me.pafias.pessentials.commands.ICommand;
 import me.pafias.pessentials.util.CC;
+import me.pafias.pessentials.util.RandomUtils;
 import org.bukkit.GameMode;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
@@ -98,12 +99,7 @@ public class GamemodeCommand extends ICommand {
                     .filter(s -> s.toLowerCase().startsWith(args[0].toLowerCase()))
                     .toList();
         else if (args.length == 2 && sender.hasPermission(getPermission() + ".others"))
-            return plugin.getServer().getOnlinePlayers()
-                    .stream()
-                    .filter(p -> ((Player) sender).canSee(p))
-                    .map(Player::getName)
-                    .filter(name -> name.toLowerCase().startsWith(args[1].toLowerCase()))
-                    .toList();
+            return RandomUtils.tabCompletePlayers(sender, args[1]);
         else return Collections.emptyList();
     }
 

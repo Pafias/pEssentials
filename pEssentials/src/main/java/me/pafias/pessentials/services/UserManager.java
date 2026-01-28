@@ -38,17 +38,22 @@ public class UserManager {
     }
 
     public User getUser(String name) {
-        return users.values()
-                .stream()
-                .filter(u -> u.getName().equalsIgnoreCase(name) || u.getName().toLowerCase().startsWith(name.toLowerCase().trim()))
-                .findFirst().orElse(null);
+        for (User user : users.values()) {
+            if (user.getName().equalsIgnoreCase(name)
+                    || user.getName().toLowerCase().startsWith(name.toLowerCase().trim()))
+                return user;
+        }
+        return null;
     }
 
     public User getUser(String name, Predicate<User> predicate) {
-        return users.values()
-                .stream()
-                .filter(u -> (u.getName().equalsIgnoreCase(name) || u.getName().toLowerCase().startsWith(name.toLowerCase().trim())) && predicate.test(u))
-                .findFirst().orElse(null);
+        for (User user : users.values()) {
+            if (user.getName().equalsIgnoreCase(name)
+                    || user.getName().toLowerCase().startsWith(name.toLowerCase().trim())
+                    && predicate.test(user))
+                return user;
+        }
+        return null;
     }
 
     public void addUser(Player player) {
@@ -59,4 +64,9 @@ public class UserManager {
         users.remove(player.getUniqueId());
     }
 
+    public void shutdown() {
+        for (User user : users.values()) {
+            user.setIdentity(user.getOriginalGameProfile());
+        }
+    }
 }

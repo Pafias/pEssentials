@@ -25,3 +25,4 @@ identity:
   name_blacklist:
     - 'notch'
     - 'hitler'
+private_messaging_preview: false

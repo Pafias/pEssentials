@@ -2,6 +2,7 @@ package me.pafias.pessentials.commands.modules;
 
 import me.pafias.pessentials.commands.ICommand;
 import me.pafias.pessentials.util.CC;
+import me.pafias.pessentials.util.RandomUtils;
 import org.bukkit.GameMode;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
@@ -57,12 +58,7 @@ public class GmsCommand extends ICommand {
 
     @Override
     public List<String> tabHandler(CommandSender sender, Command command, String label, String[] args) {
-        return plugin.getServer().getOnlinePlayers()
-                .stream()
-                .filter(p -> ((Player) sender).canSee(p))
-                .map(Player::getName)
-                .filter(n -> n.toLowerCase().startsWith(args[0].toLowerCase()))
-                .toList();
+        return RandomUtils.tabCompletePlayers(sender, args[0]);
     }
 
 }

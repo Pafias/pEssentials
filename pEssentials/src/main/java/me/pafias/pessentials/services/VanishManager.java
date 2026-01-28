@@ -5,6 +5,7 @@ import me.pafias.pessentials.events.PlayerUnvanishedEvent;
 import me.pafias.pessentials.events.PlayerVanishedEvent;
 import me.pafias.pessentials.pEssentials;
 import me.pafias.pessentials.util.CC;
+import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -33,10 +34,11 @@ public class VanishManager implements Listener {
     }
 
     public void vanish(Player player) {
-        plugin.getServer().getOnlinePlayers()
-                .stream()
-                .filter(p -> p != player && !p.hasPermission("essentials.vanish.bypass"))
-                .forEach(p -> p.hidePlayer(player));
+        for (Player p : plugin.getServer().getOnlinePlayers()) {
+            if (p != player && !p.hasPermission("essentials.vanish.bypass")) {
+                p.hidePlayer(player);
+            }
+        }
         player.setMetadata("vanished", new FixedMetadataValue(plugin, true));
         vanishedPlayers.add(player.getUniqueId());
         player.sendMessage(CC.t("&6Vanish: &aON"));
@@ -44,8 +46,9 @@ public class VanishManager implements Listener {
     }
 
     public void unvanish(Player player) {
-        plugin.getServer().getOnlinePlayers()
-                .forEach(p -> p.showPlayer(player));
+        for (Player p : plugin.getServer().getOnlinePlayers()) {
+            p.showPlayer(player);
+        }
         player.setMetadata("vanished", new FixedMetadataValue(plugin, false));
         vanishedPlayers.remove(player.getUniqueId());
         player.sendMessage(CC.t("&6Vanish: &cOFF"));
@@ -55,15 +58,15 @@ public class VanishManager implements Listener {
     @EventHandler
     public void onJoin(PlayerJoinEvent event) {
         if (vanishedPlayers.isEmpty()) return;
-        vanishedPlayers.stream()
-                .filter(uuid -> !uuid.equals(event.getPlayer().getUniqueId()))
-                .forEach(uuid -> {
-                    Player player = plugin.getServer().getPlayer(uuid);
-                    if (player != null) {
-                        if (!event.getPlayer().hasPermission("essentials.vanish.bypass"))
-                            event.getPlayer().hidePlayer(player);
-                    }
-                });
+        for (final UUID uuid : vanishedPlayers) {
+            if (!uuid.equals(event.getPlayer().getUniqueId())) {
+                final Player player = plugin.getServer().getPlayer(uuid);
+                if (player != null) {
+                    if (!event.getPlayer().hasPermission("essentials.vanish.bypass"))
+                        event.getPlayer().hidePlayer(player);
+                }
+            }
+        }
     }
 
     @EventHandler
@@ -72,4 +75,12 @@ public class VanishManager implements Listener {
             unvanish(event.getPlayer());
     }
 
+    public void shutdown() {
+        for (UUID vanished : vanishedPlayers) {
+            try {
+                unvanish(Bukkit.getPlayer(vanished));
+            } catch (Exception ignored) {
+            }
+        }
+    }
 }

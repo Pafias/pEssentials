@@ -28,7 +28,10 @@ public class CommandManager {
     }
 
     public ICommand getCommand(String name) {
-        return commands.stream().filter(command -> command.getName().equalsIgnoreCase(name)).findAny().orElse(null);
+        for (ICommand command : commands) {
+            if (command.getName().equalsIgnoreCase(name))
+                return command;
+        }
+        return null;
     }
-
 }
