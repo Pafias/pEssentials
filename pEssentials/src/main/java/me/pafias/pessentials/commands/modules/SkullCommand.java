@@ -4,6 +4,7 @@ import me.pafias.pessentials.commands.ICommand;
 import me.pafias.pessentials.util.CC;
 import me.pafias.pessentials.util.RandomUtils;
 import me.pafias.putils.builders.SkullBuilder;
+import org.bukkit.OfflinePlayer;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
@@ -11,7 +12,6 @@ import org.bukkit.inventory.meta.SkullMeta;
 
 import java.util.Collections;
 import java.util.List;
-import java.util.concurrent.CompletableFuture;
 
 public class SkullCommand extends ICommand {
 
@@ -29,11 +29,12 @@ public class SkullCommand extends ICommand {
             sender.sendMessage(CC.t("&cOnly players!"));
             return;
         }
-        CompletableFuture.supplyAsync(() -> new SkullBuilder(args[0]).build())
-                .thenAccept(skull -> {
-                    player.getInventory().addItem(skull);
-                    sender.sendMessage(CC.tf("&6Received skull of &d%s", ((SkullMeta) skull.getItemMeta()).getOwningPlayer().getName()));
-                });
+        new SkullBuilder(args[0]).buildAsync().thenAccept(skull -> {
+            player.getInventory().addItem(skull);
+            final OfflinePlayer owner = ((SkullMeta) skull.getItemMeta()).getOwningPlayer();
+            final String name = owner != null && owner.getName() != null ? owner.getName() : args[0];
+            sender.sendMessage(CC.tf("&6Received skull of &d%s", name));
+        });
     }
 
     @Override

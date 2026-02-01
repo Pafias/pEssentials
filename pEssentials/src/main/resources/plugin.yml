@@ -38,6 +38,8 @@ commands:
     aliases: [ tphere ]
   skull:
     aliases: [ playerhead ]
+  texturedskull:
+    aliases: [ texturedplayerhead ]
   back:
   top:
   day:

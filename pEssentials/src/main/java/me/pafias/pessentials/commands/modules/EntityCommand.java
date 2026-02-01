@@ -3,6 +3,7 @@ package me.pafias.pessentials.commands.modules;
 import me.pafias.pessentials.commands.ICommand;
 import me.pafias.pessentials.objects.User;
 import me.pafias.pessentials.util.CC;
+import me.pafias.pessentials.util.RandomUtils;
 import me.pafias.putils.Tasks;
 import org.bukkit.Material;
 import org.bukkit.command.Command;
@@ -27,7 +28,7 @@ public class EntityCommand extends ICommand {
         final Player player = (Player) sender;
         final User user = plugin.getSM().getUserManager().getUser(player);
         if (args.length == 0) {
-            sender.sendMessage(CC.t("&2/" + label + " s [type] &f- Spawns an entity with you on it"));
+            sender.sendMessage(CC.t("&2/" + label + " s [type] [-d] &f- Spawns an entity with you on it, or not (-d)"));
             sender.sendMessage(CC.t("&2/" + label + " d &f- Deletes the entity you're on or else the closest one to you"));
             sender.sendMessage(CC.t("&2/" + label + " fly [player] &f- Toggle fly mode for the entity where you/player is sitting on"));
             sender.sendMessage(CC.t("&2/" + label + " gravity &f- Toggle gravity mode for the entity where you're sitting on"));
@@ -88,7 +89,8 @@ public class EntityCommand extends ICommand {
                 ((Ageable) entity).setAdult();
             if (entity instanceof InventoryHolder)
                 ((InventoryHolder) entity).getInventory().setItem(0, new ItemStack(Material.SADDLE, 1));
-            entity.setPassenger(player);
+            if (!Arrays.asList(args).contains("-d"))
+                entity.setPassenger(player);
         } else if ((args[0].equalsIgnoreCase("delete") || args[0].equalsIgnoreCase("d") || args[0].equalsIgnoreCase("dv") || args[0].equalsIgnoreCase("remove")) && sender.hasPermission("essentials.entity.delete")) {
             Entity entity = null;
             if (player.isInsideVehicle()) {
@@ -252,13 +254,57 @@ public class EntityCommand extends ICommand {
                 return;
             }
             user.getPlayer().sendActionBar(CC.t("&6Entity AI toggled."));
+        } else if (args[0].equalsIgnoreCase("owner")) {
+            final Entity entity = player.getVehicle();
+            if (entity == null) {
+                sender.sendMessage(CC.t("&cYou're not on an entity!"));
+                return;
+            }
+            if (!(entity instanceof Tameable)) {
+                sender.sendMessage(CC.t("&cThis entity cannot have an owner."));
+                return;
+            }
+            final Player owner;
+            if (args.length >= 2) {
+                owner = plugin.getServer().getPlayer(args[1]);
+                if (owner == null) {
+                    sender.sendMessage(CC.t("&cPlayer not found!"));
+                    return;
+                }
+            } else {
+                owner = player;
+            }
+            ((Tameable) entity).setOwner(owner);
+            user.getPlayer().sendActionBar(CC.t("&6Entity owner set to " + owner.getName() + "."));
+        } else if (args[0].equalsIgnoreCase("target")) {
+            final Entity entity = player.getVehicle();
+            if (entity == null) {
+                sender.sendMessage(CC.t("&cYou're not on an entity!"));
+                return;
+            }
+            if (!(entity instanceof Mob)) {
+                sender.sendMessage(CC.t("&cThis entity cannot have a target."));
+                return;
+            }
+            final Player target;
+            if (args.length >= 2) {
+                target = plugin.getServer().getPlayer(args[1]);
+                if (target == null) {
+                    sender.sendMessage(CC.t("&cPlayer not found!"));
+                    return;
+                }
+            } else {
+                target = player;
+            }
+            ((Mob) entity).setTarget(target);
+            user.getPlayer().sendActionBar(CC.t("&6Entity target set to " + target.getName() + "."));
         }
     }
 
     @Override
     public List<String> tabHandler(CommandSender sender, Command command, String label, String[] args) {
         if (args.length == 1)
-            return Stream.of("spawn", "delete", "fly", "gravity", "age", "tp", "god", "glow", "name", "ride", "invis", "ai")
+            return Stream.of("spawn", "delete", "fly", "gravity", "age", "tp", "god", "glow", "name", "ride", "invis", "ai", "owner", "target")
                     .filter(s -> s.toLowerCase().startsWith(args[0].toLowerCase()))
                     .toList();
         else if (args.length == 2 && (args[0].equalsIgnoreCase("spawn") || args[0].equalsIgnoreCase("s") || args[0].equalsIgnoreCase("sv")))
@@ -268,6 +314,10 @@ public class EntityCommand extends ICommand {
                     .toList();
         else if (args.length == 2 && args[0].equalsIgnoreCase("ride"))
             return Collections.singletonList("-d");
+        else if (args.length == 3 && args[0].equalsIgnoreCase("spawn") || args[0].equalsIgnoreCase("s") || args[0].equalsIgnoreCase("sv"))
+            return Collections.singletonList("-d");
+        else if (args.length == 2 && args[0].equalsIgnoreCase("tp") || args[0].equalsIgnoreCase("owner") || args[0].equalsIgnoreCase("target"))
+            return RandomUtils.tabCompletePlayers(sender, args[1]);
         else return Collections.emptyList();
     }
 
