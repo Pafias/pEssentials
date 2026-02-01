@@ -45,7 +45,7 @@ public class CrashCommand extends ICommand {
                 sender.sendMessage(CC.t("&cInvalid number"));
                 return;
             }
-        } else times = 1;
+        } else times = 50;
         try {
             crash(target, times);
         } catch (IllegalStateException ex) {
