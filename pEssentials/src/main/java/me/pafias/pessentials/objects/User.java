@@ -4,7 +4,7 @@ import com.destroystokyo.paper.profile.PlayerProfile;
 import lombok.Getter;
 import lombok.Setter;
 import me.pafias.pessentials.pEssentials;
-import me.pafias.pessentials.util.CC;
+import me.pafias.putils.CC;
 import me.pafias.putils.Tasks;
 import org.bukkit.Location;
 import org.bukkit.NamespacedKey;

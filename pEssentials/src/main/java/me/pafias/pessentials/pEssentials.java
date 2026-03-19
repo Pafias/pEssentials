@@ -29,7 +29,9 @@ public final class pEssentials extends JavaPlugin {
 
     @Override
     public void onEnable() {
-        plugin.saveDefaultConfig();
+        getConfig().options().copyDefaults(true);
+        saveConfig();
+        reloadConfig();
 
         try {
             new AutoUpdaterTask(plugin).run();

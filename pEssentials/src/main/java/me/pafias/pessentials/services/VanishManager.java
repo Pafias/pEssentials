@@ -4,7 +4,7 @@ import lombok.Getter;
 import me.pafias.pessentials.events.PlayerUnvanishedEvent;
 import me.pafias.pessentials.events.PlayerVanishedEvent;
 import me.pafias.pessentials.pEssentials;
-import me.pafias.pessentials.util.CC;
+import me.pafias.putils.CC;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;

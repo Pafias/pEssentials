@@ -7,7 +7,7 @@ import com.github.retrooper.packetevents.protocol.packettype.PacketType;
 import com.github.retrooper.packetevents.wrapper.play.client.WrapperPlayClientSteerVehicle;
 import me.pafias.pessentials.objects.User;
 import me.pafias.pessentials.pEssentials;
-import me.pafias.pessentials.util.CC;
+import me.pafias.putils.CC;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 import org.bukkit.event.Listener;

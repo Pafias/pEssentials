@@ -2,7 +2,7 @@ package me.pafias.pessentials.services;
 
 import me.pafias.pessentials.objects.User;
 import me.pafias.pessentials.pEssentials;
-import me.pafias.pessentials.util.CC;
+import me.pafias.putils.CC;
 import me.pafias.putils.builders.ModernItemBuilder;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;

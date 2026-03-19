@@ -1,7 +1,7 @@
 package me.pafias.pessentials.commands.modules;
 
 import me.pafias.pessentials.commands.ICommand;
-import me.pafias.pessentials.util.CC;
+import me.pafias.putils.CC;
 import me.pafias.putils.Tasks;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
@@ -14,8 +14,11 @@ public class RussianrouletteCommand extends ICommand {
 
     public RussianrouletteCommand() {
         super("russianroulette", "essentials.russianroulette", "Russian roulette!", "/russianroulette [chance]");
+        cooldownTicks = getPlugin().getConfig().getInt("russian_roulette_cooldown_seconds", 30) * 20L;
     }
 
+    private final Random random = new Random();
+    private final long cooldownTicks;
     private final Set<UUID> cooldown = new HashSet<>();
 
     @Override
@@ -28,8 +31,8 @@ public class RussianrouletteCommand extends ICommand {
             sender.sendMessage(CC.t("&cYou are on cooldown."));
             return;
         }
-        final int num1 = new Random().nextInt(6);
-        final int num2 = new Random().nextInt(6);
+        final int num1 = random.nextInt(6);
+        final int num2 = random.nextInt(6);
         if (num1 == num2) {
             try {
                 player.sendTitle(CC.t("&c&lUh oh!"), CC.t("&4&lYou were unlucky!"), 2, 20, 20);
@@ -46,9 +49,7 @@ public class RussianrouletteCommand extends ICommand {
         } else {
             sender.sendMessage(CC.t("&aPhew! You survived."));
             cooldown.add(player.getUniqueId());
-            Tasks.runLaterAsync(600, () -> {
-                cooldown.remove(player.getUniqueId());
-            });
+            Tasks.runLaterAsync(cooldownTicks, () -> cooldown.remove(player.getUniqueId()));
         }
     }
 

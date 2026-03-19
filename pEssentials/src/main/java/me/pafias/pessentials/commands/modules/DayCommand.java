@@ -1,7 +1,7 @@
 package me.pafias.pessentials.commands.modules;
 
 import me.pafias.pessentials.commands.ICommand;
-import me.pafias.pessentials.util.CC;
+import me.pafias.putils.CC;
 import org.bukkit.World;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;

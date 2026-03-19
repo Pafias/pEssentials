@@ -1,8 +1,8 @@
 package me.pafias.pessentials.commands.modules;
 
 import me.pafias.pessentials.commands.ICommand;
-import me.pafias.pessentials.util.CC;
 import me.pafias.pessentials.util.RandomUtils;
+import me.pafias.putils.CC;
 import org.bukkit.attribute.Attribute;
 import org.bukkit.attribute.AttributeInstance;
 import org.bukkit.command.Command;
