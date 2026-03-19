@@ -1,7 +1,7 @@
 package me.pafias.pessentials.listeners;
 
 import me.pafias.pessentials.pEssentials;
-import me.pafias.pessentials.util.CC;
+import me.pafias.putils.CC;
 import me.pafias.putils.Tasks;
 import org.bukkit.entity.Player;
 import org.bukkit.event.Listener;

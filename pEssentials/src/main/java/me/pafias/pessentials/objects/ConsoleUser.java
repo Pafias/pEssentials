@@ -1,6 +1,6 @@
 package me.pafias.pessentials.objects;
 
-import me.pafias.pessentials.util.CC;
+import me.pafias.putils.CC;
 import org.bukkit.Bukkit;
 
 public class ConsoleUser implements Messageable {

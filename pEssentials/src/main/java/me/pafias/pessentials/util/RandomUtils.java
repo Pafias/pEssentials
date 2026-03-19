@@ -5,7 +5,7 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
 import java.util.ArrayList;
-import java.util.HashSet;
+import java.util.Collection;
 import java.util.List;
 import java.util.Set;
 
@@ -13,8 +13,8 @@ public class RandomUtils {
 
     private static final pEssentials plugin = pEssentials.get();
 
-    public static Set<Player> getStaffOnline(String perm) {
-        final Set<Player> staffOnline = new HashSet<>();
+    public static Collection<Player> getStaffOnline(String perm) {
+        final Collection<Player> staffOnline = new ArrayList<>();
         for (Player p : plugin.getServer().getOnlinePlayers()) {
             if (p.hasPermission(perm))
                 staffOnline.add(p);

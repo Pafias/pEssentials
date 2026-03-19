@@ -1,8 +1,8 @@
 package me.pafias.pessentials.commands.modules;
 
 import me.pafias.pessentials.commands.ICommand;
-import me.pafias.pessentials.util.CC;
 import me.pafias.pessentials.util.RandomUtils;
+import me.pafias.putils.CC;
 import me.pafias.putils.builders.SkullBuilder;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.command.Command;

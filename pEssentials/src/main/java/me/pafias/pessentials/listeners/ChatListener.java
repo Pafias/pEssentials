@@ -2,8 +2,8 @@ package me.pafias.pessentials.listeners;
 
 import me.pafias.pessentials.objects.User;
 import me.pafias.pessentials.pEssentials;
-import me.pafias.pessentials.util.CC;
 import me.pafias.pessentials.util.RandomUtils;
+import me.pafias.putils.CC;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
@@ -17,22 +17,29 @@ public class ChatListener implements Listener {
 
     public ChatListener(pEssentials plugin) {
         this.plugin = plugin;
+        staffchatFormat = plugin.getConfig().getString("staffchat_format");
     }
+
+    private static final String PERMISSION = "essentials.staffchat";
+    private final String staffchatFormat;
 
     @EventHandler(priority = EventPriority.HIGHEST)
     public void onStaffChat(AsyncPlayerChatEvent event) {
         final User user = plugin.getSM().getUserManager().getUser(event.getPlayer());
         if (user == null) return;
         final String message = event.getMessage();
-        if ((user.isInStaffchat() && message.startsWith("!")) || (message.startsWith("#") && event.getPlayer().hasPermission("essentials.staffchat")))
+        if ((user.isInStaffchat() && message.startsWith("!")) || (message.startsWith("#") && event.getPlayer().hasPermission(PERMISSION)))
             if (user.isInStaffchat() && message.startsWith("!"))
                 event.setMessage(message.substring(1));
-            else if (message.startsWith("#") && event.getPlayer().hasPermission("essentials.staffchat"))
+            else if (message.startsWith("#") && event.getPlayer().hasPermission(PERMISSION))
                 event.setMessage(message.substring(1));
-        if ((user.isInStaffchat() && !message.startsWith("!")) || (message.startsWith("#") && event.getPlayer().hasPermission("essentials.staffchat"))) {
-            event.setFormat(CC.formatStaffchat(user.getPlayer().getName(), event.getMessage()));
+        if ((user.isInStaffchat() && !message.startsWith("!")) || (message.startsWith("#") && event.getPlayer().hasPermission(PERMISSION))) {
+            final String format = staffchatFormat
+                    .replace("{player}", user.getPlayer().getName())
+                    .replace("{message}", event.getMessage());
+            event.setFormat(CC.t(format));
             event.getRecipients().clear();
-            event.getRecipients().addAll(RandomUtils.getStaffOnline("essentials.staffchat"));
+            event.getRecipients().addAll(RandomUtils.getStaffOnline(PERMISSION));
 
             // Because of DiscordSRV (and maybe other plugins), we gotta use this workaround
             event.setCancelled(true);

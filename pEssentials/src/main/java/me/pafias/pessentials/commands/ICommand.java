@@ -17,11 +17,11 @@ public abstract class ICommand implements CommandExecutor, TabExecutor {
     private final String name, permission, description, usage;
     private final List<String> aliases;
 
-    public ICommand(String name, String permission, String description, String usage, String... aliases) {
+    protected ICommand(String name, String permission, String description, String usage, String... aliases) {
         this(name, permission, description, usage, Arrays.asList(aliases));
     }
 
-    public ICommand(String name, String permission, String description, String usage, List<String> aliases) {
+    protected ICommand(String name, String permission, String description, String usage, List<String> aliases) {
         this.name = name;
         this.permission = permission;
         this.description = description;

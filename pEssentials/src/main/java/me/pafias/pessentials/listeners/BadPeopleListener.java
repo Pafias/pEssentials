@@ -3,7 +3,7 @@ package me.pafias.pessentials.listeners;
 import lombok.Getter;
 import lombok.Setter;
 import me.pafias.pessentials.pEssentials;
-import me.pafias.pessentials.util.CC;
+import me.pafias.putils.CC;
 import me.pafias.putils.Tasks;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.event.EventHandler;
