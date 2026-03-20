@@ -28,11 +28,11 @@ public class JoinQuitListener implements Listener {
         plugin.getSM().getUserManager().addUser(event.getPlayer());
         if (!joinMessageEnabled)
             event.setJoinMessage(null);
-        else
+        else if (joinMessage != null && !joinMessage.isBlank())
             try {
-                event.joinMessage(CC.a(joinMessage));
+                event.joinMessage(CC.af(joinMessage, event.getPlayer().getName()));
             } catch (Throwable t) {
-                event.setJoinMessage(CC.t(joinMessage));
+                event.setJoinMessage(CC.tf(joinMessage, event.getPlayer().getName()));
             }
     }
 
@@ -40,11 +40,11 @@ public class JoinQuitListener implements Listener {
     public void onQuit(PlayerQuitEvent event) {
         if (!quitMessageEnabled)
             event.setQuitMessage(null);
-        else
+        else if (quitMessage != null && !quitMessage.isBlank())
             try {
-                event.quitMessage(CC.a(quitMessage));
+                event.quitMessage(CC.af(quitMessage, event.getPlayer().getName()));
             } catch (Throwable t) {
-                event.setQuitMessage(CC.t(quitMessage));
+                event.setQuitMessage(CC.tf(quitMessage, event.getPlayer().getName()));
             }
         plugin.getSM().getUserManager().removeUser(event.getPlayer());
     }
