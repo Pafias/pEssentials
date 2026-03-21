@@ -23,9 +23,13 @@ public class JoinQuitListener implements Listener {
     private final boolean joinMessageEnabled, quitMessageEnabled;
     private final String joinMessage, quitMessage;
 
-    @EventHandler(priority = EventPriority.HIGH)
-    public void onJoin(PlayerJoinEvent event) {
+    @EventHandler(priority = EventPriority.LOW)
+    public void addUser(PlayerJoinEvent event) {
         plugin.getSM().getUserManager().addUser(event.getPlayer());
+    }
+
+    @EventHandler
+    public void joinMessage(PlayerJoinEvent event) {
         if (!joinMessageEnabled)
             event.setJoinMessage(null);
         else if (joinMessage != null && !joinMessage.isBlank())
@@ -36,8 +40,8 @@ public class JoinQuitListener implements Listener {
             }
     }
 
-    @EventHandler(priority = EventPriority.HIGH)
-    public void onQuit(PlayerQuitEvent event) {
+    @EventHandler
+    public void quitMessage(PlayerQuitEvent event) {
         if (!quitMessageEnabled)
             event.setQuitMessage(null);
         else if (quitMessage != null && !quitMessage.isBlank())
@@ -46,6 +50,10 @@ public class JoinQuitListener implements Listener {
             } catch (Throwable t) {
                 event.setQuitMessage(CC.tf(quitMessage, event.getPlayer().getName()));
             }
+    }
+
+    @EventHandler(priority = EventPriority.HIGH)
+    public void removeUser(PlayerQuitEvent event) {
         plugin.getSM().getUserManager().removeUser(event.getPlayer());
     }
 
