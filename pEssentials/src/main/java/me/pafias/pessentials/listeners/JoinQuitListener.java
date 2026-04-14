@@ -16,12 +16,13 @@ public class JoinQuitListener implements Listener {
         this.plugin = plugin;
         joinMessageEnabled = plugin.getConfig().getBoolean("join_message_enabled");
         joinMessage = plugin.getConfig().getString("join_message");
+        firstTimeJoinMessage = plugin.getConfig().getString("join_message_first_time");
         quitMessageEnabled = plugin.getConfig().getBoolean("quit_message_enabled");
         quitMessage = plugin.getConfig().getString("quit_message");
     }
 
     private final boolean joinMessageEnabled, quitMessageEnabled;
-    private final String joinMessage, quitMessage;
+    private final String joinMessage, firstTimeJoinMessage, quitMessage;
 
     @EventHandler(priority = EventPriority.LOW)
     public void addUser(PlayerJoinEvent event) {
@@ -30,14 +31,23 @@ public class JoinQuitListener implements Listener {
 
     @EventHandler
     public void joinMessage(PlayerJoinEvent event) {
-        if (!joinMessageEnabled)
+        if (!joinMessageEnabled) {
             event.setJoinMessage(null);
-        else if (joinMessage != null && !joinMessage.isBlank())
+            return;
+        }
+        if (firstTimeJoinMessage != null && !event.getPlayer().hasPlayedBefore() && !firstTimeJoinMessage.isBlank()) {
+            try {
+                event.joinMessage(CC.af(firstTimeJoinMessage, event.getPlayer().getName()));
+            } catch (Throwable t) {
+                event.setJoinMessage(CC.tf(firstTimeJoinMessage, event.getPlayer().getName()));
+            }
+        } else if (joinMessage != null && !joinMessage.isBlank()) {
             try {
                 event.joinMessage(CC.af(joinMessage, event.getPlayer().getName()));
             } catch (Throwable t) {
                 event.setJoinMessage(CC.tf(joinMessage, event.getPlayer().getName()));
             }
+        }
     }
 
     @EventHandler

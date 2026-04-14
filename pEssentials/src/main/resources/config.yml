@@ -2,6 +2,7 @@ hub_server: 'hub'
 staffchat_format: '&e&l[STAFF] &r&9{player}&r: {message}'
 join_message_enabled: false
 join_message: '&7[&a+&7] &r%s'
+join_message_first_time: ''
 quit_message_enabled: false
 quit_message: '&7[&c-&7] &r%s'
 kick_on_high_ping: false
