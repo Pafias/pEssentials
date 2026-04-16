@@ -5,6 +5,7 @@ import me.pafias.pessentials.pEssentials;
 import me.pafias.putils.CC;
 import me.pafias.putils.builders.ModernItemBuilder;
 import org.bukkit.Bukkit;
+import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.Player;
@@ -31,12 +32,13 @@ public class FreezeManager implements Listener {
 
     @EventHandler
     public void onMove(PlayerMoveEvent event) {
+        final Location from = event.getFrom();
+        final Location to = event.getTo();
+        if (from.getBlockX() == to.getBlockX()
+                && from.getBlockY() == to.getBlockY()
+                && from.getBlockZ() == to.getBlockZ()) return;
         if (!frozen.contains(event.getPlayer().getUniqueId())) return;
-        if (event.getTo().getBlockX() != event.getFrom().getBlockX()
-                || event.getTo().getBlockY() != event.getFrom().getBlockY()
-                || event.getTo().getBlockZ() != event.getFrom().getBlockZ()) {
-            event.setTo(event.getFrom());
-        }
+        event.setTo(from);
     }
 
     @EventHandler(priority = EventPriority.HIGHEST)
@@ -87,10 +89,9 @@ public class FreezeManager implements Listener {
 
     public void shutdown() {
         for (final UUID uuid : frozen) {
-            try {
-                removeFrozen(Bukkit.getPlayer(uuid));
-            } catch (Exception ignored) {
-            }
+            final Player player = Bukkit.getPlayer(uuid);
+            if (player != null)
+                removeFrozen(player);
         }
     }
 }

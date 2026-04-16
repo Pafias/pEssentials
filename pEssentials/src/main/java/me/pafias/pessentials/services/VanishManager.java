@@ -25,6 +25,9 @@ public class VanishManager extends SimplePacketListenerAbstract implements Liste
 
     private final VanishPacketListener vanishPacketListener;
 
+    private static final FixedMetadataValue VANISHED_META = new FixedMetadataValue(pEssentials.get(), true);
+    private static final FixedMetadataValue UNVANISHED_META = new FixedMetadataValue(pEssentials.get(), false);
+
     public VanishManager(pEssentials plugin) {
         this.plugin = plugin;
         plugin.getServer().getPluginManager().registerEvents(this, plugin);
@@ -34,7 +37,7 @@ public class VanishManager extends SimplePacketListenerAbstract implements Liste
     }
 
     @Getter
-    private final Set<UUID> vanishedPlayers = new HashSet<>();
+    private final Set<UUID> vanishedPlayers = new HashSet<>(3);
 
     public boolean isVanished(Player player) {
         return vanishedPlayers.contains(player.getUniqueId());
@@ -46,7 +49,7 @@ public class VanishManager extends SimplePacketListenerAbstract implements Liste
                 p.hidePlayer(player);
             }
         }
-        player.setMetadata("vanished", new FixedMetadataValue(plugin, true));
+        player.setMetadata("vanished", VANISHED_META);
         vanishedPlayers.add(player.getUniqueId());
         player.sendMessage(CC.t("&6Vanish: &aON"));
         plugin.getServer().getPluginManager().callEvent(new PlayerVanishedEvent(player));
@@ -56,7 +59,7 @@ public class VanishManager extends SimplePacketListenerAbstract implements Liste
         for (Player p : plugin.getServer().getOnlinePlayers()) {
             p.showPlayer(player);
         }
-        player.setMetadata("vanished", new FixedMetadataValue(plugin, false));
+        player.setMetadata("vanished", UNVANISHED_META);
         vanishedPlayers.remove(player.getUniqueId());
         player.sendMessage(CC.t("&6Vanish: &cOFF"));
         plugin.getServer().getPluginManager().callEvent(new PlayerUnvanishedEvent(player));
@@ -84,10 +87,9 @@ public class VanishManager extends SimplePacketListenerAbstract implements Liste
 
     public void shutdown() {
         for (UUID vanished : vanishedPlayers) {
-            try {
-                unvanish(Bukkit.getPlayer(vanished));
-            } catch (Exception ignored) {
-            }
+            final Player player = Bukkit.getPlayer(vanished);
+            if (player != null)
+                unvanish(player);
         }
         if (vanishPacketListener != null)
             vanishPacketListener.shutdown();
