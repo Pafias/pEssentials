@@ -5,6 +5,7 @@ import me.pafias.pessentials.objects.User;
 import me.pafias.pessentials.util.RandomUtils;
 import me.pafias.putils.CC;
 import me.pafias.putils.Tasks;
+import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
@@ -30,7 +31,7 @@ public class EntityCommand extends ICommand {
         if (args.length == 0) {
             sender.sendMessage(CC.t("&2/" + label + " s [type] [-d] &f- Spawns an entity with you on it, or not (-d)"));
             sender.sendMessage(CC.t("&2/" + label + " d &f- Deletes the entity you're on or else the closest one to you"));
-            sender.sendMessage(CC.t("&2/" + label + " fly [player] &f- Toggle fly mode for the entity where you/player is sitting on"));
+            sender.sendMessage(CC.t("&2/" + label + " move [player] &f- Toggle fly/move mode for the entity where you/player is sitting on"));
             sender.sendMessage(CC.t("&2/" + label + " gravity &f- Toggle gravity mode for the entity where you're sitting on"));
             sender.sendMessage(CC.t("&2/" + label + " age [age] &f- Change the age of the entity where you're sitting on"));
             sender.sendMessage(CC.t("&2/" + label + " tp <player> &f- Teleport together with your entity to someone"));
@@ -42,33 +43,27 @@ public class EntityCommand extends ICommand {
             sender.sendMessage(CC.t("&2/" + label + " ai &f- Toggle AI on the entity you're sitting on"));
             return;
         }
-        if (args[0].equalsIgnoreCase("fly") && sender.hasPermission("essentials.entity.fly")) {
+        if (args[0].equalsIgnoreCase("move") && sender.hasPermission("essentials.entity.move")) {
             if (!plugin.getServer().getPluginManager().isPluginEnabled("packetevents")) {
                 sender.sendMessage(CC.t("&cPacketEvents not found! This feature only works with PacketEvents!"));
                 return;
             }
-            final Entity entity = player.getVehicle();
+            final Entity entity;
+            if (args.length >= 2) {
+                final Player target = Bukkit.getPlayer(args[1]);
+                if (target == null) {
+                    sender.sendMessage(CC.t("&cPlayer not found!"));
+                    return;
+                }
+                entity = target.getVehicle();
+            } else
+                entity = player.getVehicle();
             if (entity == null) {
-                sender.sendMessage(CC.t("&cYou're not on an entity!"));
+                sender.sendMessage(CC.t("&cNot on an entity!"));
                 return;
             }
-            entity.setGravity(!entity.hasGravity());
-            user.flyingEntity = !user.flyingEntity;
-            entity.setInvulnerable(!entity.isInvulnerable());
-            user.getPlayer().sendActionBar(CC.t("&6Entity fly: " + (user.flyingEntity ? "&aON" : "&cOFF")));
-        } else if (args[0].equalsIgnoreCase("move") && sender.hasPermission("essentials.entity.move")) {
-            if (!plugin.getServer().getPluginManager().isPluginEnabled("packetevents")) {
-                sender.sendMessage(CC.t("&cPacketEvents not found! This feature only works with PacketEvents!"));
-                return;
-            }
-            final Entity entity = player.getVehicle();
-            if (entity == null) {
-                sender.sendMessage(CC.t("&cYou're not on an entity!"));
-                return;
-            }
-            entity.setGravity(!entity.hasGravity());
             user.movingEntity = !user.movingEntity;
-            entity.setInvulnerable(!entity.isInvulnerable());
+            entity.setGravity(!user.movingEntity);
             user.getPlayer().sendActionBar(CC.t("&6Entity move: " + (user.movingEntity ? "&aON" : "&cOFF")));
         } else if ((args[0].equalsIgnoreCase("spawn") || args[0].equalsIgnoreCase("s") || args[0].equalsIgnoreCase("sv")) && sender.hasPermission("essentials.entity.spawn")) {
             Entity entity;
@@ -107,8 +102,6 @@ public class EntityCommand extends ICommand {
                 return;
             }
             entity.remove();
-            user.flyingEntity = false;
-            user.movingEntity = false;
             user.getPlayer().sendActionBar(CC.t("&6Removed: &r" + entity));
         } else if (args[0].equalsIgnoreCase("gravity") && sender.hasPermission("essentials.entity.gravity")) {
             final Entity entity = player.getVehicle();

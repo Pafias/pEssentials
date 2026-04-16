@@ -57,8 +57,11 @@ public final class pEssentials extends JavaPlugin {
 
         pm.registerEvents(new JoinQuitListener(plugin), plugin);
         if (pm.isPluginEnabled("packetevents")) {
-            pm.registerEvents(new FlyListener(plugin), plugin);
-            pm.registerEvents(new MoveListener(plugin), plugin);
+            if (com.github.retrooper.packetevents.PacketEvents.getAPI().getServerManager()
+                    .getVersion().isNewerThanOrEquals(com.github.retrooper.packetevents.manager.server.ServerVersion.V_1_21_2))
+                pm.registerEvents(new FlyProtocolListener(plugin), plugin);
+            else
+                pm.registerEvents(new FlyProtocolListenerOld(plugin), plugin);
         }
         pm.registerEvents(new TeleportListener(plugin), plugin);
         pm.registerEvents(new ChatListener(plugin), plugin);
