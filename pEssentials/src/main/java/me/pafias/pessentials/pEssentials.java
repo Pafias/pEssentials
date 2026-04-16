@@ -59,7 +59,6 @@ public final class pEssentials extends JavaPlugin {
         if (pm.isPluginEnabled("packetevents")) {
             pm.registerEvents(new FlyListener(plugin), plugin);
             pm.registerEvents(new MoveListener(plugin), plugin);
-            pm.registerEvents(new VanishListener(plugin), plugin);
         }
         pm.registerEvents(new TeleportListener(plugin), plugin);
         pm.registerEvents(new ChatListener(plugin), plugin);

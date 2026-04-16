@@ -1,8 +1,10 @@
 package me.pafias.pessentials.services;
 
+import com.github.retrooper.packetevents.event.SimplePacketListenerAbstract;
 import lombok.Getter;
 import me.pafias.pessentials.events.PlayerUnvanishedEvent;
 import me.pafias.pessentials.events.PlayerVanishedEvent;
+import me.pafias.pessentials.listeners.VanishPacketListener;
 import me.pafias.pessentials.pEssentials;
 import me.pafias.putils.CC;
 import org.bukkit.Bukkit;
@@ -17,13 +19,18 @@ import java.util.HashSet;
 import java.util.Set;
 import java.util.UUID;
 
-public class VanishManager implements Listener {
+public class VanishManager extends SimplePacketListenerAbstract implements Listener {
 
     private final pEssentials plugin;
+
+    private final VanishPacketListener vanishPacketListener;
 
     public VanishManager(pEssentials plugin) {
         this.plugin = plugin;
         plugin.getServer().getPluginManager().registerEvents(this, plugin);
+        if (plugin.getServer().getPluginManager().isPluginEnabled("packetevents"))
+            vanishPacketListener = new VanishPacketListener(this);
+        else vanishPacketListener = null;
     }
 
     @Getter
@@ -82,5 +89,8 @@ public class VanishManager implements Listener {
             } catch (Exception ignored) {
             }
         }
+        if (vanishPacketListener != null)
+            vanishPacketListener.shutdown();
     }
+
 }
