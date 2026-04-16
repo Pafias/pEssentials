@@ -31,7 +31,7 @@ public class User implements Messageable {
     @Getter
     private final PersistentDataContainer dataContainer;
 
-    public boolean flyingEntity, movingEntity;
+    public boolean movingEntity;
     public Location lastLocation;
 
     @Getter
