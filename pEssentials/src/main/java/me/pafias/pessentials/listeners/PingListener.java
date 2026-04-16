@@ -17,7 +17,7 @@ public class PingListener implements Listener {
                         final int ping = p.getPing();
                         if (ping > threshold)
                             Tasks.runSync(() -> {
-                                p.kick(CC.af("&cYour ping is too high. (%dms)", ping));
+                                p.kickPlayer(CC.tf("&cYour ping is too high. (%dms)", ping));
                             });
                     }
                 }

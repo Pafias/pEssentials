@@ -4,6 +4,8 @@ import com.destroystokyo.paper.profile.PlayerProfile;
 import lombok.Getter;
 import lombok.Setter;
 import me.pafias.pessentials.pEssentials;
+import me.pafias.pessentials.services.FreezeManager;
+import me.pafias.pessentials.services.VanishManager;
 import me.pafias.putils.CC;
 import me.pafias.putils.Tasks;
 import org.bukkit.Location;
@@ -15,18 +17,20 @@ import org.bukkit.persistence.PersistentDataType;
 import org.bukkit.scheduler.BukkitTask;
 import org.jetbrains.annotations.Unmodifiable;
 
-import java.util.Collections;
 import java.util.HashSet;
 import java.util.Set;
 import java.util.UUID;
-import java.util.stream.Collectors;
 
 public class User implements Messageable {
 
     private final pEssentials plugin = pEssentials.get();
+    private final VanishManager vanishManager = plugin.getSM().getVanishManager();
+    private final FreezeManager freezeManager = plugin.getSM().getFreezeManager();
+
 
     @Getter
     private final Player player;
+    private final UUID uuid;
 
     @Getter
     private final PersistentDataContainer dataContainer;
@@ -49,13 +53,16 @@ public class User implements Messageable {
     private boolean blockingPMs;
 
     private final Set<UUID> blocking = new HashSet<>();
+    private static final NamespacedKey BLOCKING_KEY =
+            new NamespacedKey(pEssentials.get(), "blocking");
 
     public User(Player player) {
         this.player = player;
+        this.uuid = player.getUniqueId();
 
         dataContainer = player.getPersistentDataContainer();
 
-        String blockingData = dataContainer.getOrDefault(new NamespacedKey(plugin, "blocking"), PersistentDataType.STRING, "");
+        String blockingData = dataContainer.getOrDefault(BLOCKING_KEY, PersistentDataType.STRING, "");
         if (!blockingData.isBlank()) {
             for (String blocked : blockingData.split(","))
                 blocking.add(UUID.fromString(blocked));
@@ -65,17 +72,16 @@ public class User implements Messageable {
     }
 
     public UUID getUUID() {
-        return this.player.getUniqueId();
+        return uuid;
     }
 
     @Override
     public boolean isOnline() {
-        return player != null && player.isOnline();
+        return player.isOnline();
     }
 
     public String getName() {
-        if (newIdentity != null) return newIdentity.getName();
-        return profile.getName();
+        return newIdentity != null ? newIdentity.getName() : profile.getName();
     }
 
     @Override
@@ -88,8 +94,8 @@ public class User implements Messageable {
 
     @Override
     public boolean isBlockingPMsFrom(Messageable sender) {
-        if (sender instanceof ConsoleUser) return false;
-        return blocking.contains(((User) sender).getUUID());
+        if (!(sender instanceof User user)) return false;
+        return blocking.contains(user.getUUID());
     }
 
     public String getRealName() {
@@ -115,7 +121,7 @@ public class User implements Messageable {
             if (idTask != null)
                 idTask.cancel();
             idTask = Tasks.runRepeatingSync(2, 40, () -> {
-                player.sendActionBar(CC.a("&aCurrently disguised."));
+                player.sendActionBar(CC.t("&aCurrently disguised."));
             });
         }
         player.setPlayerProfile(profile);
@@ -124,19 +130,20 @@ public class User implements Messageable {
 
     public void crash() {
         try {
+            final Location location = player.getEyeLocation();
             for (int i = 0; i < 5; i++)
-                player.spawnParticle(Particle.CRIT, player.getEyeLocation().getX(), player.getEyeLocation().getY(), player.getEyeLocation().getZ(), Integer.MAX_VALUE);
+                player.spawnParticle(Particle.CRIT, location.getX(), location.getY(), location.getZ(), Integer.MAX_VALUE);
         } catch (Throwable e) {
             throw new IllegalStateException("This server version does not support this feature!", e);
         }
     }
 
     public boolean isVanished() {
-        return plugin.getSM().getVanishManager().isVanished(player);
+        return vanishManager.isVanished(player);
     }
 
     public boolean isFrozen() {
-        return plugin.getSM().getFreezeManager().getFrozenUsers().contains(player.getUniqueId());
+        return freezeManager.getFrozenUsers().contains(player.getUniqueId());
     }
 
     public void destroy() {
@@ -157,13 +164,13 @@ public class User implements Messageable {
         }
 
         if (!frozen) {
-            plugin.getSM().getFreezeManager().removeFrozen(player);
+            freezeManager.removeFrozen(player);
             return;
         }
 
-        plugin.getSM().getFreezeManager().applyFrozen(player);
+        freezeManager.applyFrozen(player);
         freezeTask = Tasks.runRepeatingSync(0, 40, () -> {
-            player.sendActionBar(CC.a("&c&lYou are frozen! Do not log out."));
+            player.sendActionBar(CC.t("&c&lYou are frozen! Do not log out."));
         });
     }
 
@@ -179,24 +186,36 @@ public class User implements Messageable {
 
     @Unmodifiable
     public Set<UUID> getBlocking() {
-        return Collections.unmodifiableSet(blocking);
+        return blocking;
     }
 
     public void addBlocking(UUID uuid) {
         blocking.add(uuid);
 
-        String blockingData = blocking.stream().map(UUID::toString).collect(Collectors.joining(","));
-        dataContainer.set(new NamespacedKey(plugin, "blocking"), PersistentDataType.STRING, blockingData);
+        final StringBuilder sb = new StringBuilder();
+        for (final UUID id : blocking) {
+            if (sb.length() > 0) sb.append(",");
+            sb.append(id);
+        }
+        final String blockingData = sb.toString();
+
+        dataContainer.set(BLOCKING_KEY, PersistentDataType.STRING, blockingData);
     }
 
     public void removeBlocking(UUID uuid) {
         blocking.remove(uuid);
 
         if (!blocking.isEmpty()) {
-            String blockingData = blocking.stream().map(UUID::toString).collect(Collectors.joining(","));
-            dataContainer.set(new NamespacedKey(plugin, "blocking"), PersistentDataType.STRING, blockingData);
+            final StringBuilder sb = new StringBuilder();
+            for (final UUID id : blocking) {
+                if (sb.length() > 0) sb.append(",");
+                sb.append(id);
+            }
+            final String blockingData = sb.toString();
+
+            dataContainer.set(BLOCKING_KEY, PersistentDataType.STRING, blockingData);
         } else {
-            dataContainer.remove(new NamespacedKey(plugin, "blocking"));
+            dataContainer.remove(BLOCKING_KEY);
         }
     }
 
