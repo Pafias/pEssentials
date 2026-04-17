@@ -1,9 +1,10 @@
 package me.pafias.pessentials;
 
 import me.pafias.pessentials.listeners.*;
-import me.pafias.pessentials.objects.User;
 import me.pafias.pessentials.services.ServicesManager;
 import me.pafias.pessentials.tasks.AutoUpdaterTask;
+import me.pafias.putils.pUtils;
+import org.bukkit.entity.Player;
 import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.java.JavaPlugin;
 
@@ -24,6 +25,7 @@ public final class pEssentials extends JavaPlugin {
     @Override
     public void onEnable() {
         plugin = this;
+        pUtils.setPlugin(this);
 
         plugin.getConfig().options().copyDefaults(true);
         plugin.saveConfig();
@@ -41,7 +43,10 @@ public final class pEssentials extends JavaPlugin {
 
         register();
 
-        getServer().getOnlinePlayers().forEach(p -> servicesManager.getUserManager().addUser(p));
+        for (Player online : getServer().getOnlinePlayers()) {
+            if (!online.hasMetadata("NPC"))
+                servicesManager.getUserManager().addUser(online);
+        }
     }
 
     private void register() {
@@ -52,12 +57,14 @@ public final class pEssentials extends JavaPlugin {
 
         pm.registerEvents(new JoinQuitListener(plugin), plugin);
         if (pm.isPluginEnabled("packetevents")) {
-            pm.registerEvents(new FlyListener(plugin), plugin);
-            pm.registerEvents(new MoveListener(plugin), plugin);
-            pm.registerEvents(new VanishListener(plugin), plugin);
+            pm.registerEvents(new FlyListener_PE(plugin), plugin);
+            pm.registerEvents(new MoveListener_PE(plugin), plugin);
+        } else if (pm.isPluginEnabled("ProtocolLib")) {
+            pm.registerEvents(new FlyListener_PL(plugin), plugin);
+            pm.registerEvents(new MoveListener_PL(plugin), plugin);
         }
-        pm.registerEvents(new TeleportListener(plugin), plugin);
-        pm.registerEvents(new ChatListener(plugin), plugin);
+        pm.registerEvents(new TeleportListener(servicesManager.getUserManager()), plugin);
+        pm.registerEvents(new ChatListener(plugin, servicesManager.getUserManager()), plugin);
         pm.registerEvents(new PingListener(plugin), plugin);
         pm.registerEvents(new SitListener(), plugin);
         pm.registerEvents(new BadPeopleListener(plugin), plugin);
@@ -66,12 +73,7 @@ public final class pEssentials extends JavaPlugin {
     @Override
     public void onDisable() {
         getServer().getScheduler().cancelTasks(plugin);
-        getServer().getOnlinePlayers().stream()
-                .filter(p -> servicesManager.getVanishManager().isVanished(p))
-                .forEach(p -> servicesManager.getVanishManager().unvanish(p));
-        servicesManager.getUserManager().getUsers().values().stream().filter(User::hasIdentity).forEach(user -> user.setIdentity(user.getOriginalGameProfile()));
-        if (getServer().getPluginManager().getPlugin("PlaceholderAPI") != null)
-            servicesManager.getPapiExpansion().unregister();
+        servicesManager.onDisable();
     }
 
     public double parseVersion() {

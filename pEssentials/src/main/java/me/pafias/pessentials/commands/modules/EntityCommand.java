@@ -4,6 +4,7 @@ import me.pafias.pessentials.commands.ICommand;
 import me.pafias.pessentials.objects.User;
 import me.pafias.pessentials.util.RandomUtils;
 import me.pafias.putils.CC;
+import me.pafias.putils.LCC;
 import me.pafias.putils.Tasks;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
@@ -41,6 +42,8 @@ public class EntityCommand extends ICommand {
             sender.sendMessage(CC.t("&2/" + label + " ride [-d] &f- Ride on (or dismount -d) the closest entity to you"));
             sender.sendMessage(CC.t("&2/" + label + " invis &f- Toggle invisibility for the entity where you're sitting on or else the closest one to you"));
             sender.sendMessage(CC.t("&2/" + label + " ai &f- Toggle AI on the entity you're sitting on"));
+            sender.sendMessage(LCC.t("&2/" + label + " owner [player] &f- Set the owner of the entity you're sitting on"));
+            sender.sendMessage(LCC.t("&2/" + label + " target [player] &f- Set the target of the entity you're sitting on"));
             return;
         }
         if (args[0].equalsIgnoreCase("move") && sender.hasPermission("essentials.entity.move")) {
@@ -265,10 +268,13 @@ public class EntityCommand extends ICommand {
                     return;
                 }
             } else {
-                owner = player;
+                owner = null;
             }
             ((Tameable) entity).setOwner(owner);
-            user.getPlayer().sendActionBar(CC.t("&6Entity owner set to " + owner.getName() + "."));
+            if (owner == null)
+                user.getPlayer().sendActionBar(CC.t("&6Entity owner removed."));
+            else
+                user.getPlayer().sendActionBar(CC.t("&6Entity owner set to " + owner.getName() + "."));
         } else if (args[0].equalsIgnoreCase("target")) {
             final Entity entity = player.getVehicle();
             if (entity == null) {
@@ -287,10 +293,13 @@ public class EntityCommand extends ICommand {
                     return;
                 }
             } else {
-                target = player;
+                target = null;
             }
             ((Mob) entity).setTarget(target);
-            user.getPlayer().sendActionBar(CC.t("&6Entity target set to " + target.getName() + "."));
+            if (target == null)
+                user.getPlayer().sendActionBar(CC.t("&6Entity target removed."));
+            else
+                user.getPlayer().sendActionBar(CC.t("&6Entity target set to " + target.getName() + "."));
         }
     }
 

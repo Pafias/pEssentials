@@ -1,5 +1,6 @@
 package me.pafias.pessentials.commands;
 
+import lombok.Getter;
 import me.pafias.pessentials.pEssentials;
 import org.bukkit.command.*;
 import org.jetbrains.annotations.NotNull;
@@ -8,21 +9,19 @@ import org.jetbrains.annotations.Nullable;
 import java.util.Arrays;
 import java.util.List;
 
+@Getter
 public abstract class ICommand implements CommandExecutor, TabExecutor {
 
     public final pEssentials plugin = pEssentials.get();
 
-    private final String name;
-    private final String permission;
-    private final String description;
-    private final String usage;
+    private final String name, permission, description, usage;
     private final List<String> aliases;
 
-    public ICommand(String name, String permission, String description, String usage, String... aliases) {
+    protected ICommand(String name, String permission, String description, String usage, String... aliases) {
         this(name, permission, description, usage, Arrays.asList(aliases));
     }
 
-    public ICommand(String name, String permission, String description, String usage, List<String> aliases) {
+    protected ICommand(String name, String permission, String description, String usage, List<String> aliases) {
         this.name = name;
         this.permission = permission;
         this.description = description;
@@ -54,23 +53,4 @@ public abstract class ICommand implements CommandExecutor, TabExecutor {
         return tabHandler(sender, command, label, args);
     }
 
-    public String getName() {
-        return name;
-    }
-
-    public String getPermission() {
-        return permission;
-    }
-
-    public String getDescription() {
-        return description;
-    }
-
-    public String getUsage() {
-        return usage;
-    }
-
-    public List<String> getAliases() {
-        return aliases;
-    }
 }

@@ -1,7 +1,8 @@
 package me.pafias.pessentials.commands.modules;
 
 import me.pafias.pessentials.commands.ICommand;
-import me.pafias.pessentials.util.CC;
+import me.pafias.putils.CC;
+import me.pafias.putils.LCC;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 
@@ -17,20 +18,20 @@ public class BroadcastCommand extends ICommand {
     @Override
     public void commandHandler(CommandSender sender, Command command, String label, String[] args) {
         if (args.length < 1) {
-            sender.sendMessage(CC.tf("&c/%s <message>", label));
+            sender.sendMessage(LCC.tf("&c/%s <message>", label));
             return;
         }
         final String message = String.join(" ", args);
         try {
             sender.getServer().broadcast(CC.a(message));
         } catch (Throwable t) {
-            sender.getServer().broadcastMessage(CC.t(message));
+            sender.getServer().broadcastMessage(LCC.t(message));
         }
     }
 
     @Override
     public List<String> tabHandler(CommandSender sender, Command command, String label, String[] args) {
-        return Collections.singletonList(CC.t(String.join(" ", args)));
+        return Collections.singletonList(LCC.t(String.join(" ", args)));
     }
 
 }

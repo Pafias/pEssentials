@@ -2,7 +2,7 @@ package me.pafias.pessentials.commands.modules;
 
 import me.pafias.pessentials.commands.ICommand;
 import me.pafias.pessentials.objects.User;
-import me.pafias.pessentials.util.CC;
+import me.pafias.putils.LCC;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
@@ -19,16 +19,16 @@ public class BackCommand extends ICommand {
     @Override
     public void commandHandler(CommandSender sender, Command command, String label, String[] args) {
         if (!(sender instanceof Player)) {
-            sender.sendMessage(CC.t("&cOnly players!"));
+            sender.sendMessage(LCC.t("&cOnly players!"));
             return;
         }
         final User player = plugin.getSM().getUserManager().getUser((Player) sender);
         if (player.lastLocation == null) {
-            sender.sendMessage(CC.t("&cNo last location available."));
+            sender.sendMessage(LCC.t("&cNo last location available."));
             return;
         }
         player.getPlayer().teleport(player.lastLocation);
-        sender.sendMessage(CC.t("&6Teleported to last location."));
+        sender.sendMessage(LCC.t("&6Teleported to last location."));
     }
 
     @Override

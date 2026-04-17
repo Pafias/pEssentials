@@ -5,9 +5,9 @@ import me.pafias.pessentials.objects.ConsoleUser;
 import me.pafias.pessentials.objects.User;
 import org.bukkit.entity.Player;
 
-import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.function.Predicate;
 
 public class UserManager {
@@ -16,7 +16,7 @@ public class UserManager {
     private final ConsoleUser consoleUser = new ConsoleUser();
 
     @Getter
-    private final Map<UUID, User> users = new HashMap<>();
+    private final Map<UUID, User> users = new ConcurrentHashMap<>();
 
     public User getUser(UUID uuid) {
         return users.get(uuid);
@@ -38,17 +38,24 @@ public class UserManager {
     }
 
     public User getUser(String name) {
-        return users.values()
-                .stream()
-                .filter(u -> u.getName().equalsIgnoreCase(name) || u.getName().toLowerCase().startsWith(name.toLowerCase().trim()))
-                .findFirst().orElse(null);
+        final String nameLower = name.toLowerCase().trim();
+        for (User user : users.values()) {
+            if (user.getName().equalsIgnoreCase(name)
+                    || user.getName().toLowerCase().startsWith(nameLower))
+                return user;
+        }
+        return null;
     }
 
     public User getUser(String name, Predicate<User> predicate) {
-        return users.values()
-                .stream()
-                .filter(u -> (u.getName().equalsIgnoreCase(name) || u.getName().toLowerCase().startsWith(name.toLowerCase().trim())) && predicate.test(u))
-                .findFirst().orElse(null);
+        final String nameLower = name.toLowerCase().trim();
+        for (User user : users.values()) {
+            if (user.getName().equalsIgnoreCase(name)
+                    || user.getName().toLowerCase().startsWith(nameLower)
+                    && predicate.test(user))
+                return user;
+        }
+        return null;
     }
 
     public void addUser(Player player) {
@@ -57,6 +64,12 @@ public class UserManager {
 
     public void removeUser(Player player) {
         users.remove(player.getUniqueId());
+    }
+
+    public void shutdown() {
+        for (User user : users.values()) {
+            user.setIdentity(user.getOriginalGameProfile());
+        }
     }
 
 }

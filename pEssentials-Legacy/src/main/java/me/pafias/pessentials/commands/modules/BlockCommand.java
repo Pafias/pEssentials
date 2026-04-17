@@ -2,7 +2,7 @@ package me.pafias.pessentials.commands.modules;
 
 import me.pafias.pessentials.commands.ICommand;
 import me.pafias.pessentials.objects.User;
-import me.pafias.pessentials.util.CC;
+import me.pafias.putils.LCC;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
@@ -23,13 +23,14 @@ public class BlockCommand extends ICommand {
     @Override
     public void commandHandler(CommandSender sender, Command command, String label, String[] args) {
         if (!(sender instanceof Player)) {
-            sender.sendMessage(CC.t("&cOnly players!"));
+            sender.sendMessage(LCC.t("&cOnly players!"));
             return;
         }
+        final Player senderPlayer = (Player) sender;
         User user;
         if (args.length == 0) {
-            user = plugin.getSM().getUserManager().getUser((Player) sender);
-            sender.sendMessage(CC.t("&6You are currently blocking:"));
+            user = plugin.getSM().getUserManager().getUser(senderPlayer);
+            sender.sendMessage(LCC.t("&6You are currently blocking:"));
             final StringBuilder sb = new StringBuilder();
             for (UUID blocked : user.getBlocking()) {
                 final OfflinePlayer offlinePlayer = plugin.getServer().getOfflinePlayer(blocked);
@@ -37,23 +38,23 @@ public class BlockCommand extends ICommand {
             }
             if (sb.length() > 0) {
                 sb.delete(sb.length() - 2, sb.length());
-                sender.sendMessage(CC.t(sb.toString()));
+                sender.sendMessage(LCC.t(sb.toString()));
             } else {
-                sender.sendMessage(CC.t("&cNo one!"));
+                sender.sendMessage(LCC.t("&cNo one!"));
             }
         } else {
             final Player player = plugin.getServer().getPlayer(args[0]);
-            if (player == null) {
-                sender.sendMessage(CC.t("&cPlayer not online!"));
+            if (player == null || !senderPlayer.canSee(player)) {
+                sender.sendMessage(LCC.t("&cPlayer not online!"));
                 return;
             }
-            user = plugin.getSM().getUserManager().getUser((Player) sender);
+            user = plugin.getSM().getUserManager().getUser(senderPlayer);
             if (user.getBlocking().contains(player.getUniqueId())) {
                 user.getBlocking().remove(player.getUniqueId());
-                sender.sendMessage(CC.t("&aYou have unblocked &f" + player.getName()));
+                sender.sendMessage(LCC.t("&aYou have unblocked &f" + player.getName()));
             } else {
                 user.getBlocking().add(player.getUniqueId());
-                sender.sendMessage(CC.t("&aYou have blocked &f" + player.getName()));
+                sender.sendMessage(LCC.t("&aYou have blocked &f" + player.getName()));
             }
         }
     }

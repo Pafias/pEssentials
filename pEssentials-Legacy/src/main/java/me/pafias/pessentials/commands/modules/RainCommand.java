@@ -1,7 +1,7 @@
 package me.pafias.pessentials.commands.modules;
 
 import me.pafias.pessentials.commands.ICommand;
-import me.pafias.pessentials.util.CC;
+import me.pafias.putils.LCC;
 import org.bukkit.WeatherType;
 import org.bukkit.World;
 import org.bukkit.command.Command;
@@ -28,23 +28,23 @@ public class RainCommand extends ICommand {
                 world = plugin.getServer().getWorlds().get(0);
             }
             if (world == null) {
-                sender.sendMessage(CC.t("&cInvalid world!"));
+                sender.sendMessage(LCC.t("&cInvalid world!"));
                 return;
             }
             world.setStorm(true);
-            sender.sendMessage(CC.t("&6Weather set to storming (rain)."));
+            sender.sendMessage(LCC.t("&6Weather set to storming (rain)."));
         } else if (sender.hasPermission("essentials.rain.personal")) {
             if (!(sender instanceof Player)) {
-                sender.sendMessage(CC.t("&cOnly players!"));
+                sender.sendMessage(LCC.t("&cOnly players!"));
                 return;
             }
             final Player player = (Player) sender;
             if (player.getPlayerWeather() != null && player.getPlayerWeather().equals(WeatherType.DOWNFALL)) {
                 player.resetPlayerWeather();
-                player.sendMessage(CC.t("&6Personal weather reset."));
+                player.sendMessage(LCC.t("&6Personal weather reset."));
             } else {
                 player.setPlayerWeather(WeatherType.DOWNFALL);
-                player.sendMessage(CC.t("&6Personal weather set to raining"));
+                player.sendMessage(LCC.t("&6Personal weather set to raining"));
             }
         }
     }
