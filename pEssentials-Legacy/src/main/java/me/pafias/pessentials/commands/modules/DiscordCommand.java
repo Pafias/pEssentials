@@ -1,7 +1,8 @@
 package me.pafias.pessentials.commands.modules;
 
 import me.pafias.pessentials.commands.ICommand;
-import me.pafias.pessentials.util.CC;
+import me.pafias.putils.CC;
+import me.pafias.putils.LCC;
 import net.md_5.bungee.api.chat.ClickEvent;
 import net.md_5.bungee.api.chat.ComponentBuilder;
 import net.md_5.bungee.api.chat.HoverEvent;
@@ -21,7 +22,7 @@ public class DiscordCommand extends ICommand {
     public void commandHandler(CommandSender sender, Command command, String label, String[] args) {
         final String link = plugin.getConfig().getString("discord_link");
         if (link == null || link.isEmpty()) {
-            sender.sendMessage(CC.t("&cThere is no discord link available :("));
+            sender.sendMessage(LCC.t("&cThere is no discord link available :("));
             return;
         }
         CommandSender target;
@@ -29,7 +30,7 @@ public class DiscordCommand extends ICommand {
             target = plugin.getServer().getPlayer(args[0]);
         else target = sender;
         if (target == null) {
-            sender.sendMessage(CC.t("&cPlayer not found!"));
+            sender.sendMessage(LCC.t("&cPlayer not found!"));
             return;
         }
         try {
@@ -39,7 +40,7 @@ public class DiscordCommand extends ICommand {
         } catch (Throwable t) {
             final ComponentBuilder builder = new ComponentBuilder(link);
             builder.event(new ClickEvent(ClickEvent.Action.OPEN_URL, link));
-            builder.event(new HoverEvent(HoverEvent.Action.SHOW_TEXT, new ComponentBuilder(CC.t("&7&oClick to open")).create()));
+            builder.event(new HoverEvent(HoverEvent.Action.SHOW_TEXT, new ComponentBuilder(LCC.t("&7&oClick to open")).create()));
             sender.sendMessage(builder.create());
         }
     }

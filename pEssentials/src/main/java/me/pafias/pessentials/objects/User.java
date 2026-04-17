@@ -46,6 +46,7 @@ public class User implements Messageable {
     private PlayerProfile newIdentity;
     private BukkitTask idTask;
 
+    @Getter
     private BukkitTask freezeTask;
 
     @Setter
@@ -144,17 +145,6 @@ public class User implements Messageable {
 
     public boolean isFrozen() {
         return freezeManager.getFrozenUsers().contains(player.getUniqueId());
-    }
-
-    public void destroy() {
-        if (idTask != null) {
-            idTask.cancel();
-            idTask = null;
-        }
-        if (freezeTask != null) {
-            freezeTask.cancel();
-            freezeTask = null;
-        }
     }
 
     public void setFrozen(boolean frozen) {

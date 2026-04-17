@@ -4,6 +4,7 @@ import me.pafias.pessentials.listeners.*;
 import me.pafias.pessentials.services.ServicesManager;
 import me.pafias.pessentials.tasks.AutoUpdaterTask;
 import me.pafias.putils.pUtils;
+import org.bukkit.entity.Player;
 import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.java.JavaPlugin;
 
@@ -46,7 +47,10 @@ public final class pEssentials extends JavaPlugin {
 
         register();
 
-        getServer().getOnlinePlayers().forEach(p -> servicesManager.getUserManager().addUser(p));
+        for (Player online : getServer().getOnlinePlayers()) {
+            if (!online.hasMetadata("NPC"))
+                servicesManager.getUserManager().addUser(online);
+        }
     }
 
     private void register() {
@@ -63,7 +67,7 @@ public final class pEssentials extends JavaPlugin {
             else
                 pm.registerEvents(new FlyProtocolListenerOld(plugin), plugin);
         }
-        pm.registerEvents(new TeleportListener(plugin), plugin);
+        pm.registerEvents(new TeleportListener(servicesManager.getUserManager()), plugin);
         pm.registerEvents(new ChatListener(plugin, servicesManager.getUserManager()), plugin);
         pm.registerEvents(new PingListener(plugin), plugin);
         pm.registerEvents(new SitListener(), plugin);

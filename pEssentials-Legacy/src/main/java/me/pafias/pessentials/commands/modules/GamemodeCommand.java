@@ -1,7 +1,8 @@
 package me.pafias.pessentials.commands.modules;
 
 import me.pafias.pessentials.commands.ICommand;
-import me.pafias.pessentials.util.CC;
+import me.pafias.pessentials.util.RandomUtils;
+import me.pafias.putils.LCC;
 import org.bukkit.GameMode;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
@@ -27,7 +28,7 @@ public class GamemodeCommand extends ICommand {
     @Override
     public void commandHandler(CommandSender sender, Command command, String label, String[] args) {
         if (args.length == 0) {
-            sender.sendMessage(CC.t("&c/" + label + " <gamemode> [player]"));
+            sender.sendMessage(LCC.t("&c/" + label + " <gamemode> [player]"));
             return;
         } else if (args.length == 1) {
             GameMode gamemode = null;
@@ -41,32 +42,32 @@ public class GamemodeCommand extends ICommand {
                             break;
                         }
                 } catch (IllegalArgumentException exx) {
-                    sender.sendMessage(CC.t("&cInvalid gamemode!"));
+                    sender.sendMessage(LCC.t("&cInvalid gamemode!"));
                     return;
                 }
             }
             if (gamemode == null) {
-                sender.sendMessage(CC.t("&cInvalid gamemode!"));
+                sender.sendMessage(LCC.t("&cInvalid gamemode!"));
                 return;
             }
             if (!sender.hasPermission(gamemodePermissions.get(gamemode))) {
-                sender.sendMessage(CC.t("&cYou do not have permission for this gamemode!"));
+                sender.sendMessage(LCC.t("&cYou do not have permission for this gamemode!"));
                 return;
             }
             ((Player) sender).setGameMode(gamemode);
-            sender.sendMessage(CC.tf("&6Gamemode: &a%s", gamemode.name().toLowerCase()));
+            sender.sendMessage(LCC.tf("&6Gamemode: &a%s", gamemode.name().toLowerCase()));
         } else {
             if (!sender.hasPermission(getPermission() + ".others")) {
-                sender.sendMessage(CC.t("&cYou do not have permission to change other players' gamemodes!"));
+                sender.sendMessage(LCC.t("&cYou do not have permission to change other players' gamemodes!"));
                 return;
             }
             GameMode gamemode = parseGamemode(args[0]);
             if (gamemode == null) {
-                sender.sendMessage(CC.t("&cInvalid gamemode!"));
+                sender.sendMessage(LCC.t("&cInvalid gamemode!"));
                 return;
             }
             if (!sender.hasPermission(gamemodePermissions.get(gamemode))) {
-                sender.sendMessage(CC.t("&cYou do not have permission for this gamemode!"));
+                sender.sendMessage(LCC.t("&cYou do not have permission for this gamemode!"));
                 return;
             }
             final boolean silent = Arrays.asList(args).contains("-s");
@@ -75,18 +76,18 @@ public class GamemodeCommand extends ICommand {
                 plugin.getServer().getOnlinePlayers().forEach(p -> {
                     p.setGameMode(finalGamemode);
                     if (!silent)
-                        p.sendMessage(CC.t("&6Gamemode: &a" + finalGamemode.name().toLowerCase()));
+                        p.sendMessage(LCC.t("&6Gamemode: &a" + finalGamemode.name().toLowerCase()));
                 });
             } else {
                 final Player target = plugin.getServer().getPlayer(args[1]);
-                if (target == null) {
-                    sender.sendMessage(CC.t("&cPlayer not found!"));
+                if (target == null || (sender instanceof Player && !((Player) sender).canSee(target))) {
+                    sender.sendMessage(LCC.t("&cPlayer not found!"));
                     return;
                 }
                 target.setGameMode(gamemode);
                 if (!silent)
-                    target.sendMessage(CC.tf("&6Gamemode: &a%s", gamemode.name().toLowerCase()));
-                sender.sendMessage(CC.tf("&6Gamemode for &7%s&6: &a%s", target.getName(), gamemode.name().toLowerCase()));
+                    target.sendMessage(LCC.tf("&6Gamemode: &a%s", gamemode.name().toLowerCase()));
+                sender.sendMessage(LCC.tf("&6Gamemode for &7%s&6: &a%s", target.getName(), gamemode.name().toLowerCase()));
             }
         }
     }
@@ -114,12 +115,7 @@ public class GamemodeCommand extends ICommand {
                     .filter(s -> s.toLowerCase().startsWith(args[0].toLowerCase()))
                     .collect(Collectors.toList());
         else if (args.length == 2 && sender.hasPermission(getPermission() + ".others"))
-            return plugin.getServer().getOnlinePlayers()
-                    .stream()
-                    .filter(p -> ((Player) sender).canSee(p))
-                    .map(Player::getName)
-                    .filter(name -> name.toLowerCase().startsWith(args[1].toLowerCase()))
-                    .collect(Collectors.toList());
+            return RandomUtils.tabCompletePlayers(sender, args[1]);
         else return Collections.emptyList();
     }
 

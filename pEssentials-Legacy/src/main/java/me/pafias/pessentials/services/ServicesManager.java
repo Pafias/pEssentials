@@ -17,6 +17,30 @@ public class ServicesManager {
             papiExpansion = new PAPIExpansion(plugin);
     }
 
+    public void onDisable() {
+        try {
+            if (papiExpansion != null)
+                papiExpansion.unregister();
+        } catch (Throwable t) {
+            t.printStackTrace();
+        }
+        try {
+            freezeManager.shutdown();
+        } catch (Throwable t) {
+            t.printStackTrace();
+        }
+        try {
+            vanishManager.shutdown();
+        } catch (Throwable t) {
+            t.printStackTrace();
+        }
+        try {
+            userManager.shutdown();
+        } catch (Throwable t) {
+            t.printStackTrace();
+        }
+    }
+
     private PAPIExpansion papiExpansion;
     private final UserManager userManager;
     private final VanishManager vanishManager;

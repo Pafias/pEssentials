@@ -1,7 +1,7 @@
 package me.pafias.pessentials.commands.modules;
 
 import me.pafias.pessentials.commands.ICommand;
-import me.pafias.pessentials.util.CC;
+import me.pafias.putils.LCC;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
@@ -19,37 +19,33 @@ public class CopyinventoryCommand extends ICommand {
     @Override
     public void commandHandler(CommandSender sender, Command command, String label, String[] args) {
         if (args.length == 0)
-            sender.sendMessage(CC.t("&c/" + label + " <player from> [player to]"));
+            sender.sendMessage(LCC.t("&c/" + label + " <player from> [player to]"));
         else if (args.length == 1) {
             final Player from = plugin.getServer().getPlayer(args[0]);
-            if (from == null) {
-                sender.sendMessage(CC.t("&cPlayer not found!"));
+            final Player to = sender instanceof Player ? (Player) sender : null;
+            if (from == null || (to != null && !to.canSee(from))) {
+                sender.sendMessage(LCC.t("&cPlayer not found!"));
                 return;
             }
-            if (!(sender instanceof Player)) {
-                sender.sendMessage(CC.t("&cOnly players!"));
-                return;
-            }
-            final Player to = (Player) sender;
             copy(from, to);
-            sender.sendMessage(CC.t("&aInventory copied!"));
+            sender.sendMessage(LCC.t("&aInventory copied!"));
         } else {
             final Player from = plugin.getServer().getPlayer(args[0]);
-            if (from == null) {
-                sender.sendMessage(CC.t("&cPlayer " + args[0] + " not found!"));
+            if (from == null || (sender instanceof Player && !((Player) sender).canSee(from))) {
+                sender.sendMessage(LCC.t("&cPlayer " + args[0] + " not found!"));
                 return;
             }
             if (args[1].equalsIgnoreCase("@a") || args[1].equalsIgnoreCase("*"))
                 plugin.getServer().getOnlinePlayers().forEach(p -> copy(from, p));
             else {
                 final Player to = plugin.getServer().getPlayer(args[1]);
-                if (to == null) {
-                    sender.sendMessage(CC.t("&cPlayer " + args[1] + " not found!"));
+                if (to == null || (sender instanceof Player && !((Player) sender).canSee(to))) {
+                    sender.sendMessage(LCC.t("&cPlayer " + args[1] + " not found!"));
                     return;
                 }
                 copy(from, to);
             }
-            sender.sendMessage(CC.t("&aInventory copied!"));
+            sender.sendMessage(LCC.t("&aInventory copied!"));
         }
     }
 

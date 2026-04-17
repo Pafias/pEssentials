@@ -7,7 +7,6 @@ import org.bukkit.entity.Player;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
-import java.util.Set;
 
 public class RandomUtils {
 
@@ -22,9 +21,9 @@ public class RandomUtils {
         return staffOnline;
     }
 
-    public static boolean containsIgnoreCase(Set<String> nameBlacklist, String name) {
-        for (String s : nameBlacklist)
-            if (s.equalsIgnoreCase(name)) return true;
+    public static boolean containsIgnoreCase(Collection<String> collection, String s) {
+        for (String ss : collection)
+            if (s.equalsIgnoreCase(ss)) return true;
         return false;
     }
 

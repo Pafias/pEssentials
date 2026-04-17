@@ -1,9 +1,14 @@
 package me.pafias.pessentials.objects;
 
-import me.pafias.pessentials.util.CC;
+import me.pafias.putils.LCC;
 import org.bukkit.Bukkit;
 
 public class ConsoleUser implements Messageable {
+
+    @Override
+    public boolean isOnline() {
+        return true;
+    }
 
     @Override
     public String getName() {
@@ -12,7 +17,7 @@ public class ConsoleUser implements Messageable {
 
     @Override
     public void message(boolean colorize, String content) {
-        Bukkit.getConsoleSender().sendMessage(CC.t(content));
+        Bukkit.getConsoleSender().sendMessage(LCC.t(content));
     }
 
     @Override

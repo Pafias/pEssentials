@@ -4,7 +4,8 @@ import me.pafias.pessentials.commands.ICommand;
 import me.pafias.pessentials.objects.Messageable;
 import me.pafias.pessentials.objects.User;
 import me.pafias.pessentials.services.UserManager;
-import me.pafias.pessentials.util.CC;
+import me.pafias.pessentials.util.RandomUtils;
+import me.pafias.putils.LCC;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
@@ -14,7 +15,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.WeakHashMap;
 import java.util.function.Predicate;
-import java.util.stream.Collectors;
 
 public class TellCommand extends ICommand {
 
@@ -27,7 +27,7 @@ public class TellCommand extends ICommand {
     @Override
     public void commandHandler(CommandSender commandSender, Command command, String label, String[] args) {
         if (args.length < 2)
-            commandSender.sendMessage(CC.t("&c/" + label + " <player> <message>"));
+            commandSender.sendMessage(LCC.t("&c/" + label + " <player> <message>"));
         else {
             final UserManager userManager = plugin.getSM().getUserManager();
             final Messageable sender;
@@ -45,11 +45,11 @@ public class TellCommand extends ICommand {
                 target = userManager.getUser(args[0], predicate);
             }
             if (target == null) {
-                commandSender.sendMessage(CC.t("&cPlayer not found!"));
+                commandSender.sendMessage(LCC.t("&cPlayer not found!"));
                 return;
             }
             if (target.isBlockingPMs()) {
-                commandSender.sendMessage(CC.t("&cThat player has private messages turned off."));
+                commandSender.sendMessage(LCC.t("&cThat player has private messages turned off."));
                 return;
             }
             final StringBuilder sb = new StringBuilder();
@@ -70,11 +70,7 @@ public class TellCommand extends ICommand {
     @Override
     public List<String> tabHandler(CommandSender sender, Command command, String label, String[] args) {
         if (args.length == 1)
-            return plugin.getServer().getOnlinePlayers().stream()
-                    .filter(p -> ((Player) sender).canSee(p))
-                    .map(Player::getName)
-                    .filter(n -> n.toLowerCase().startsWith(args[0].toLowerCase()))
-                    .collect(Collectors.toList());
+            return RandomUtils.tabCompletePlayers(sender, args[0]);
         else {
             final StringBuilder sb = new StringBuilder();
             for (int i = 1; i < args.length; i++)
@@ -82,7 +78,7 @@ public class TellCommand extends ICommand {
             final String message = sb.toString().trim();
             if (message.isEmpty())
                 return Collections.emptyList();
-            return Collections.singletonList(CC.t("&7Preview: &f" + message));
+            return Collections.singletonList(LCC.t("&7Preview: &f" + message));
         }
     }
 

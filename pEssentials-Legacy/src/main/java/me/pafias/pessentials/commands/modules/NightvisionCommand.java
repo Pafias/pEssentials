@@ -1,7 +1,7 @@
 package me.pafias.pessentials.commands.modules;
 
 import me.pafias.pessentials.commands.ICommand;
-import me.pafias.pessentials.util.CC;
+import me.pafias.putils.LCC;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
@@ -29,18 +29,18 @@ public class NightvisionCommand extends ICommand {
     public void commandHandler(CommandSender sender, Command command, String label, String[] args) {
         if (args.length == 0) {
             if (!(sender instanceof Player)) {
-                sender.sendMessage(CC.t("&cOnly players!"));
+                sender.sendMessage(LCC.t("&cOnly players!"));
                 return;
             }
             toggleNightvision((Player) sender);
         } else if (sender.hasPermission(getPermission() + ".others")) {
             final Player target = plugin.getServer().getPlayer(args[0]);
-            if (target == null) {
-                sender.sendMessage(CC.t("&cPlayer not found."));
+            if (target == null || (sender instanceof Player && !((Player) sender).canSee(target))) {
+                sender.sendMessage(LCC.t("&cPlayer not found."));
                 return;
             }
             toggleNightvision(target);
-            sender.sendMessage(CC.tf("&6Nightvision for %s: %s", target.getName(), target.hasPotionEffect(PotionEffectType.NIGHT_VISION) ? CC.t("&aON") : CC.t("&cOFF")));
+            sender.sendMessage(LCC.tf("&6Nightvision for %s: %s", target.getName(), target.hasPotionEffect(PotionEffectType.NIGHT_VISION) ? LCC.t("&aON") : LCC.t("&cOFF")));
         }
     }
 

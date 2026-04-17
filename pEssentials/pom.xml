@@ -6,7 +6,7 @@
 
     <groupId>me.pafias</groupId>
     <artifactId>pEssentials</artifactId>
-    <version>2.6.3</version>
+    <version>2.6.4</version>
     <packaging>jar</packaging>
 
     <name>pEssentials</name>
@@ -41,6 +41,12 @@
                         </goals>
                         <configuration>
                             <createDependencyReducedPom>false</createDependencyReducedPom>
+                            <relocations>
+                                <relocation>
+                                    <pattern>me.pafias.putils</pattern>
+                                    <shadedPattern>me.pafias.pessentials.utils</shadedPattern>
+                                </relocation>
+                            </relocations>
                         </configuration>
                     </execution>
                 </executions>

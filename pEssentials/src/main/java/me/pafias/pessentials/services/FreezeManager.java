@@ -46,7 +46,8 @@ public class FreezeManager implements Listener {
         final User user = plugin.getSM().getUserManager().getUser(event.getPlayer());
         if (user == null) return;
 
-        user.destroy();
+        if (user.getFreezeTask() != null)
+            user.getFreezeTask().cancel();
         if (frozen.contains(user.getUUID())) {
             plugin.getServer().broadcastMessage(CC.tf("&d&l%s &c&llogged out while frozen.", user.getName()));
             helmetCache.remove(user.getUUID());

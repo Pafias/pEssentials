@@ -1,8 +1,8 @@
 package me.pafias.pessentials.commands.modules;
 
 import me.pafias.pessentials.commands.ICommand;
-import me.pafias.pessentials.util.CC;
-import me.pafias.pessentials.util.Tasks;
+import me.pafias.putils.LCC;
+import me.pafias.putils.Tasks;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
@@ -14,42 +14,43 @@ public class RussianrouletteCommand extends ICommand {
 
     public RussianrouletteCommand() {
         super("russianroulette", "essentials.russianroulette", "Russian roulette!", "/russianroulette [chance]");
+        cooldownTicks = getPlugin().getConfig().getInt("russian_roulette_cooldown_seconds", 30) * 20L;
     }
 
+    private final Random random = new Random();
+    private final long cooldownTicks;
     private final Set<UUID> cooldown = new HashSet<>();
 
     @Override
     public void commandHandler(@NotNull CommandSender sender, @NotNull Command command, @NotNull String label, @NotNull String[] args) {
         if (!(sender instanceof Player)) {
-            sender.sendMessage(CC.t("&cOnly players!"));
+            sender.sendMessage(LCC.t("&cOnly players!"));
             return;
         }
         final Player player = (Player) sender;
         if (cooldown.contains(player.getUniqueId())) {
-            sender.sendMessage(CC.t("&cYou are on cooldown."));
+            sender.sendMessage(LCC.t("&cYou are on cooldown."));
             return;
         }
-        final int num1 = new Random().nextInt(6);
-        final int num2 = new Random().nextInt(6);
+        final int num1 = random.nextInt(6);
+        final int num2 = random.nextInt(6);
         if (num1 == num2) {
             try {
-                player.sendTitle(CC.t("&c&lUh oh!"), CC.t("&4&lYou were unlucky!"), 2, 20, 20);
+                player.sendTitle(LCC.t("&c&lUh oh!"), LCC.t("&4&lYou were unlucky!"), 2, 20, 20);
             } catch (Throwable t) {
-                player.sendTitle(CC.t("&c&lUh oh!"), CC.t("&4&lYou were unlucky!"));
+                player.sendTitle(LCC.t("&c&lUh oh!"), LCC.t("&4&lYou were unlucky!"));
             }
             Tasks.runLaterSync(20, () -> {
                 try {
                     plugin.getSM().getUserManager().getUser(player).crash();
                 } catch (Exception ex) {
-                    player.kickPlayer(CC.t("&k|||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||"));
+                    player.kickPlayer(LCC.t("&k|||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||"));
                 }
             });
         } else {
-            sender.sendMessage(CC.t("&aPhew! You survived."));
+            sender.sendMessage(LCC.t("&aPhew! You survived."));
             cooldown.add(((Player) sender).getUniqueId());
-            Tasks.runLaterAsync(600, () -> {
-                cooldown.remove(((Player) sender).getUniqueId());
-            });
+            Tasks.runLaterAsync(cooldownTicks, () -> cooldown.remove(player.getUniqueId()));
         }
     }
 

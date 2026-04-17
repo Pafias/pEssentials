@@ -1,7 +1,8 @@
 package me.pafias.pessentials.commands.modules;
 
 import me.pafias.pessentials.commands.ICommand;
-import me.pafias.pessentials.util.CC;
+import me.pafias.putils.CC;
+import me.pafias.putils.LCC;
 import org.bukkit.Material;
 import org.bukkit.NamespacedKey;
 import org.bukkit.command.Command;
@@ -24,9 +25,9 @@ public class ItemstackCommand extends ICommand {
     }
 
     private void help(CommandSender sender, String label) {
-        sender.sendMessage(CC.t("&c/" + label + " name <name>"));
-        sender.sendMessage(CC.t("&c/" + label + " lore <lore>"));
-        sender.sendMessage(CC.t("&c/" + label + " enchant <enchantment> <level>"));
+        sender.sendMessage(LCC.t("&c/" + label + " name <name>"));
+        sender.sendMessage(LCC.t("&c/" + label + " lore <lore>"));
+        sender.sendMessage(LCC.t("&c/" + label + " enchant <enchantment> <level>"));
     }
 
     @Override
@@ -36,14 +37,14 @@ public class ItemstackCommand extends ICommand {
             return;
         }
         if (!(sender instanceof Player)) {
-            sender.sendMessage(CC.t("&cOnly players!"));
+            sender.sendMessage(LCC.t("&cOnly players!"));
             return;
         }
         final Player player = (Player) sender;
         if (args[0].equalsIgnoreCase("name") || args[0].equalsIgnoreCase("rename")) {
             final ItemStack is = player.getInventory().getItemInHand();
             if (!validItem(is)) {
-                sender.sendMessage(CC.t("&cInvalid item."));
+                sender.sendMessage(LCC.t("&cInvalid item."));
                 return;
             }
             final StringBuilder sb = new StringBuilder();
@@ -54,14 +55,14 @@ public class ItemstackCommand extends ICommand {
             try {
                 meta.displayName(CC.a(name));
             } catch (Throwable ex) {
-                meta.setDisplayName(CC.t(name));
+                meta.setDisplayName(LCC.t(name));
             }
             is.setItemMeta(meta);
-            sender.sendMessage(CC.t("&aName changed."));
+            sender.sendMessage(LCC.t("&aName changed."));
         } else if (args[0].equalsIgnoreCase("lore")) {
             final ItemStack is = player.getInventory().getItemInHand();
             if (!validItem(is)) {
-                sender.sendMessage(CC.t("&cInvalid item."));
+                sender.sendMessage(LCC.t("&cInvalid item."));
                 return;
             }
             final StringBuilder sb = new StringBuilder();
@@ -73,10 +74,10 @@ public class ItemstackCommand extends ICommand {
             try {
                 meta.lore(CC.a(Arrays.asList(lore)));
             } catch (Throwable ex) {
-                meta.setLore(CC.t(Arrays.asList(lore)));
+                meta.setLore(Arrays.asList(LCC.t(Arrays.asList(lore))));
             }
             is.setItemMeta(meta);
-            sender.sendMessage(CC.t("&aLore changed."));
+            sender.sendMessage(LCC.t("&aLore changed."));
         } else if (args[0].equalsIgnoreCase("enchant")) {
             if (args.length < 3) {
                 help(sender, label);
@@ -90,7 +91,7 @@ public class ItemstackCommand extends ICommand {
             } else
                 enchantment = Enchantment.getByName(args[1].toUpperCase().trim());
             if (enchantment == null) {
-                sender.sendMessage(CC.t("&cInvalid enchantment."));
+                sender.sendMessage(LCC.t("&cInvalid enchantment."));
                 return;
             }
             int level;
@@ -100,18 +101,18 @@ public class ItemstackCommand extends ICommand {
                 else
                     level = Integer.parseInt(args[2]);
             } catch (NumberFormatException ex) {
-                sender.sendMessage(CC.t("&cInvalid level."));
+                sender.sendMessage(LCC.t("&cInvalid level."));
                 return;
             }
             final ItemStack is = player.getInventory().getItemInHand();
             if (!validItem(is)) {
-                sender.sendMessage(CC.t("&cInvalid item."));
+                sender.sendMessage(LCC.t("&cInvalid item."));
                 return;
             }
             final ItemMeta meta = is.getItemMeta();
             meta.addEnchant(enchantment, level, true);
             is.setItemMeta(meta);
-            sender.sendMessage(CC.t("&aItem enchanted."));
+            sender.sendMessage(LCC.t("&aItem enchanted."));
         }
     }
 

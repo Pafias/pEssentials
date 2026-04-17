@@ -1,7 +1,7 @@
 package me.pafias.pessentials.commands.modules;
 
 import me.pafias.pessentials.commands.ICommand;
-import me.pafias.pessentials.util.CC;
+import me.pafias.putils.LCC;
 import org.bukkit.WeatherType;
 import org.bukkit.World;
 import org.bukkit.command.Command;
@@ -28,7 +28,7 @@ public class SunCommand extends ICommand {
                 world = plugin.getServer().getWorlds().get(0);
             }
             if (world == null) {
-                sender.sendMessage(CC.t("&cInvalid world!"));
+                sender.sendMessage(LCC.t("&cInvalid world!"));
                 return;
             }
             try {
@@ -36,19 +36,19 @@ public class SunCommand extends ICommand {
             } catch (Throwable ignored) {
             }
             world.setThundering(false);
-            sender.sendMessage(CC.t("&6Weather cleared."));
+            sender.sendMessage(LCC.t("&6Weather cleared."));
         } else if (sender.hasPermission("essentials.sun.personal")) {
             if (!(sender instanceof Player)) {
-                sender.sendMessage(CC.t("&cOnly players!"));
+                sender.sendMessage(LCC.t("&cOnly players!"));
                 return;
             }
             final Player player = (Player) sender;
             if (player.getPlayerWeather() != null && player.getPlayerWeather().equals(WeatherType.CLEAR)) {
                 player.resetPlayerWeather();
-                player.sendMessage(CC.t("&6Personal weather reset."));
+                player.sendMessage(LCC.t("&6Personal weather reset."));
             } else {
                 player.setPlayerWeather(WeatherType.CLEAR);
-                player.sendMessage(CC.t("&6Personal weather set to clear"));
+                player.sendMessage(LCC.t("&6Personal weather set to clear"));
             }
         }
     }

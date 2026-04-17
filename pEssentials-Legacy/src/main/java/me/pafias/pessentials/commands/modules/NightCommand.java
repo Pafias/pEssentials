@@ -1,7 +1,7 @@
 package me.pafias.pessentials.commands.modules;
 
 import me.pafias.pessentials.commands.ICommand;
-import me.pafias.pessentials.util.CC;
+import me.pafias.putils.LCC;
 import org.bukkit.World;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
@@ -27,23 +27,23 @@ public class NightCommand extends ICommand {
                 world = plugin.getServer().getWorlds().get(0);
             }
             if (world == null) {
-                sender.sendMessage(CC.t("&cInvalid world!"));
+                sender.sendMessage(LCC.t("&cInvalid world!"));
                 return;
             }
             world.setTime(14000);
-            sender.sendMessage(CC.t("&6Time set to night (14000 ticks)"));
+            sender.sendMessage(LCC.t("&6Time set to night (14000 ticks)"));
         } else if (sender.hasPermission("essentials.night.personal")) {
             if (!(sender instanceof Player)) {
-                sender.sendMessage(CC.t("&cOnly players!"));
+                sender.sendMessage(LCC.t("&cOnly players!"));
                 return;
             }
             final Player player = (Player) sender;
             if (!player.isPlayerTimeRelative()) {
                 player.resetPlayerTime();
-                player.sendMessage(CC.t("&6Personal time reset."));
+                player.sendMessage(LCC.t("&6Personal time reset."));
             } else {
                 player.setPlayerTime(14000, false);
-                player.sendMessage(CC.t("&6Personal time set to night (14000 ticks)"));
+                player.sendMessage(LCC.t("&6Personal time set to night (14000 ticks)"));
             }
         }
         return;

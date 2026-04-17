@@ -1,8 +1,8 @@
 package me.pafias.pessentials.commands.modules;
 
 import me.pafias.pessentials.commands.ICommand;
-import me.pafias.pessentials.util.CC;
-import me.pafias.pessentials.util.Tasks;
+import me.pafias.putils.LCC;
+import me.pafias.putils.Tasks;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
@@ -28,11 +28,11 @@ public class ChristmastreeCommand extends ICommand {
     @Override
     public void commandHandler(@NotNull CommandSender sender, @NotNull Command command, @NotNull String label, @NotNull String[] args) {
         if (!(sender instanceof Player)) {
-            sender.sendMessage(CC.t("&cOnly players!"));
+            sender.sendMessage(LCC.t("&cOnly players!"));
             return;
         }
         if (args.length < 3) {
-            sender.sendMessage(CC.tf("&c/%s <width> <height> <base>", label));
+            sender.sendMessage(LCC.tf("&c/%s <width> <height> <base>", label));
             return;
         }
         final Player player = (Player) sender;

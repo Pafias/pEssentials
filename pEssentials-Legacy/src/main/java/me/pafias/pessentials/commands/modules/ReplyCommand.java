@@ -2,7 +2,7 @@ package me.pafias.pessentials.commands.modules;
 
 import me.pafias.pessentials.commands.ICommand;
 import me.pafias.pessentials.objects.Messageable;
-import me.pafias.pessentials.util.CC;
+import me.pafias.putils.LCC;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
@@ -19,7 +19,7 @@ public class ReplyCommand extends ICommand {
     @Override
     public void commandHandler(CommandSender commandSender, Command command, String label, String[] args) {
         if (args.length < 1) {
-            commandSender.sendMessage(CC.t("&c/" + label + " <message>"));
+            commandSender.sendMessage(LCC.t("&c/" + label + " <message>"));
         } else {
             final Messageable sender;
             if (commandSender instanceof Player) {
@@ -28,16 +28,16 @@ public class ReplyCommand extends ICommand {
                 sender = plugin.getSM().getUserManager().getConsoleUser();
             }
             if (!TellCommand.msg.containsKey(sender)) {
-                commandSender.sendMessage(CC.t("&cYou haven't messaged anybody recently!"));
+                commandSender.sendMessage(LCC.t("&cYou haven't messaged anybody recently!"));
                 return;
             }
             final Messageable target = TellCommand.msg.get(sender);
-            if (target == null) {
-                commandSender.sendMessage(CC.t("&cThe person you were chatting with is no longer online!"));
+            if (target == null || !target.isOnline()) {
+                commandSender.sendMessage(LCC.t("&cThe person you were chatting with is no longer online!"));
                 return;
             }
             if (target.isBlockingPMs() && !sender.canBypassMsgtoggle()) {
-                commandSender.sendMessage(CC.t("&cThat player has private messages turned off."));
+                commandSender.sendMessage(LCC.t("&cThat player has private messages turned off."));
                 return;
             }
             final StringBuilder sb = new StringBuilder();
@@ -54,7 +54,7 @@ public class ReplyCommand extends ICommand {
         final String message = String.join(" ", args).trim();
         if (message.isEmpty())
             return Collections.emptyList();
-        return Collections.singletonList(CC.t("&7Preview: &f" + message));
+        return Collections.singletonList(LCC.t("&7Preview: &f" + message));
     }
 
 }

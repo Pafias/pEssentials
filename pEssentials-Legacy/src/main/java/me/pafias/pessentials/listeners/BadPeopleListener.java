@@ -1,8 +1,10 @@
 package me.pafias.pessentials.listeners;
 
+import lombok.Getter;
+import lombok.Setter;
 import me.pafias.pessentials.pEssentials;
-import me.pafias.pessentials.util.CC;
-import me.pafias.pessentials.util.Tasks;
+import me.pafias.putils.LCC;
+import me.pafias.putils.Tasks;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
@@ -20,11 +22,17 @@ public class BadPeopleListener implements Listener {
 
     private final pEssentials plugin;
 
-    private final ConfigurationSection config;
-
     public BadPeopleListener(pEssentials plugin) {
         this.plugin = plugin;
-        config = plugin.getConfig().getConfigurationSection("bad_people_filter");
+
+        final ConfigurationSection config = plugin.getConfig().getConfigurationSection("bad_people_filter");
+        usernameCheck = config.getBoolean("username_check");
+        movementVerification = config.getBoolean("movement_verification");
+        antiAdvertisingEnabled = config.getBoolean("anti_advertising.enabled");
+        antiAdvertisingShadowDisallow = config.getBoolean("anti_advertising.shadow_disallow");
+        antiSpamEnabled = config.getBoolean("anti_spam.enabled");
+        antiSpamAutoMute = config.getBoolean("anti_spam.auto_mute");
+
         MAX_MESSAGES = config.getInt("anti_spam.max_messages", 12);
         TIME_PERIOD = config.getInt("anti_spam.time_period_millis", 5000);
         MUTE_DURATION = config.getInt("anti_spam.mute_duration_millis", 10000);
@@ -32,6 +40,11 @@ public class BadPeopleListener implements Listener {
         regex1 = config.getString("anti_advertising.regex1");
         regex2 = config.getString("anti_advertising.regex2");
     }
+
+    private final boolean usernameCheck;
+    private final boolean movementVerification;
+    private final boolean antiAdvertisingEnabled, antiAdvertisingShadowDisallow;
+    private final boolean antiSpamEnabled, antiSpamAutoMute;
 
     @RegEx
     private final String usernameRegex;
@@ -56,9 +69,8 @@ public class BadPeopleListener implements Listener {
 
     @EventHandler(priority = EventPriority.LOWEST)
     public void onPreLogin(AsyncPlayerPreLoginEvent event) {
-        final String playerName = event.getName();
-
-        if (config.getBoolean("username_check")) {
+        if (usernameCheck) {
+            final String playerName = event.getName();
             if (!isValidUsername(playerName)) {
                 event.disallow(AsyncPlayerPreLoginEvent.Result.KICK_OTHER, "Invalid username. Your name must be 3-16 characters long and contain only letters, numbers, and underscores.");
                 plugin.getLogger().log(Level.INFO, String.format("%s attempted to join with the invalid username %s", event.getAddress().getHostAddress(), playerName));
@@ -68,12 +80,12 @@ public class BadPeopleListener implements Listener {
 
     @EventHandler(priority = EventPriority.HIGH, ignoreCancelled = true)
     public void onJoin(PlayerJoinEvent event) {
-        final UUID playerUUID = event.getPlayer().getUniqueId();
-        final String playerName = event.getPlayer().getName();
-        if (config.getBoolean("movement_verification")) {
+        if (movementVerification) {
+            final UUID playerUUID = event.getPlayer().getUniqueId();
+            final String playerName = event.getPlayer().getName();
             final BukkitTask verificationTask = Tasks.runLaterAsync(30 * 20, () -> {
                 if (toVerify.containsKey(playerUUID)) {
-                    event.getPlayer().kickPlayer(CC.t("&cFailed to verify your account."));
+                    event.getPlayer().kickPlayer(me.pafias.putils.LCC.t("&cFailed to verify your account."));
                     plugin.getLogger().log(Level.INFO, String.format("Player %s has been disallowed login due to failed verification.", playerName));
                 }
                 toVerify.remove(playerUUID);
@@ -84,7 +96,7 @@ public class BadPeopleListener implements Listener {
 
     @EventHandler
     public void onMove(PlayerMoveEvent event) {
-        if (!config.getBoolean("movement_verification")) return;
+        if (!movementVerification) return;
         final UUID playerUUID = event.getPlayer().getUniqueId();
         final BukkitTask task = toVerify.remove(playerUUID);
         if (task != null) {
@@ -105,24 +117,24 @@ public class BadPeopleListener implements Listener {
         }
 
         // Anti advertising
-        if (config.getBoolean("anti_advertising.enabled") && !event.getPlayer().hasPermission("essentials.bypass.advertising")) {
+        if (antiAdvertisingEnabled && !event.getPlayer().hasPermission("essentials.bypass.advertising")) {
             final String message = event.getMessage().toLowerCase();
             if (message.matches(regex1) ||
                     message.matches(regex2)) {
-                if (config.getBoolean("anti_advertising.shadow_disallow")) {
+                if (antiAdvertisingShadowDisallow) {
                     event.getRecipients().removeIf(p -> !p.equals(event.getPlayer()));
                 } else {
                     event.setCancelled(true);
-                    event.getPlayer().sendMessage(CC.t("&cYou are not allowed to say that"));
+                    event.getPlayer().sendMessage(me.pafias.putils.LCC.t("&cYou are not allowed to say that"));
                 }
-                plugin.getLogger().log(Level.INFO, String.format("Player %s attempted to advertise in chat. Message blocked: %s", event.getPlayer().getName(), message));
+                plugin.getLogger().info(String.format("Player %s attempted to advertise in chat. Message blocked: %s", event.getPlayer().getName(), message));
                 return;
             }
         }
 
         // Anti spam
 
-        if (!config.getBoolean("anti_spam.enabled") || event.getPlayer().hasPermission("essentials.bypass.antispam"))
+        if (!antiSpamEnabled || event.getPlayer().hasPermission("essentials.bypass.antispam"))
             return;
 
         final PlayerChatData data = chatData.getOrDefault(uuid, new PlayerChatData());
@@ -135,20 +147,20 @@ public class BadPeopleListener implements Listener {
                 data.setMuted(false);
             } else {
                 event.setCancelled(true);
-                event.getPlayer().sendMessage(CC.t("&cYou are currently on cooldown for spamming."));
+                event.getPlayer().sendMessage(me.pafias.putils.LCC.t("&cYou are currently on cooldown for spamming."));
                 return;
             }
         }
 
         if (data.getMessageCount() > MAX_MESSAGES) {
-            if (config.getBoolean("anti_spam.auto_mute")) {
+            if (antiSpamAutoMute) {
                 data.setMuted(true);
                 data.setMuteEndTime(currentTime + MUTE_DURATION);
             }
             event.setCancelled(true);
-            event.getPlayer().sendMessage(CC.t("&cYou have been muted for " + (MUTE_DURATION / 1000) + " seconds due to spamming."));
+            event.getPlayer().sendMessage(me.pafias.putils.LCC.t("&cYou have been muted for " + (MUTE_DURATION / 1000) + " seconds due to spamming."));
         } else if (data.getMessageCount() == MAX_MESSAGES || data.getMessageCount() == MAX_MESSAGES - 1) {
-            event.getPlayer().sendMessage(CC.t("&e&oPlease slow down, you are sending messages too quickly!"));
+            event.getPlayer().sendMessage(LCC.t("&e&oPlease slow down, you are sending messages too quickly!"));
         }
 
         chatData.put(uuid, data);
@@ -162,8 +174,15 @@ public class BadPeopleListener implements Listener {
     }
 
     private static class PlayerChatData {
+
+        @Setter
+        @Getter
         private long muteEndTime;
+
+        @Setter
+        @Getter
         private boolean muted;
+
         private final Map<Long, Integer> messageTimestamps;
 
         public PlayerChatData() {
@@ -183,21 +202,6 @@ public class BadPeopleListener implements Listener {
             return messageTimestamps.values().stream().mapToInt(Integer::intValue).sum();
         }
 
-        public boolean isMuted() {
-            return muted;
-        }
-
-        public void setMuted(boolean muted) {
-            this.muted = muted;
-        }
-
-        public long getMuteEndTime() {
-            return muteEndTime;
-        }
-
-        public void setMuteEndTime(long muteEndTime) {
-            this.muteEndTime = muteEndTime;
-        }
     }
 
 }

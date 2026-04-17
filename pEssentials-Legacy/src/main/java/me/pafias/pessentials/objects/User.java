@@ -4,9 +4,12 @@ import com.mojang.authlib.GameProfile;
 import lombok.Getter;
 import lombok.Setter;
 import me.pafias.pessentials.pEssentials;
-import me.pafias.pessentials.util.CC;
+import me.pafias.pessentials.services.FreezeManager;
+import me.pafias.pessentials.services.VanishManager;
 import me.pafias.pessentials.util.Reflection;
-import me.pafias.pessentials.util.Tasks;
+import me.pafias.putils.CC;
+import me.pafias.putils.LCC;
+import me.pafias.putils.Tasks;
 import org.bukkit.Location;
 import org.bukkit.Particle;
 import org.bukkit.entity.Player;
@@ -19,9 +22,12 @@ import java.util.UUID;
 public class User implements Messageable {
 
     private final pEssentials plugin = pEssentials.get();
+    private final VanishManager vanishManager = plugin.getSM().getVanishManager();
+    private final FreezeManager freezeManager = plugin.getSM().getFreezeManager();
 
     @Getter
     private final Player player;
+    private final UUID uuid;
 
     public boolean flyingEntity, movingEntity;
     public Location lastLocation;
@@ -34,6 +40,9 @@ public class User implements Messageable {
     private GameProfile newIdentity;
     private BukkitTask idTask;
 
+    @Getter
+    private BukkitTask freezeTask;
+
     @Setter
     @Getter
     private boolean blockingPMs;
@@ -43,11 +52,13 @@ public class User implements Messageable {
 
     public User(Player player) {
         this.player = player;
+        this.uuid = player.getUniqueId();
+
         profile = Reflection.getGameProfile(player);
     }
 
     public UUID getUUID() {
-        return this.player.getUniqueId();
+        return uuid;
     }
 
     public String getName() {
@@ -56,12 +67,17 @@ public class User implements Messageable {
     }
 
     @Override
+    public boolean isOnline() {
+        return player.isOnline();
+    }
+
+    @Override
     public void message(boolean colorize, String content) {
         if (colorize)
             try {
                 player.sendMessage(CC.a(content));
             } catch (Throwable ex) {
-                player.sendMessage(CC.t(content));
+                player.sendMessage(LCC.t(content));
             }
         else
             player.sendMessage(content);
@@ -96,7 +112,7 @@ public class User implements Messageable {
             if (idTask != null)
                 idTask.cancel();
             idTask = Tasks.runRepeatingSync(2, 40, () -> {
-                Reflection.sendActionbar(player, CC.t(String.format("&aCurrently disguised. &6Name: &b%s", getName())));
+                Reflection.sendActionbar(player, LCC.t(String.format("&aCurrently disguised. &6Name: &b%s", getName())));
             });
         }
         Reflection.setGameProfile(player, profile);
@@ -111,26 +127,37 @@ public class User implements Messageable {
 
     public void crash() {
         try {
+            final Location location = player.getEyeLocation();
             for (int i = 0; i < 5; i++)
-                player.spawnParticle(Particle.CRIT, player.getEyeLocation().getX(), player.getEyeLocation().getY(), player.getEyeLocation().getZ(), Integer.MAX_VALUE);
+                player.spawnParticle(Particle.CRIT, location.getX(), location.getY(), location.getZ(), Integer.MAX_VALUE);
         } catch (Throwable e) {
             throw new IllegalStateException("This server version does not support this feature!", e);
         }
     }
 
     public boolean isVanished() {
-        return plugin.getSM().getVanishManager().isVanished(player);
+        return vanishManager.isVanished(player);
     }
 
     public boolean isFrozen() {
-        return plugin.getSM().getFreezeManager().getFrozenUsers().contains(player.getUniqueId());
+        return freezeManager.getFrozenUsers().contains(player.getUniqueId());
     }
 
     public void setFrozen(boolean frozen) {
-        if (frozen)
-            plugin.getSM().getFreezeManager().getFrozenUsers().add(player.getUniqueId());
-        else
-            plugin.getSM().getFreezeManager().getFrozenUsers().remove(player.getUniqueId());
+        if (freezeTask != null) {
+            freezeTask.cancel();
+            freezeTask = null;
+        }
+
+        if (!frozen) {
+            freezeManager.removeFrozen(player);
+            return;
+        }
+
+        freezeManager.applyFrozen(player);
+        freezeTask = Tasks.runRepeatingSync(0, 40, () -> {
+            player.sendActionBar(LCC.t("&c&lYou are frozen! Do not log out."));
+        });
     }
 
     @Override

@@ -1,7 +1,7 @@
 package me.pafias.pessentials.commands.modules;
 
 import me.pafias.pessentials.commands.ICommand;
-import me.pafias.pessentials.util.CC;
+import me.pafias.putils.LCC;
 import org.bukkit.Sound;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
@@ -19,15 +19,15 @@ public class SoundCommand extends ICommand {
     @Override
     public void commandHandler(CommandSender sender, Command command, String label, String[] args) {
         if (args.length == 0) {
-            sender.sendMessage(CC.t("&2/" + label + " play <player/all> <sound> [volume] [pitch] &f- Plays a sound"));
-            sender.sendMessage(CC.t("&2/" + label + " stop <player/all> &f- Stops a sound"));
+            sender.sendMessage(LCC.t("&2/" + label + " play <player/all> <sound> [volume] [pitch] &f- Plays a sound"));
+            sender.sendMessage(LCC.t("&2/" + label + " stop <player/all> &f- Stops a sound"));
             return;
         }
         if (args[0].equalsIgnoreCase("play") && sender.hasPermission("essentials.sound.play")) {
             Set<Player> target;
             Sound sound;
             if (args.length < 3) {
-                sender.sendMessage(CC.t("&c/" + label + " " + args[0] + " play <player/all> <sound> [volume] [pitch]"));
+                sender.sendMessage(LCC.t("&c/" + label + " " + args[0] + " play <player/all> <sound> [volume] [pitch]"));
                 return;
             }
             if (args[1].equalsIgnoreCase("all") || args[1].equalsIgnoreCase("*")) {
@@ -36,13 +36,13 @@ public class SoundCommand extends ICommand {
                 target = new HashSet<>(Collections.singleton(plugin.getServer().getPlayer(args[1])));
             }
             if (target == null || target.isEmpty()) {
-                sender.sendMessage(CC.t("&cPlayer not found!"));
+                sender.sendMessage(LCC.t("&cPlayer not found!"));
                 return;
             }
             try {
                 sound = Sound.valueOf(args[2].toUpperCase());
             } catch (IllegalArgumentException ex) {
-                sender.sendMessage(CC.t("&cInvalid sound!"));
+                sender.sendMessage(LCC.t("&cInvalid sound!"));
                 return;
             }
             float volume = 1.0F;
@@ -50,7 +50,7 @@ public class SoundCommand extends ICommand {
                 try {
                     volume = Float.parseFloat(args[3]);
                 } catch (NumberFormatException ex) {
-                    sender.sendMessage(CC.t("&cInvalid volume level!"));
+                    sender.sendMessage(LCC.t("&cInvalid volume level!"));
                     return;
                 }
             float pitch = 1.0F;
@@ -58,17 +58,17 @@ public class SoundCommand extends ICommand {
                 try {
                     pitch = Float.parseFloat(args[4]);
                 } catch (NumberFormatException ex) {
-                    sender.sendMessage(CC.t("&cInvalid pitch level!"));
+                    sender.sendMessage(LCC.t("&cInvalid pitch level!"));
                     return;
                 }
             for (Player t : target) {
                 t.playSound(t.getEyeLocation(), sound, volume, pitch);
             }
-            sender.sendMessage(CC.t("&aSound played!"));
+            sender.sendMessage(LCC.t("&aSound played!"));
         } else if (args[0].equalsIgnoreCase("stop") && sender.hasPermission("essentials.sound.stop")) {
             Set<Player> target;
             if (args.length < 2) {
-                sender.sendMessage(CC.t("&c/" + label + " " + args[0] + " stop <player/all>"));
+                sender.sendMessage(LCC.t("&c/" + label + " " + args[0] + " stop <player/all>"));
                 return;
             }
             if (args[1].equalsIgnoreCase("all") || args[1].equalsIgnoreCase("*")) {
@@ -77,7 +77,7 @@ public class SoundCommand extends ICommand {
                 target = new HashSet<>(Collections.singleton(plugin.getServer().getPlayer(args[1])));
             }
             if (target == null || target.isEmpty()) {
-                sender.sendMessage(CC.t("&cPlayer not found!"));
+                sender.sendMessage(LCC.t("&cPlayer not found!"));
                 return;
             }
             try {
@@ -86,10 +86,10 @@ public class SoundCommand extends ICommand {
                         t.stopSound(sound);
                 }
             } catch (Throwable ex) {
-                sender.sendMessage(CC.t("&cThis server version does not support stopping sounds! :/"));
+                sender.sendMessage(LCC.t("&cThis server version does not support stopping sounds! :/"));
                 return;
             }
-            sender.sendMessage(CC.t("&aSound(s) stopped!"));
+            sender.sendMessage(LCC.t("&aSound(s) stopped!"));
         }
     }
 
