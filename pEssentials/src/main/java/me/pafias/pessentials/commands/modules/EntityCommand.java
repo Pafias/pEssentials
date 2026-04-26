@@ -65,6 +65,7 @@ public class EntityCommand extends ICommand {
             final String arg = args[1].toLowerCase();
             final List<String> list = new ArrayList<>();
             for (EntityType type : EntityType.values()) {
+                if (type.getName() == null) continue;
                 final String name = type.getName().toLowerCase();
                 if (name.startsWith(arg)) {
                     list.add(name);
