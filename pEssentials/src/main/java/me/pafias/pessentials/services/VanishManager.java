@@ -1,6 +1,5 @@
 package me.pafias.pessentials.services;
 
-import com.github.retrooper.packetevents.event.SimplePacketListenerAbstract;
 import lombok.Getter;
 import me.pafias.pessentials.events.PlayerUnvanishedEvent;
 import me.pafias.pessentials.events.PlayerVanishedEvent;
@@ -19,7 +18,7 @@ import java.util.HashSet;
 import java.util.Set;
 import java.util.UUID;
 
-public class VanishManager extends SimplePacketListenerAbstract implements Listener {
+public class VanishManager implements Listener {
 
     private final pEssentials plugin;
 
