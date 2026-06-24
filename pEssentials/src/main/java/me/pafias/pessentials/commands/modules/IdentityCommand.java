@@ -7,21 +7,24 @@ import me.pafias.pessentials.util.RandomUtils;
 import me.pafias.putils.CC;
 import me.pafias.putils.Tasks;
 import me.pafias.putils.builders.PlayerProfileBuilder;
+import org.bukkit.Bukkit;
+import org.bukkit.OfflinePlayer;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.*;
-import java.util.concurrent.CompletableFuture;
 
 public class IdentityCommand extends ICommand {
 
     public IdentityCommand() {
         super("identity", "essentials.identity", "Change your identity (disguise)", "/id <reset/<player>> [skin]", "id");
+        disallowKnownPlayers = getPlugin().getConfig().getBoolean("identity.disallow_known_players");
         nameBlacklist = new HashSet<>(getPlugin().getConfig().getStringList("identity.name_blacklist"));
     }
 
+    private final boolean disallowKnownPlayers;
     private final Set<String> nameBlacklist;
 
     @Override
@@ -36,7 +39,7 @@ public class IdentityCommand extends ICommand {
             return;
         }
         final User user = plugin.getSM().getUserManager().getUser(player.getUniqueId());
-        if (args[0].equalsIgnoreCase("reset")) {
+        if (args[0].equalsIgnoreCase("reset") || args[0].equalsIgnoreCase(user.getOriginalGameProfile().getName())) {
             if (!user.hasIdentity()) {
                 sender.sendMessage(CC.t("&cYou are already yourself"));
                 return;
@@ -54,40 +57,47 @@ public class IdentityCommand extends ICommand {
                 sender.sendMessage(CC.t("&cYou cannot use that name."));
                 return;
             }
-            String skin = name;
-            if (hasSkin)
-                skin = args[1];
-            if (skin.length() > 16) {
-                sender.sendMessage(CC.t("&cName of skin player cannot be longer than 16 characters."));
-                return;
-            }
             sender.sendMessage(CC.t("&aProcessing..."));
-            try {
-                CompletableFuture<PlayerProfile> skinProfileFuture;
-                if (skin.equals(user.getOriginalGameProfile().getName()))
-                    skinProfileFuture = CompletableFuture.completedFuture(user.getOriginalGameProfile());
-                else
-                    skinProfileFuture = new PlayerProfileBuilder()
-                            .setName(skin)
-                            .setGenerateUuidFromName(false)
-                            .setFetchProperties(true)
-                            .buildAsync();
+            Tasks.runAsync(() -> {
+                if (disallowKnownPlayers) {
+                    final OfflinePlayer offlinePlayer = Bukkit.getOfflinePlayer(name);
+                    if ((offlinePlayer.isOnline() || offlinePlayer.hasPlayedBefore()) && !offlinePlayer.equals(player)) {
+                        sender.sendMessage(CC.t("&cYou cannot use this name."));
+                        return;
+                    }
+                }
+                String skin = name;
+                if (hasSkin)
+                    skin = args[1];
+                if (skin.length() > 16) {
+                    sender.sendMessage(CC.t("&cName of skin player cannot be longer than 16 characters."));
+                    return;
+                }
+                try {
+                    PlayerProfile skinProfile;
+                    if (skin.equals(user.getOriginalGameProfile().getName()))
+                        skinProfile = user.getOriginalGameProfile();
+                    else
+                        skinProfile = new PlayerProfileBuilder()
+                                .setName(skin)
+                                .setGenerateUuidFromName(false)
+                                .setFetchProperties(true)
+                                .build();
 
-                skinProfileFuture
-                        .thenCompose(skinProfile -> new PlayerProfileBuilder()
-                                .setProperties(skinProfile.getProperties())
-                                .setUuid(user.getUUID())
-                                .setName(name)
-                                .buildAsync())
-                        .thenAccept(fakeProfile -> {
-                            Tasks.runSync(() -> {
-                                user.setIdentity(fakeProfile);
-                                sender.sendMessage(CC.t("&aIdentity changed."));
-                            });
-                        });
-            } catch (Exception ex) {
-                sender.sendMessage(CC.t("&cSomething went wrong. &oDoes that player exist?"));
-            }
+                    final PlayerProfile profile = new PlayerProfileBuilder()
+                            .setProperties(skinProfile.getProperties())
+                            .setUuid(user.getUUID())
+                            .setName(name)
+                            .build();
+
+                    Tasks.runSync(() -> {
+                        user.setIdentity(profile);
+                        sender.sendMessage(CC.t("&aIdentity changed."));
+                    });
+                } catch (Exception ex) {
+                    sender.sendMessage(CC.t("&cSomething went wrong. &oDoes that player exist?"));
+                }
+            });
         }
     }
 

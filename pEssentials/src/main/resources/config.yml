@@ -27,6 +27,7 @@ bad_people_filter:
     auto_mute: true
     mute_duration_millis: 10000
 identity:
+  disallow_known_players: false
   name_blacklist:
     - 'notch'
     - 'hitler'
