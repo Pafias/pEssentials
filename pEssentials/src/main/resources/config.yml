@@ -26,6 +26,13 @@ bad_people_filter:
     time_period_millis: 5000
     auto_mute: true
     mute_duration_millis: 10000
+  chat_filter:
+    enabled: true
+    shadow_disallow: false
+    notify_staff: true
+    blacklisted_words:
+      - 'nigger'
+      - 'nigga'
 identity:
   disallow_known_players: false
   name_blacklist:

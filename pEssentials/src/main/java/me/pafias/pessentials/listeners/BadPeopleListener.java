@@ -1,11 +1,19 @@
 package me.pafias.pessentials.listeners;
 
+import io.papermc.paper.event.player.AsyncChatEvent;
 import lombok.Getter;
 import lombok.Setter;
 import me.pafias.pessentials.pEssentials;
+import me.pafias.pessentials.util.RandomUtils;
+import me.pafias.pessentials.util.TextUtils;
 import me.pafias.putils.CC;
 import me.pafias.putils.Tasks;
+import net.kyori.adventure.text.Component;
+import net.kyori.adventure.text.event.HoverEvent;
+import net.kyori.adventure.text.serializer.plain.PlainTextComponentSerializer;
+import org.bukkit.Bukkit;
 import org.bukkit.configuration.ConfigurationSection;
+import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
@@ -13,9 +21,7 @@ import org.bukkit.event.player.*;
 import org.bukkit.scheduler.BukkitTask;
 
 import javax.annotation.RegEx;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.UUID;
+import java.util.*;
 import java.util.logging.Level;
 
 public class BadPeopleListener implements Listener {
@@ -39,6 +45,18 @@ public class BadPeopleListener implements Listener {
         usernameRegex = config.getString("username_regex");
         regex1 = config.getString("anti_advertising.regex1");
         regex2 = config.getString("anti_advertising.regex2");
+
+        chatFilterEnabled = config.getBoolean("chat_filter.enabled");
+        chatFilterShadowDisallow = config.getBoolean("chat_filter.shadow_disallow");
+        chatFilterNotifyStaff = config.getBoolean("chat_filter.notify_staff");
+        blacklistedWords = config.getStringList("chat_filter.blacklisted_words")
+                .stream()
+                .map(word -> new TextUtils.BlacklistedWord(
+                        word,
+                        TextUtils.normalize(word)
+                ))
+                .filter(word -> !word.normalized().isBlank())
+                .toList();
     }
 
     private final boolean usernameCheck;
@@ -53,6 +71,9 @@ public class BadPeopleListener implements Listener {
     @RegEx
     private final String regex2;
 
+    private final boolean chatFilterEnabled, chatFilterShadowDisallow, chatFilterNotifyStaff;
+    private final List<TextUtils.BlacklistedWord> blacklistedWords;
+
     private final Map<UUID, BukkitTask> toVerify = new HashMap<>();
 
     private final Map<UUID, PlayerChatData> chatData = new HashMap<>();
@@ -60,6 +81,51 @@ public class BadPeopleListener implements Listener {
     private int MAX_MESSAGES = 12;
     private long TIME_PERIOD = 5000;
     private long MUTE_DURATION = 10000;
+    private static final String PERMISSION = "essentials.staffchat";
+
+    @EventHandler
+    public void onProfanity(AsyncChatEvent event) {
+        if (!chatFilterEnabled) return;
+
+        final Player player = event.getPlayer();
+
+        if (player.hasPermission("essentials.bypass.chatfilter"))
+            return;
+
+        final String original = PlainTextComponentSerializer.plainText().serialize(event.message());
+        final String normalized = TextUtils.normalize(original);
+
+        TextUtils.BlacklistedWord match = null;
+
+        final String rawLower = original.toLowerCase(Locale.ROOT);
+        for (TextUtils.BlacklistedWord word : blacklistedWords) {
+            if (normalized.contains(word.normalized()) || rawLower.contains(word.normalized())) {
+                match = word;
+                break;
+            }
+        }
+
+        if (match != null) {
+            if (chatFilterShadowDisallow) {
+                event.viewers().removeIf(p -> !p.equals(player));
+            } else {
+                event.setCancelled(true);
+                player.sendMessage(CC.t("&cYou cannot say that!"));
+            }
+            if (chatFilterNotifyStaff) {
+                Bukkit.getConsoleSender().sendMessage(CC.t("&cPlayer &b" + player.getName() + " &ctried using a blacklisted word: &e" + match.original() + " &7&o(" + original + ")"));
+                for (Player staff : RandomUtils.getStaffOnline(PERMISSION)) {
+                    staff.sendMessage(
+                            CC.a("&cPlayer &b" + player.getName() + " &ctried using a blacklisted word: ")
+                                    .append(
+                                            CC.a("&e" + match.original())
+                                                    .hoverEvent(HoverEvent.showText(Component.text(original)))
+                                    )
+                    );
+                }
+            }
+        }
+    }
 
     private boolean isValidUsername(String username) {
         if (username.length() < 2 || username.length() > 16)
