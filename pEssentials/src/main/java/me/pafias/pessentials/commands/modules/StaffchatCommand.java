@@ -4,6 +4,7 @@ import me.pafias.pessentials.commands.ICommand;
 import me.pafias.pessentials.objects.User;
 import me.pafias.pessentials.util.RandomUtils;
 import me.pafias.putils.CC;
+import org.bukkit.Bukkit;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
@@ -35,6 +36,7 @@ public class StaffchatCommand extends ICommand {
             final String format = staffchatFormat
                     .replace("{player}", sender.getName())
                     .replace("{message}", message);
+            Bukkit.getConsoleSender().sendMessage(CC.t(format));
             for (Player staff : RandomUtils.getStaffOnline(getPermission())) {
                 try {
                     staff.sendMessage(CC.a(format));
