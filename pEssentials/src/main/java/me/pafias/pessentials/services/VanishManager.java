@@ -25,7 +25,6 @@ public class VanishManager implements Listener {
     private final VanishPacketListener vanishPacketListener;
 
     private static final FixedMetadataValue VANISHED_META = new FixedMetadataValue(pEssentials.get(), true);
-    private static final FixedMetadataValue UNVANISHED_META = new FixedMetadataValue(pEssentials.get(), false);
 
     public VanishManager(pEssentials plugin) {
         this.plugin = plugin;
@@ -45,7 +44,7 @@ public class VanishManager implements Listener {
     public void vanish(Player player) {
         for (Player p : plugin.getServer().getOnlinePlayers()) {
             if (p != player && !p.hasPermission("essentials.vanish.bypass")) {
-                p.hidePlayer(player);
+                p.hidePlayer(plugin, player);
             }
         }
         player.setMetadata("vanished", VANISHED_META);
@@ -56,9 +55,9 @@ public class VanishManager implements Listener {
 
     public void unvanish(Player player) {
         for (Player p : plugin.getServer().getOnlinePlayers()) {
-            p.showPlayer(player);
+            p.showPlayer(plugin, player);
         }
-        player.setMetadata("vanished", UNVANISHED_META);
+        player.removeMetadata("vanished", plugin);
         vanishedPlayers.remove(player.getUniqueId());
         player.sendMessage(CC.t("&6Vanish: &cOFF"));
         plugin.getServer().getPluginManager().callEvent(new PlayerUnvanishedEvent(player));
@@ -72,7 +71,7 @@ public class VanishManager implements Listener {
                 final Player player = plugin.getServer().getPlayer(uuid);
                 if (player != null) {
                     if (!event.getPlayer().hasPermission("essentials.vanish.bypass"))
-                        event.getPlayer().hidePlayer(player);
+                        event.getPlayer().hidePlayer(plugin, player);
                 }
             }
         }
