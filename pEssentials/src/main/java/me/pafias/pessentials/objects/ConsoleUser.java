@@ -1,6 +1,7 @@
 package me.pafias.pessentials.objects;
 
 import me.pafias.putils.CC;
+import net.kyori.adventure.text.Component;
 import org.bukkit.Bukkit;
 
 public class ConsoleUser implements Messageable {
@@ -16,8 +17,8 @@ public class ConsoleUser implements Messageable {
     }
 
     @Override
-    public void message(boolean colorize, String content) {
-        Bukkit.getConsoleSender().sendMessage(CC.t(content));
+    public void message(Component message) {
+        Bukkit.getConsoleSender().sendMessage(CC.t(CC.serialize(message)));
     }
 
     @Override
@@ -37,6 +38,11 @@ public class ConsoleUser implements Messageable {
 
     @Override
     public boolean canBypassMsgtoggle() {
+        return true;
+    }
+
+    @Override
+    public boolean canColorize() {
         return true;
     }
 

@@ -86,9 +86,10 @@ commands:
   block:
     aliases: [ ignore ]
   size:
-    aliases: [scale]
+    aliases: [ scale ]
   reach:
-    aliases: [range]
+    aliases: [ range ]
+  socialspy:
 permissions:
   essentials.fly:
     default: op
@@ -164,3 +165,6 @@ permissions:
     description: Change the range attribute of another player.
     children:
       essentials.reach: true
+  essentials.socialspy:
+    default: op
+    description: Toggle socialspy.

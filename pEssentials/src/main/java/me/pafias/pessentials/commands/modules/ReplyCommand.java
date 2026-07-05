@@ -2,7 +2,11 @@ package me.pafias.pessentials.commands.modules;
 
 import me.pafias.pessentials.commands.ICommand;
 import me.pafias.pessentials.objects.Messageable;
+import me.pafias.pessentials.objects.User;
+import me.pafias.pessentials.services.UserManager;
 import me.pafias.putils.CC;
+import me.pafias.putils.Tasks;
+import net.kyori.adventure.text.Component;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
@@ -47,9 +51,27 @@ public class ReplyCommand extends ICommand {
             for (String arg : args) sb.append(arg).append(" ");
             final String message = sb.toString();
             final boolean colorize = sender.canColorize();
-            if (!target.isBlockingPMsFrom(sender) || sender.canBypassBlock())
-                target.message(colorize, "&e[Tell] &c" + sender.getName() + "&6: &r" + message);
-            sender.message(colorize, "&e[Tell] &c" + sender.getName() + " &6-> &c" + target.getName() + " &6: &r" + message);
+
+            if (!target.isBlockingPMsFrom(sender) || sender.canBypassBlock()) {
+                final Component targetComponent = CC.a("&e[Tell] &c" + sender.getName() + "&6: ")
+                        .append(colorize ? CC.a(message) : Component.text(message));
+                target.message(targetComponent);
+            }
+            final Component senderComponent = CC.a("&e[Tell] &c" + sender.getName() + " &6-> &c" + target.getName() + "&6: ")
+                    .append(colorize ? CC.a(message) : Component.text(message));
+            sender.message(senderComponent);
+
+            // SocialSpy
+            Tasks.runAsync(() -> {
+                final Component spyMessage = CC.a("&b&o[SocialSpy] &c&o" + sender.getName() + " &6&o-> &c&o" + target.getName() + "&6&o: ")
+                        .append(colorize ? CC.a("&o" + message) : Component.text(message));
+                final UserManager userManager = plugin.getSM().getUserManager();
+                for (User spy : userManager.getUsers().values()) {
+                    if (spy.isSpyingDms()) {
+                        spy.message(spyMessage);
+                    }
+                }
+            });
         }
     }
 

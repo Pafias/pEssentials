@@ -1,10 +1,12 @@
 package me.pafias.pessentials.objects;
 
+import net.kyori.adventure.text.Component;
+
 public interface Messageable {
     boolean isOnline();
     String getName();
 
-    void message(boolean colorize, String content);
+    void message(Component message);
 
     boolean isBlockingPMs();
     boolean isBlockingPMsFrom(Messageable sender);

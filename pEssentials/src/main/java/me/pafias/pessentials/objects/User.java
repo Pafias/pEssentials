@@ -8,6 +8,7 @@ import me.pafias.pessentials.services.FreezeManager;
 import me.pafias.pessentials.services.VanishManager;
 import me.pafias.putils.CC;
 import me.pafias.putils.Tasks;
+import net.kyori.adventure.text.Component;
 import org.bukkit.Location;
 import org.bukkit.NamespacedKey;
 import org.bukkit.Particle;
@@ -57,6 +58,10 @@ public class User implements Messageable {
     private static final NamespacedKey BLOCKING_KEY =
             new NamespacedKey(pEssentials.get(), "blocking");
 
+    @Getter
+    @Setter
+    private boolean spyingDms;
+
     public User(Player player) {
         this.player = player;
         this.uuid = player.getUniqueId();
@@ -86,11 +91,8 @@ public class User implements Messageable {
     }
 
     @Override
-    public void message(boolean colorize, String content) {
-        if (colorize)
-            player.sendMessage(CC.a(content));
-        else
-            player.sendMessage(content);
+    public void message(Component message) {
+        player.sendMessage(message);
     }
 
     @Override

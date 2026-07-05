@@ -6,6 +6,8 @@ import me.pafias.pessentials.objects.User;
 import me.pafias.pessentials.services.UserManager;
 import me.pafias.pessentials.util.RandomUtils;
 import me.pafias.putils.CC;
+import me.pafias.putils.Tasks;
+import net.kyori.adventure.text.Component;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
@@ -62,13 +64,30 @@ public class TellCommand extends ICommand {
 
             boolean colorize = sender.canColorize();
             boolean notBlocked = !target.isBlockingPMsFrom(sender) || sender.canBypassBlock();
-            if (notBlocked)
-                target.message(colorize, "&e[Tell] &c" + sender.getName() + "&6: &r" + message);
-            sender.message(colorize, "&e[Tell] &c" + sender.getName() + " &6-> &c" + target.getName() + " &6: &r" + message);
+
+            if (notBlocked) {
+                final Component targetMessageComponent = CC.a("&e[Tell] &c" + sender.getName() + "&6: ")
+                        .append(colorize ? CC.a(message) : Component.text(message));
+                target.message(targetMessageComponent);
+            }
+            final Component senderMessageComponent = CC.a("&e[Tell] &c" + sender.getName() + " &6-> &c" + target.getName() + "&6: ")
+                    .append(colorize ? CC.a(message) : Component.text(message));
+            sender.message(senderMessageComponent);
 
             msg.put(sender, target);
             if (notBlocked)
                 msg.put(target, sender);
+
+            // SocialSpy
+            Tasks.runAsync(() -> {
+                final Component spyMessage = CC.a("&b&o[SocialSpy] &c&o" + sender.getName() + " &6&o-> &c&o" + target.getName() + "&6&o: ")
+                        .append(colorize ? CC.a("&o" + message) : Component.text(message));
+                for (User spy : userManager.getUsers().values()) {
+                    if (spy.isSpyingDms() && sender != spy && target != spy) {
+                        spy.message(spyMessage);
+                    }
+                }
+            });
         }
     }
 
