@@ -110,6 +110,8 @@ permissions:
       essentials.reply: true
   essentials.reply:
     default: true
+  essentials.tell.colorize:
+    default: op
   essentials.block:
     default: true
   essentials.gamemode.others:

@@ -11,9 +11,9 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.WeakHashMap;
 import java.util.function.Predicate;
 
 public class TellCommand extends ICommand {
@@ -25,7 +25,7 @@ public class TellCommand extends ICommand {
 
     private final boolean privateMessagingPreview;
 
-    public final static Map<Messageable, Messageable> msg = new WeakHashMap<>();
+    public final static Map<Messageable, Messageable> msg = new HashMap<>();
 
     @Override
     public void commandHandler(CommandSender commandSender, Command command, String label, String[] args) {
@@ -34,8 +34,8 @@ public class TellCommand extends ICommand {
         else {
             final UserManager userManager = plugin.getSM().getUserManager();
             final Messageable sender;
-            if (commandSender instanceof Player) {
-                sender = userManager.getUser((Player) commandSender);
+            if (commandSender instanceof Player player) {
+                sender = userManager.getUser(player);
             } else {
                 sender = userManager.getConsoleUser();
             }
@@ -44,14 +44,14 @@ public class TellCommand extends ICommand {
                 target = userManager.getConsoleUser();
             } else {
                 // Only get the user if you're either console, or if you can see them (accounting for vanish)
-                Predicate<User> predicate = user -> (!(commandSender instanceof Player)) || ((Player) commandSender).canSee(user.getPlayer());
+                Predicate<User> predicate = user -> (!(commandSender instanceof Player player)) || player.canSee(user.getPlayer());
                 target = userManager.getUser(args[0], predicate);
             }
             if (target == null) {
                 commandSender.sendMessage(CC.t("&cPlayer not found!"));
                 return;
             }
-            if (target.isBlockingPMs()) {
+            if (target.isBlockingPMs() && !sender.canBypassMsgtoggle()) {
                 commandSender.sendMessage(CC.t("&cThat player has private messages turned off."));
                 return;
             }
@@ -59,13 +59,15 @@ public class TellCommand extends ICommand {
             for (int i = 1; i < args.length; i++)
                 sb.append(args[i]).append(" ");
             final String message = sb.toString();
-            // TODO add a permission node for color codes
-            if (!target.isBlockingPMsFrom(sender) || sender.canBypassBlock())
-                target.message(true, "&e[Tell] &c" + sender.getName() + "&6: &r" + message);
-            sender.message(true, "&e[Tell] &c" + sender.getName() + " &6-> &c" + target.getName() + " &6: &r" + message);
+
+            boolean colorize = sender.canColorize();
+            boolean notBlocked = !target.isBlockingPMsFrom(sender) || sender.canBypassBlock();
+            if (notBlocked)
+                target.message(colorize, "&e[Tell] &c" + sender.getName() + "&6: &r" + message);
+            sender.message(colorize, "&e[Tell] &c" + sender.getName() + " &6-> &c" + target.getName() + " &6: &r" + message);
 
             msg.put(sender, target);
-            if (!target.isBlockingPMsFrom(sender) || sender.canBypassBlock())
+            if (notBlocked)
                 msg.put(target, sender);
         }
     }

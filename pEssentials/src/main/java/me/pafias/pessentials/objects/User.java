@@ -174,6 +174,11 @@ public class User implements Messageable {
         return player.hasPermission("essentials.msgtoggle.bypass");
     }
 
+    @Override
+    public boolean canColorize() {
+        return player.hasPermission("essentials.tell.colorize");
+    }
+
     @Unmodifiable
     public Set<UUID> getBlocking() {
         return blocking;

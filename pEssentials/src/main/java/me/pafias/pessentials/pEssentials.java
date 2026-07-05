@@ -72,6 +72,7 @@ public final class pEssentials extends JavaPlugin {
         pm.registerEvents(new PingListener(plugin), plugin);
         pm.registerEvents(new SitListener(), plugin);
         pm.registerEvents(new BadPeopleListener(plugin), plugin);
+        pm.registerEvents(new DmListener(servicesManager.getUserManager()), plugin);
     }
 
     @Override

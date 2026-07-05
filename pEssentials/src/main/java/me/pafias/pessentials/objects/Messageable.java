@@ -12,4 +12,5 @@ public interface Messageable {
     boolean canBypassBlock();
     boolean canBypassMsgtoggle();
 
+    boolean canColorize();
 }

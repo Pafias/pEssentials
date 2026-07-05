@@ -50,8 +50,8 @@ public class UserManager {
     public User getUser(String name, Predicate<User> predicate) {
         final String nameLower = name.toLowerCase().trim();
         for (User user : users.values()) {
-            if (user.getName().equalsIgnoreCase(name)
-                    || user.getName().toLowerCase().startsWith(nameLower)
+            if ((user.getName().equalsIgnoreCase(name)
+                    || user.getName().toLowerCase().startsWith(nameLower))
                     && predicate.test(user))
                 return user;
         }

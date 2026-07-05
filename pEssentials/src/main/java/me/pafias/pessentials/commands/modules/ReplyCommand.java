@@ -25,8 +25,8 @@ public class ReplyCommand extends ICommand {
             commandSender.sendMessage(CC.t("&c/" + label + " <message>"));
         } else {
             final Messageable sender;
-            if (commandSender instanceof Player) {
-                sender = plugin.getSM().getUserManager().getUser((Player) commandSender);
+            if (commandSender instanceof Player player) {
+                sender = plugin.getSM().getUserManager().getUser(player);
             } else {
                 sender = plugin.getSM().getUserManager().getConsoleUser();
             }
@@ -46,9 +46,10 @@ public class ReplyCommand extends ICommand {
             final StringBuilder sb = new StringBuilder();
             for (String arg : args) sb.append(arg).append(" ");
             final String message = sb.toString();
+            final boolean colorize = sender.canColorize();
             if (!target.isBlockingPMsFrom(sender) || sender.canBypassBlock())
-                target.message(true, "&e[Tell] &c" + sender.getName() + "&6: &r" + message);
-            sender.message(true, "&e[Tell] &c" + sender.getName() + " &6-> &c" + target.getName() + " &6: &r" + message);
+                target.message(colorize, "&e[Tell] &c" + sender.getName() + "&6: &r" + message);
+            sender.message(colorize, "&e[Tell] &c" + sender.getName() + " &6-> &c" + target.getName() + " &6: &r" + message);
         }
     }
 
