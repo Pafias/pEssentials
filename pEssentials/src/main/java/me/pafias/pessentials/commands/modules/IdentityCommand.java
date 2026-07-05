@@ -31,15 +31,16 @@ public class IdentityCommand extends ICommand {
     public void commandHandler(@NotNull CommandSender sender, @NotNull Command command, @NotNull String label, @NotNull String[] args) {
         if (args.length == 0) {
             sender.sendMessage(CC.t("&c/" + label + " <reset/<name>> [skin]"));
-            sender.sendMessage(CC.t("&6[skin] = the player who's skin you want to have"));
+            sender.sendMessage(CC.t("&6[skin] = the player whose skin you want to have"));
             return;
         }
         if (!(sender instanceof Player player)) {
             sender.sendMessage(CC.t("&cOnly players!"));
             return;
         }
+        final boolean hasSkin = args.length == 2;
         final User user = plugin.getSM().getUserManager().getUser(player.getUniqueId());
-        if (args[0].equalsIgnoreCase("reset") || args[0].equalsIgnoreCase(user.getOriginalGameProfile().getName())) {
+        if (args[0].equalsIgnoreCase("reset") || (args[0].equalsIgnoreCase(user.getOriginalGameProfile().getName()) && !hasSkin)) {
             if (!user.hasIdentity()) {
                 sender.sendMessage(CC.t("&cYou are already yourself"));
                 return;
@@ -47,7 +48,6 @@ public class IdentityCommand extends ICommand {
             user.setIdentity(user.getOriginalGameProfile());
             sender.sendMessage(CC.t("&aIdentity restored."));
         } else {
-            boolean hasSkin = args.length == 2;
             final String name = args[0];
             if (name.length() > 16) {
                 sender.sendMessage(CC.t("&cName cannot be longer than 16 characters."));
@@ -75,7 +75,7 @@ public class IdentityCommand extends ICommand {
                 }
                 try {
                     PlayerProfile skinProfile;
-                    if (skin.equals(user.getOriginalGameProfile().getName()))
+                    if (skin.equalsIgnoreCase(user.getOriginalGameProfile().getName()))
                         skinProfile = user.getOriginalGameProfile();
                     else
                         skinProfile = new PlayerProfileBuilder()
