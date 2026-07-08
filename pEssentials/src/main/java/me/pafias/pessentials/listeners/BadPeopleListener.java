@@ -93,16 +93,29 @@ public class BadPeopleListener implements Listener {
             return;
 
         final String original = PlainTextComponentSerializer.plainText().serialize(event.message());
-        final String normalized = TextUtils.normalize(original);
+        final Set<String> normalizedVariants = TextUtils.normalizeVariants(original);
 
         TextUtils.BlacklistedWord match = null;
 
         final String rawLower = original.toLowerCase(Locale.ROOT);
         for (TextUtils.BlacklistedWord word : blacklistedWords) {
-            if (normalized.contains(word.normalized()) || rawLower.contains(word.normalized())) {
+            if (word.normalized().length() <= 2)
+                continue;
+
+            if (rawLower.contains(word.original().toLowerCase(Locale.ROOT))) {
                 match = word;
                 break;
             }
+
+            for (String normalized : normalizedVariants) {
+                if (normalized.contains(word.normalized())) {
+                    match = word;
+                    break;
+                }
+            }
+
+            if (match != null)
+                break;
         }
 
         if (match != null) {
@@ -112,8 +125,10 @@ public class BadPeopleListener implements Listener {
                 event.setCancelled(true);
                 player.sendMessage(CC.t("&cYou cannot say that!"));
             }
+
             if (chatFilterNotifyStaff) {
                 Bukkit.getConsoleSender().sendMessage(CC.t("&cPlayer &b" + player.getName() + " &ctried using a blacklisted word: &e" + match.original() + " &7&o(" + original + ")"));
+
                 for (Player staff : RandomUtils.getStaffOnline(PERMISSION)) {
                     staff.sendMessage(
                             CC.a("&cPlayer &b" + player.getName() + " &ctried using a blacklisted word: ")
