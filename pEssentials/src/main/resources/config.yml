@@ -1,20 +1,53 @@
+# pEssentials config file. To see comments and default values, see the GitHub repository.
+
+# Whether to automatically update the plugin when a new version is available.
+auto_update: true
+
+# The server to connect to when a player uses the /hub command.
 hub_server: 'hub'
+
+# The format of the staff messages
 staffchat_format: '&e&l[STAFF] &r&9{player}&r: {message}'
+
+# Join and quit messages.
+# The enabled option controls whether to show a join/quit message at all.
+# The first_time message replaces the regular join/quit message if not left blank. Leaving it blank will use the regular message.
+# Leaving the regular message blank aswell, will skip this plugin behavior, and let other plugins/vanilla decide.
 join_message_enabled: false
 join_message: '&7[&a+&7] &r%s'
 join_message_first_time: ''
 quit_message_enabled: false
 quit_message: '&7[&c-&7] &r%s'
+
+# Whether to kick players with high ping.
 kick_on_high_ping: false
+
+# The threshold ping from which players should start being kicked.
 ping_kick_threshold: 150
+
+# Whether to show a preview of the private message being sent.
 private_messaging_preview: false
+
+# The cooldown in seconds before a player can use the /russianroulette command again.
 russian_roulette_cooldown_seconds: 30
+
+# The link to the discord server.
 discord_link: ''
-disabled_commands: []
+
+# A list of pEssentials commands that should be disabled.
+disabled_commands: [ ]
 bad_people_filter:
+  # Whether to verify the player's movement. When enabled, the player must move within 30 seconds of joining the server, otherwise they will be kicked.
+  # Mostly for cracked servers, to prevent bots.
   movement_verification: false
+
+  # Whether to check if the player's username is a valid Minecraft username.
+  # Mostly for cracked servers.
   username_check: false
   username_regex: '^[a-zA-Z0-9_]{3,16}$'
+
+  # The following sections should be self-explanatory.
+  # shadow_disallow: If true, the player who sent the message will think the message sent, though no one else will see it. If false, the player will be disallowed form sending the message.
   anti_advertising:
     enabled: false
     shadow_disallow: true
@@ -34,6 +67,7 @@ bad_people_filter:
       - 'nigger'
       - 'nigga'
 identity:
+  # Whether to disallow "known" players: players who have joined the server before.
   disallow_known_players: false
   name_blacklist:
     - 'notch'
