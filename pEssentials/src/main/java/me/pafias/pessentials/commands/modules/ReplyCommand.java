@@ -67,7 +67,7 @@ public class ReplyCommand extends ICommand {
                         .append(colorize ? CC.a("&o" + message) : Component.text(message));
                 final UserManager userManager = plugin.getSM().getUserManager();
                 for (User spy : userManager.getUsers().values()) {
-                    if (spy.isSpyingDms()) {
+                    if (spy.isSpyingDms() && sender != spy && target != spy) {
                         spy.message(spyMessage);
                     }
                 }
