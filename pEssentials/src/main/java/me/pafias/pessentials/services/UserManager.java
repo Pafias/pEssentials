@@ -40,8 +40,11 @@ public class UserManager {
     public User getUser(String name) {
         final String nameLower = name.toLowerCase().trim();
         for (User user : users.values()) {
-            if (user.getName().equalsIgnoreCase(name)
-                    || user.getName().toLowerCase().startsWith(nameLower))
+            if (user.getName().equalsIgnoreCase(name))
+                return user;
+        }
+        for (User user : users.values()) {
+            if (user.getName().toLowerCase().startsWith(nameLower))
                 return user;
         }
         return null;
@@ -50,9 +53,11 @@ public class UserManager {
     public User getUser(String name, Predicate<User> predicate) {
         final String nameLower = name.toLowerCase().trim();
         for (User user : users.values()) {
-            if ((user.getName().equalsIgnoreCase(name)
-                    || user.getName().toLowerCase().startsWith(nameLower))
-                    && predicate.test(user))
+            if (user.getName().equalsIgnoreCase(name) && predicate.test(user))
+                return user;
+        }
+        for (User user : users.values()) {
+            if (user.getName().toLowerCase().startsWith(nameLower) && predicate.test(user))
                 return user;
         }
         return null;
