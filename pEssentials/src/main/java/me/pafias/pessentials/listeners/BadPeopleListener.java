@@ -49,14 +49,7 @@ public class BadPeopleListener implements Listener {
         chatFilterEnabled = config.getBoolean("chat_filter.enabled");
         chatFilterShadowDisallow = config.getBoolean("chat_filter.shadow_disallow");
         chatFilterNotifyStaff = config.getBoolean("chat_filter.notify_staff");
-        blacklistedWords = config.getStringList("chat_filter.blacklisted_words")
-                .stream()
-                .map(word -> new TextUtils.BlacklistedWord(
-                        word,
-                        TextUtils.normalize(word)
-                ))
-                .filter(word -> !word.normalized().isBlank())
-                .toList();
+        blacklistedWords = loadBlacklistedWords(config);
     }
 
     private final boolean usernameCheck;
@@ -83,6 +76,104 @@ public class BadPeopleListener implements Listener {
     private long MUTE_DURATION = 10000;
     private static final String PERMISSION = "essentials.staffchat";
 
+    private List<TextUtils.BlacklistedWord> loadBlacklistedWords(
+            ConfigurationSection config
+    ) {
+        final List<?> configuredWords =
+                config.getList("chat_filter.blacklisted_words", List.of());
+
+        final List<TextUtils.BlacklistedWord> result = new ArrayList<>();
+
+        for (final Object entry : configuredWords) {
+            if (entry instanceof String legacyWord) {
+                addBlacklistedWord(
+                        result,
+                        legacyWord,
+                        TextUtils.MatchMode.CONTAINS
+                );
+                continue;
+            }
+
+            if (entry instanceof Map<?, ?> configuredWord) {
+                final Object wordValue = configuredWord.get("word");
+
+                if (!(wordValue instanceof String word)) {
+                    plugin.getLogger().warning(
+                            "Ignoring chat-filter entry without a valid word: "
+                                    + configuredWord
+                    );
+                    continue;
+                }
+
+                final Object modeValue = configuredWord.get("mode");
+                final TextUtils.MatchMode mode =
+                        parseMatchMode(word, modeValue);
+
+                addBlacklistedWord(result, word, mode);
+                continue;
+            }
+
+            plugin.getLogger().warning(
+                    "Ignoring invalid chat-filter entry: " + entry
+            );
+        }
+
+        return List.copyOf(result);
+    }
+
+    private TextUtils.MatchMode parseMatchMode(
+            String word,
+            Object modeValue
+    ) {
+        if (!(modeValue instanceof String configuredMode)) {
+            return TextUtils.MatchMode.CONTAINS;
+        }
+
+        try {
+            return TextUtils.MatchMode.valueOf(
+                    configuredMode.trim().toUpperCase(Locale.ROOT)
+            );
+        } catch (IllegalArgumentException exception) {
+            plugin.getLogger().warning(
+                    "Invalid chat-filter mode '" + configuredMode
+                            + "' for word '" + word
+                            + "'. Using CONTAINS."
+            );
+
+            return TextUtils.MatchMode.CONTAINS;
+        }
+    }
+
+    private void addBlacklistedWord(
+            List<TextUtils.BlacklistedWord> result,
+            String original,
+            TextUtils.MatchMode mode
+    ) {
+        final String trimmed = original.trim();
+
+        if (trimmed.isBlank()) {
+            return;
+        }
+
+        final String normalized = TextUtils.normalize(trimmed);
+
+        if (normalized.isBlank()) {
+            plugin.getLogger().warning(
+                    "Ignoring chat-filter word that normalizes to nothing: "
+                            + trimmed
+            );
+            return;
+        }
+
+        result.add(
+                new TextUtils.BlacklistedWord(
+                        trimmed,
+                        normalized,
+                        mode
+                )
+        );
+    }
+
     @EventHandler
     public void onProfanity(AsyncChatEvent event) {
         if (!chatFilterEnabled) return;
@@ -93,34 +184,13 @@ public class BadPeopleListener implements Listener {
             return;
 
         final String original = PlainTextComponentSerializer.plainText().serialize(event.message());
-        final Set<String> normalizedVariants = TextUtils.normalizeVariants(original);
+        final Set<String> candidates = TextUtils.createFilterCandidates(original);
 
-        TextUtils.BlacklistedWord match = null;
-
-        final String rawLower = original.toLowerCase(Locale.ROOT);
-        for (TextUtils.BlacklistedWord word : blacklistedWords) {
-            if (word.normalized().length() <= 2)
-                continue;
-
-            if (rawLower.contains(word.original().toLowerCase(Locale.ROOT))) {
-                match = word;
-                break;
-            }
-
-            for (String normalized : normalizedVariants) {
-                if (normalized.contains(word.normalized())) {
-                    match = word;
-                    break;
-                }
-            }
-
-            if (match != null)
-                break;
-        }
+        TextUtils.BlacklistedWord match = findBlacklistedWord(candidates);
 
         if (match != null) {
             if (chatFilterShadowDisallow) {
-                event.viewers().removeIf(p -> !p.equals(player));
+                event.viewers().removeIf(viewer -> !viewer.equals(player));
             } else {
                 event.setCancelled(true);
                 player.sendMessage(CC.t("&cYou cannot say that!"));
@@ -131,15 +201,34 @@ public class BadPeopleListener implements Listener {
 
                 for (Player staff : RandomUtils.getStaffOnline(PERMISSION)) {
                     staff.sendMessage(
-                            CC.a("&cPlayer &b" + player.getName() + " &ctried using a blacklisted word: ")
+                            CC.a("&cPlayer &b" + player.getName() + " &ctried using a blacklisted word. ")
                                     .append(
-                                            CC.a("&e" + match.original())
+                                            CC.a("&7&ohover to see")
                                                     .hoverEvent(HoverEvent.showText(Component.text(original)))
                                     )
                     );
                 }
             }
         }
+    }
+
+    private TextUtils.BlacklistedWord findBlacklistedWord(
+            Set<String> candidates
+    ) {
+        for (final TextUtils.BlacklistedWord word : blacklistedWords) {
+            for (final String candidate : candidates) {
+                final boolean matches = switch (word.matchMode()) {
+                    case EXACT -> candidate.equals(word.normalized());
+                    case CONTAINS -> candidate.contains(word.normalized());
+                };
+
+                if (matches) {
+                    return word;
+                }
+            }
+        }
+
+        return null;
     }
 
     private boolean isValidUsername(String username) {

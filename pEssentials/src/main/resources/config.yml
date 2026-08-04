@@ -63,9 +63,14 @@ bad_people_filter:
     enabled: true
     shadow_disallow: false
     notify_staff: true
+    # mode EXACT will only prohibit the word if the player types it exactly like that. CONTAINS will do a more sophisticated check and prevent bypass attempts.
     blacklisted_words:
-      - 'nigger'
-      - 'nigga'
+      - word: 'nigger'
+        mode: CONTAINS
+      - word: 'nigga'
+        mode: CONTAINS
+      - word: 'nga'
+        mode: EXACT
 identity:
   # Whether to disallow "known" players: players who have joined the server before.
   disallow_known_players: false
