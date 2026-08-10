@@ -114,6 +114,7 @@ public class User implements Messageable {
     }
 
     public void setIdentity(PlayerProfile profile) {
+        final String oldName = getName();
         if (profile == this.profile) {
             this.newIdentity = null;
             if (idTask != null)
@@ -129,6 +130,7 @@ public class User implements Messageable {
         }
         player.setPlayerProfile(profile);
         player.setDisplayName(profile.getName());
+        plugin.getSM().getUserManager().updateNameIndex(uuid, oldName, getName());
     }
 
     public void crash() {

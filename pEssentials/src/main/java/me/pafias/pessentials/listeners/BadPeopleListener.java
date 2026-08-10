@@ -20,9 +20,9 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.player.*;
 import org.bukkit.scheduler.BukkitTask;
 
-import javax.annotation.RegEx;
 import java.util.*;
 import java.util.logging.Level;
+import java.util.regex.Pattern;
 
 public class BadPeopleListener implements Listener {
 
@@ -42,9 +42,9 @@ public class BadPeopleListener implements Listener {
         MAX_MESSAGES = config.getInt("anti_spam.max_messages", 12);
         TIME_PERIOD = config.getInt("anti_spam.time_period_millis", 5000);
         MUTE_DURATION = config.getInt("anti_spam.mute_duration_millis", 10000);
-        usernameRegex = config.getString("username_regex");
-        regex1 = config.getString("anti_advertising.regex1");
-        regex2 = config.getString("anti_advertising.regex2");
+        usernamePattern = Pattern.compile(config.getString("username_regex"));
+        advertisingPattern1 = Pattern.compile(config.getString("anti_advertising.regex1"));
+        advertisingPattern2 = Pattern.compile(config.getString("anti_advertising.regex2"));
 
         chatFilterEnabled = config.getBoolean("chat_filter.enabled");
         chatFilterShadowDisallow = config.getBoolean("chat_filter.shadow_disallow");
@@ -57,12 +57,9 @@ public class BadPeopleListener implements Listener {
     private final boolean antiAdvertisingEnabled, antiAdvertisingShadowDisallow;
     private final boolean antiSpamEnabled, antiSpamAutoMute;
 
-    @RegEx
-    private final String usernameRegex;
-    @RegEx
-    private final String regex1;
-    @RegEx
-    private final String regex2;
+    private final Pattern usernamePattern;
+    private final Pattern advertisingPattern1;
+    private final Pattern advertisingPattern2;
 
     private final boolean chatFilterEnabled, chatFilterShadowDisallow, chatFilterNotifyStaff;
     private final List<TextUtils.BlacklistedWord> blacklistedWords;
@@ -234,7 +231,7 @@ public class BadPeopleListener implements Listener {
     private boolean isValidUsername(String username) {
         if (username.length() < 2 || username.length() > 16)
             return false;
-        return username.matches(usernameRegex);
+        return usernamePattern.matcher(username).matches();
     }
 
     @EventHandler(priority = EventPriority.LOWEST)
@@ -289,8 +286,8 @@ public class BadPeopleListener implements Listener {
         // Anti advertising
         if (antiAdvertisingEnabled && !event.getPlayer().hasPermission("essentials.bypass.advertising")) {
             final String message = event.getMessage().toLowerCase();
-            if (message.matches(regex1) ||
-                    message.matches(regex2)) {
+            if (advertisingPattern1.matcher(message).matches() ||
+                    advertisingPattern2.matcher(message).matches()) {
                 if (antiAdvertisingShadowDisallow) {
                     event.getRecipients().removeIf(p -> !p.equals(event.getPlayer()));
                 } else {

@@ -14,6 +14,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.EntityDismountEvent;
+import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.scheduler.BukkitTask;
 import org.bukkit.util.Vector;
 import org.jetbrains.annotations.NotNull;
@@ -40,9 +41,17 @@ public class FlyProtocolListener extends SimplePacketListenerAbstract implements
         }
     }
 
+    @EventHandler
+    public void onQuit(PlayerQuitEvent event) {
+        final User user = plugin.getSM().getUserManager().getUser(event.getPlayer());
+        if (user != null)
+            cleanup(user);
+    }
+
     private void cleanup(@NotNull User user) {
         user.movingEntity = false;
         speedMap.remove(user.getUUID());
+        inputMap.remove(user.getUUID());
         final BukkitTask task = taskMap.remove(user.getUUID());
         if (task != null)
             task.cancel();
@@ -50,6 +59,11 @@ public class FlyProtocolListener extends SimplePacketListenerAbstract implements
 
     private final Map<UUID, Double> speedMap = new HashMap<>();
     private final Map<UUID, BukkitTask> taskMap = new HashMap<>();
+    private final Map<UUID, InputState> inputMap = new HashMap<>();
+
+    private static class InputState {
+        volatile boolean forward, backward, left, right;
+    }
 
     @Override
     public void onPacketPlayReceive(@NotNull PacketPlayReceiveEvent event) {
@@ -68,33 +82,41 @@ public class FlyProtocolListener extends SimplePacketListenerAbstract implements
 
                 if (packet.isShift()) {
                     cleanup(user);
+                    return;
                 }
 
                 if (!packet.isForward() && !packet.isBackward() && !packet.isRight() && !packet.isLeft()) {
-                    taskMap.get(user.getUUID()).cancel();
+                    final BukkitTask task = taskMap.remove(user.getUUID());
+                    if (task != null)
+                        task.cancel();
+                    inputMap.remove(user.getUUID());
                     entity.setVelocity(new Vector());
                 } else {
-                    if (taskMap.containsKey(user.getUUID()))
-                        taskMap.get(user.getUUID()).cancel();
-                    taskMap.put(user.getUUID(), Tasks.runRepeatingSync(1, 1, () -> {
+                    final InputState state = inputMap.computeIfAbsent(user.getUUID(), id -> new InputState());
+                    state.forward = packet.isForward();
+                    state.backward = packet.isBackward();
+                    state.left = packet.isLeft();
+                    state.right = packet.isRight();
+
+                    taskMap.computeIfAbsent(user.getUUID(), id -> Tasks.runRepeatingSync(1, 1, () -> {
                         final double speed = speedMap.getOrDefault(user.getUUID(), 0.1d);
 
                         final Vector direction = user.getPlayer().getLocation().getDirection().normalize();
                         direction.setY(direction.getY() * 0.5);
                         direction.normalize();
 
-                        if (packet.isForward()) {
+                        if (state.forward) {
                             direction.multiply(speed);
                         }
-                        if (packet.isBackward()) {
+                        if (state.backward) {
                             direction.multiply(-speed);
                         }
-                        if (packet.isRight()) {
+                        if (state.right) {
                             double newSpeed = speed + 0.1D;
                             speedMap.put(user.getUUID(), newSpeed);
                             user.getPlayer().sendTitle("", CC.tf("&6Speed: &7%.2f", newSpeed), 2, 10, 5);
                         }
-                        if (packet.isLeft()) {
+                        if (state.left) {
                             double newSpeed = speed - 0.1D;
                             speedMap.put(user.getUUID(), newSpeed);
                             user.getPlayer().sendTitle("", CC.tf("&6Speed: &7%.2f", newSpeed), 2, 10, 5);

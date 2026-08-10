@@ -15,14 +15,22 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 
-import java.text.SimpleDateFormat;
+import java.time.Instant;
+import java.time.ZoneId;
+import java.time.format.DateTimeFormatter;
 import java.util.*;
 import java.util.concurrent.CompletableFuture;
 
 public class WhoisCommand extends ICommand {
 
+    private static final DateTimeFormatter DATE_FORMAT = DateTimeFormatter.ofPattern("dd MM yyyy @ HH:mm:ss");
+
     public WhoisCommand() {
         super("whois", "essentials.whois", "Info on someone", "/whois <player>", "seen");
+    }
+
+    private static String formatEpochMillis(long millis) {
+        return DATE_FORMAT.format(Instant.ofEpochMilli(millis).atZone(ZoneId.systemDefault()));
     }
 
     @Override
@@ -48,9 +56,9 @@ public class WhoisCommand extends ICommand {
                                 sender.sendMessage(CC.t("&6Name: &7" + offlinePlayer.getName()));
                             if (user != null)
                                 sender.sendMessage(CC.t("&6Ping: &7" + user.getPlayer().getPing()));
-                            sender.sendMessage(CC.t("&6First played: &7" + new SimpleDateFormat("dd MM yyyy @ HH:mm:ss").format(new Date(offlinePlayer.getFirstPlayed()))));
-                            sender.sendMessage(CC.t("&6Last login: &7" + new SimpleDateFormat("dd MM yyyy @ HH:mm:ss").format(new Date(offlinePlayer.getLastLogin()))));
-                            sender.sendMessage(CC.t("&6Last seen: &7" + new SimpleDateFormat("dd MM yyyy @ HH:mm:ss").format(new Date(offlinePlayer.getLastSeen()))));
+                            sender.sendMessage(CC.t("&6First played: &7" + formatEpochMillis(offlinePlayer.getFirstPlayed())));
+                            sender.sendMessage(CC.t("&6Last login: &7" + formatEpochMillis(offlinePlayer.getLastLogin())));
+                            sender.sendMessage(CC.t("&6Last seen: &7" + formatEpochMillis(offlinePlayer.getLastSeen())));
                             try {
                                 final Location lastDeathLocation = offlinePlayer.getLastDeathLocation();
                                 if (lastDeathLocation != null) {
